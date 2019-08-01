@@ -99,6 +99,13 @@ class SpeakOskGhar(Action):
 	def execute(self):
 		if "RatMenace_started" in self.state.player.flags:
 			text_state = 2
+		if "RatMenace_rat1_killed" in self.state.player.flags:
+			if "RatMenace_rat2_killed" in self.state.player.flags:
+				if "RatMenace_rat3_killed" in self.state.player.flags:
+					if "RatMenace_rat_king_killed" in self.state.player.flags:
+						self.state.player.flags.append("RatMenace_completed")
+		if "RatMenace_completed" in self.state.player.flags:
+			text_state = 3
 		else:
 			text_state = 0
 		text = [
@@ -139,6 +146,15 @@ class SpeakOskGhar(Action):
 						"You are already on a quest for me,",
 						"You need to slay those pesky rats, remember?"
 					]
+				
+				elif text_state == 3:
+					text = [
+						"So you slayed them all!",
+						"Feel free to take an item from the",
+						"chest behind me as a token of ",
+						"appreciation."
+					]
+					self.state.player.flags.append("RatMenace_reward")
 			
 
 			if answer.lower() in ["trade", "barter"]:

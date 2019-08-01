@@ -231,7 +231,7 @@ def draw_menu(stdscr):
 	stdscr.refresh()
 	curses.curs_set(0)
 	curses.noecho()
-	curses.halfdelay(1)
+	#curses.halfdelay(1)
 	curses.mousemask(curses.ALL_MOUSE_EVENTS)
 
 	game_box = stdscr.derwin(39,99,0,1)
@@ -275,6 +275,9 @@ def draw_menu(stdscr):
 	curses.init_pair(135, curses.COLOR_CYAN, -1)
 	curses.init_pair(136, curses.COLOR_YELLOW, -1)
 	#gamemap = mapper.GameMap("map1.txt", [npc.Human("Niklas", 8, 4)])
+
+	print(is_tab_enabled(state_handler))
+	print(state_handler.map_screen)
 
 
 	# Loop where k is the last character pressed
@@ -384,6 +387,7 @@ def draw_menu(stdscr):
 								state_handler.gamemap = state_handler.player.location(state_handler)
 								state_handler.ingame_menu = state_handler.gamemap.ingame_menu(state_handler)
 								state_handler.game_state = state_handler.gamemap.menu(state_handler)
+								curses.ungetch(curses.KEY_F0)
 							else:
 								state_handler.game_state = next_game_state(state_handler)
 
@@ -458,7 +462,7 @@ def draw_menu(stdscr):
 			#helper.popup(state_handler.game_box, state_handler, ["Popup text"])
 			#helper.yes_no(state_handler.game_box, state_handler, ["Popup text"])
 			
-			battlemode = battle.Battle(state_handler, monster.RatKing(), "3")
+			battlemode = battle.Battle(state_handler, monster.Rat(), "3")
 			battlemode.play()
 
 

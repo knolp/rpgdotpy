@@ -165,6 +165,20 @@ class Rat(Monster):
 		screen.addch(self.x, self.y, self.character)
 		screen.attroff(curses.color_pair(240))
 
+class RatKing(Monster):
+	def __init__(self, x, y, state):
+		super().__init__("RatKing", x, y, "R", state)
+
+	def action(self):
+		result = battle.Battle(self.state, monster.RatKing(), "3").play()
+		return result
+
+	def draw(self, screen):
+		screen.addstr(self.x -1, self.y - 1, "RATKING")
+		screen.attron(curses.color_pair(240))
+		screen.addch(self.x, self.y, self.character)
+		screen.attroff(curses.color_pair(240))
+
 
 
 

@@ -364,7 +364,7 @@ class Battle():
             if k == ord(" "):
                 if len(self.loot_list) != 0: 
                     self.player.inventory.append(self.loot_list.pop(selected_item))
-
+                selected_item = 0
             k = self.screen.getch()
 
 

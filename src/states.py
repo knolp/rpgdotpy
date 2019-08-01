@@ -4,6 +4,7 @@ import mapper
 import npc
 import random
 import abilities
+import pathfinding
 import monster
 import battle
 import events
@@ -681,7 +682,6 @@ class StarterTown_house(MapState):
 			events.StarterTown_house_door(self.state)
 
 		if self.state.player.x == 13 and self.state.player.y == 32:
-			print("oo?")
 			events.StarterTown_house_basement_door_entrance(self.state)
 
 
@@ -777,7 +777,7 @@ class StarterTown_house_basement_hallway(MapState):
 	raw_name = "StarterTown_house_basement_hallway"
 	menu_commands = GameCommands
 	objects = [
-			npc.BasementChest(7,10)
+			npc.BasementChest(7,10),
 		]
 	game_map = mapper.GameMap("StarterTown_house_basement_hallway.txt", objects)
 
@@ -789,6 +789,9 @@ class StarterTown_house_basement_hallway(MapState):
 		objects = [
 			npc.BasementChest(7,10)
 		]
+		if "RatMenace_rat_king_killed" not in state.player.flags:
+			objects.append(npc.RatKing(30, 45, state))
+
 
 		self.game_map = mapper.GameMap("StarterTown_house_basement_hallway.txt", objects)
 		self.menu = GameMenu
@@ -808,11 +811,15 @@ class StarterTown_house_basement_hallway(MapState):
 		if self.state.player.x == 1 and self.state.player.y == 83:
 			events.StarterTown_house_basement_hallway_door_exit(self.state)
 		
-		#if self.state.player.x == 19 and self.state.player.y == 68 and "Rock" in list_of_objects:
-		#	for item in self.game_map.objects:
-		#		if item.name == "Rock":
-		#			item.action(self.state.game_box, self.state)
-		#			self.state.player.y = 67
+		if self.state.player.x == 30 and self.state.player.y == 45 and "RatKing" in list_of_objects:
+			for item in self.game_map.objects:
+				if item.name == "RatKing":
+					result = item.action()
+					if result == True:
+						self.state.player.flags.append("RatMenace_rat_king_killed")
+						self.game_map.objects.remove(item)
+					else:
+						self.state.player.x = 29
 
 
 class GreenForest(MapState):
@@ -827,7 +834,9 @@ class GreenForest(MapState):
 		if state.first_time == True:
 			state.change_map_screen()
 			state.first_time = False
-		objects = []
+		objects = [
+			npc.Rat(2,2,state)
+		]
 		self.game_map = mapper.GameMap("GreenForest.txt", objects)
 		self.menu = GameMenu
 		self.menu_commands = GameCommands
@@ -843,3 +852,16 @@ class GreenForest(MapState):
 	def check_events(self):
 		if self.state.player.x == 37:
 			events.GreenForest_south(self.state)
+
+		for item in self.game_map.objects:
+			path = pathfinding.astar(self.state.player.location.game_map.background2, (item.x, item.y), (self.state.player.x, self.state.player.y), self.state)
+			if isinstance(path, list) == False:
+				path = []
+			if path:
+				if path[1] == (self.state.player.x, self.state.player.y - 1):
+					result = battle.Battle(self.state, monster.Rat(), "3").play()
+					if result:
+						self.game_map.objects.remove(item)
+				item.x, item.y = path[1]
+
+			

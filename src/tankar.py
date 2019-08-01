@@ -10,6 +10,10 @@ class Flags():
         rat_1 = "RatMenace_rat1_killed"
         rat_2 = "RatMenace_rat2_killed"
         rat_3 = "RatMenace_rat3_killed"
+        rat_king = "RatMenace_rat_king_killed"
+
+        completed = "RatMenace_completed"
+        reward = "RatMenace_reward"
 
         BasementChest = "BasementChest_item_taken"
 
