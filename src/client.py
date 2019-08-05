@@ -39,6 +39,7 @@ class StateHandler():
 		self.ingame_menu = False
 		self.first_time = True
 		self.stdscr = stdscr
+		self.autowalk = False
 
 		self.action = "None"
 
@@ -224,6 +225,7 @@ def draw_menu(stdscr):
 	k = 0
 	cursor_x = 0
 	cursor_y = 0
+	name = ""
 
 
 	# Clear and refresh the screen for a blank canvas
@@ -231,7 +233,6 @@ def draw_menu(stdscr):
 	stdscr.refresh()
 	curses.curs_set(0)
 	curses.noecho()
-	#curses.halfdelay(1)
 	curses.mousemask(curses.ALL_MOUSE_EVENTS)
 
 	game_box = stdscr.derwin(39,99,0,1)
@@ -276,9 +277,7 @@ def draw_menu(stdscr):
 	curses.init_pair(136, curses.COLOR_YELLOW, -1)
 	#gamemap = mapper.GameMap("map1.txt", [npc.Human("Niklas", 8, 4)])
 
-	print(is_tab_enabled(state_handler))
-	print(state_handler.map_screen)
-
+	counter = 0
 
 	# Loop where k is the last character pressed
 	while (k != ord('q')):
@@ -291,41 +290,44 @@ def draw_menu(stdscr):
 		height, width = state_handler.game_box.getmaxyx()
 
 		if state_handler.map_screen == True:
+			
 			if k == 9 and is_tab_enabled(state_handler):
 				k = 1
 				state_handler.change_map_screen()
 				continue
+			if state_handler.autowalk == False:
+				if k in [curses.KEY_DOWN, curses.KEY_UP, curses.KEY_LEFT, curses.KEY_RIGHT, ord("w"), ord("a"), ord("s"), ord("d")]:
+					state_handler.player.last_pos = state_handler.player.x, state_handler.player.y
+					state_handler.check_tall_grass()
+					name = ""
 
-			if k in [curses.KEY_DOWN, curses.KEY_UP, curses.KEY_LEFT, curses.KEY_RIGHT]:
-				state_handler.player.last_pos = state_handler.player.x, state_handler.player.y
-				state_handler.check_tall_grass()
-			if k == curses.KEY_DOWN:
-				next_direction = state_handler.player.x + 1
-				next_tile = next_direction, state_handler.player.y
-				if state_handler.player.x < 37 and state_handler.check_collision(next_tile):
-					state_handler.player.x = next_direction
-				k = 1
-			elif k == curses.KEY_UP:
-				next_direction = state_handler.player.x - 1
-				next_tile = next_direction, state_handler.player.y
-				if state_handler.player.x > 1 and state_handler.check_collision(next_tile):
-					state_handler.player.x = next_direction
-				k = 1
-			elif k == curses.KEY_LEFT:
-				next_direction = state_handler.player.y - 1
-				next_tile = state_handler.player.x, next_direction
-				if state_handler.player.y > 1 and state_handler.check_collision(next_tile):
-					state_handler.player.y = next_direction
-				k = 1
-			elif k == curses.KEY_RIGHT:
-				next_direction = state_handler.player.y + 1
-				next_tile = state_handler.player.x, next_direction
-				if state_handler.player.y < 96 and state_handler.check_collision(next_tile):
-					state_handler.player.y = next_direction
-				k = 1
+				if k == curses.KEY_DOWN or k == ord("s"):
+					next_direction = state_handler.player.x + 1
+					next_tile = next_direction, state_handler.player.y
+					if state_handler.player.x < 37 and state_handler.check_collision(next_tile):
+						state_handler.player.x = next_direction
+					k = 1
+				elif k == curses.KEY_UP or k == ord("w"):
+					next_direction = state_handler.player.x - 1
+					next_tile = next_direction, state_handler.player.y
+					if state_handler.player.x > 1 and state_handler.check_collision(next_tile):
+						state_handler.player.x = next_direction
+					k = 1
+				elif k == curses.KEY_LEFT or k == ord("a"):
+					next_direction = state_handler.player.y - 1
+					next_tile = state_handler.player.x, next_direction
+					if state_handler.player.y > 1 and state_handler.check_collision(next_tile):
+						state_handler.player.y = next_direction
+					k = 1
+				elif k == curses.KEY_RIGHT or k == ord("d"):
+					next_direction = state_handler.player.y + 1
+					next_tile = state_handler.player.x, next_direction
+					if state_handler.player.y < 96 and state_handler.check_collision(next_tile):
+						state_handler.player.y = next_direction
+					k = 1
 
-			elif k == ord(" "):
-				state_handler.check_npc_action()
+				elif k == ord(" "):
+					state_handler.check_npc_action()
 
 			state_handler.gamemap.check_events()
 
@@ -333,14 +335,9 @@ def draw_menu(stdscr):
 			state_handler.gamemap.draw()
 			draw_commands(state_handler.ingame_menu, state_handler.command_box)
 			state_handler.player.draw(game_box)
-			if last_mouse_y and len(path) != 0:
-				state_handler.game_box.addstr(last_mouse_y, last_mouse_x - 1, "?")
 
-				#time.sleep(0.3)
-
-				state_handler.player.x = path[0][0]
-				state_handler.player.y = path[0][1]
-				path.pop(path.index(path[0]))
+			if last_mouse_x != 0:
+				state_handler.game_box.addstr(last_mouse_y, last_mouse_x - 1, name)
 
 
 			#Mer snappy events		
@@ -415,7 +412,7 @@ def draw_menu(stdscr):
 		
 
 		# Declaration of strings
-		statusbarstr = "Press 'q' to exit | Mouse: x: {} , y: {} | Pos: {}, {} | {}x{} | Action: {}".format(last_mouse_x, last_mouse_y,cursor_x, cursor_y, width, height, state_handler.action)
+		statusbarstr = "{} | Mouse: x: {} , y: {} | Pos: {}, {} | {}x{} | Action: {}".format(name,last_mouse_x, last_mouse_y,cursor_x, cursor_y, width, height, state_handler.action)
 
 
 		# Render status bar
@@ -429,21 +426,23 @@ def draw_menu(stdscr):
 		# Refresh the screen
 		stdscr.refresh()
 
+
 		# Wait for next input
 		k = stdscr.getch()
 
 		if k == curses.KEY_MOUSE:
 			unused_1, last_mouse_x, last_mouse_y,unused_2,unused_3 = curses.getmouse()
 			if last_mouse_x <= 97 and last_mouse_y <= 37 and state_handler.map_screen == True:
-				state_handler.game_box.addstr(last_mouse_y, last_mouse_x,"?")
-				path = pathfinding.astar(state_handler.player.location.game_map.background2, (state_handler.player.x, state_handler.player.y), (last_mouse_y, last_mouse_x), state_handler)
-				#path = pathfinding2.astar(state_handler.player.location.game_map.background2, (last_mouse_y, last_mouse_x), (state_handler.player.x, state_handler.player.y), state_handler)
-				#path, closed_path, open_path = path
-				if isinstance(path, list) == False:
-					path = []
-				#for item in path:
-				#	print(item)
-				#	game_box.addstr(item[0], item[1], "3")
+				#state_handler.game_box.addstr(last_mouse_y, last_mouse_x,"?")
+				#path = pathfinding.astar(state_handler.player.location.game_map.background2, (state_handler.player.x, state_handler.player.y), (last_mouse_y, last_mouse_x), state_handler)
+				#if isinstance(path, list) == False:
+				#	path = []
+				for item in state_handler.gamemap.game_map.objects:
+					if item.y == (last_mouse_x - 1) and item.x == last_mouse_y:
+						name = item.name
+						break
+					else:
+						name = state_handler.gamemap.game_map.background2[last_mouse_y - 1][last_mouse_x - 2].name
 			else:
 				last_mouse_y = 0
 				last_mouse_x = 0
@@ -458,12 +457,13 @@ def draw_menu(stdscr):
 		if k == ord("p") and state_handler.player != False:
 			inventory.view_spellbook(state_handler.stdscr, state_handler)
 
-		if k == ord("a") and state_handler.player != False:
+		if k == ord("c") and state_handler.player != False:
 			#helper.popup(state_handler.game_box, state_handler, ["Popup text"])
 			#helper.yes_no(state_handler.game_box, state_handler, ["Popup text"])
 			
-			battlemode = battle.Battle(state_handler, monster.Rat(), "3")
+			battlemode = battle.Battle(state_handler, monster.RatKing(), "3")
 			battlemode.play()
+
 
 
 

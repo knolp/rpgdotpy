@@ -859,7 +859,7 @@ class GreenForest(MapState):
 				path = []
 			if path:
 				if path[1] == (self.state.player.x, self.state.player.y - 1):
-					result = battle.Battle(self.state, monster.Rat(), "3").play()
+					result = battle.Battle(self.state, monster.Rat(), "3", run=False).play()
 					if result:
 						self.game_map.objects.remove(item)
 				item.x, item.y = path[1]

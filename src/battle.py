@@ -311,6 +311,7 @@ class Battle():
                     #return True
                 
                 if self.commands[selected_command] == "Exit":
+                    curses.ungetch(curses.KEY_F0)
                     return True
                     
                 if self.opponent_killed == False:
@@ -365,7 +366,9 @@ class Battle():
                 if len(self.loot_list) != 0: 
                     self.player.inventory.append(self.loot_list.pop(selected_item))
                 selected_item = 0
+                curses.ungetch(curses.KEY_F0)
             k = self.screen.getch()
+        curses.ungetch(curses.KEY_F0)
 
 
 def yes_no(screen, state, text):

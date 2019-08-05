@@ -30,6 +30,14 @@ def input_text(name, vocation, screen, text, state):
 	return text.strip(" ")
 
 
+def add_ungetch(f):
+	def return_func(self):
+		f(self)
+		curses.ungetch(curses.KEY_F0)
+	return return_func
+
+
+
 class Action():
 	def __init__(self, screen, state, action_name):
 		self.screen = state.stdscr
@@ -41,13 +49,13 @@ class Action():
 
 
 #STARTER TOWN
-
 class SpeakErolKipman(Action):
 	def __init__(self, screen, state):
 		super().__init__(screen, state, "Speak")
 		self.name = "Erol Kipman"
 		self.vocation = "Starter Town Sheriff"
-	
+
+	@add_ungetch
 	def execute(self):
 		text_state = 0
 		text = [
@@ -96,6 +104,7 @@ class SpeakOskGhar(Action):
 		self.name = "Osk'Ghar the Rock"
 		self.vocation = "Starter Town Blacksmith"
 	
+	@add_ungetch
 	def execute(self):
 		if "RatMenace_started" in self.state.player.flags:
 			text_state = 2
@@ -217,6 +226,7 @@ class BasementLeverTouch(Action):
 		super().__init__(screen, state, "Speak")
 		self.name = "BasementLever"
 	
+	@add_ungetch
 	def execute(self):
 		pulled = helper.yes_no(self.screen, self.state, [
 			"You see and old, rusty lever.",
@@ -228,6 +238,7 @@ class BasementLeverTouch(Action):
 			for item in self.state.gamemap.game_map.objects:
 				if item.name == "Rock":
 					self.state.gamemap.game_map.objects.remove(item)
+		#curses.ungetch(curses.KEY_F0)
 
 class Rock(Action):
 	def __init__(self, screen, state):

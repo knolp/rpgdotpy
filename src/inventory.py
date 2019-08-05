@@ -86,8 +86,10 @@ def open_chest(screen, state, name, items):
 			if len(loot_list) != 0:
 				taken.append(loot_list[selected_item])
 				player.inventory.append(loot_list.pop(selected_item))
+			curses.ungetch(curses.KEY_F0)
 
 		k = screen.getch()
+	curses.ungetch(curses.KEY_F0)
 	if taken:
 		return taken
 	else:

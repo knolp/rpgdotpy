@@ -169,8 +169,8 @@ class RatKing(Monster):
 	def __init__(self, x, y, state):
 		super().__init__("RatKing", x, y, "R", state)
 
-	def action(self):
-		result = battle.Battle(self.state, monster.RatKing(), "3").play()
+	def action(self, run=True):
+		result = battle.Battle(self.state, monster.RatKing(), "3", run=run).play()
 		return result
 
 	def draw(self, screen):

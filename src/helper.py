@@ -51,6 +51,7 @@ def yes_no(screen, state, text):
 		elif k == curses.KEY_RIGHT:
 			yes_selected = False
 	
+	curses.ungetch(curses.KEY_F0)
 	return yes_selected
 
 
@@ -68,6 +69,7 @@ def popup(screen, state, text):
 		screen.attroff(curses.color_pair(5))
 
 		k = screen.getch()
+	curses.ungetch(curses.KEY_F0)
 
 def get_item(item):
 	for var in dir(items):
