@@ -160,7 +160,8 @@ class Rat(Monster):
 		return result
 
 	def draw(self, screen):
-		screen.addstr(self.x -1, self.y - 1, "Rat")
+		text = "RAT"
+		screen.addstr(self.x - 1, self.y - int((len(text) / 2)), text)
 		screen.attron(curses.color_pair(240))
 		screen.addch(self.x, self.y, self.character)
 		screen.attroff(curses.color_pair(240))
@@ -174,7 +175,25 @@ class RatKing(Monster):
 		return result
 
 	def draw(self, screen):
-		screen.addstr(self.x -1, self.y - 1, "RATKING")
+		text = "RATKING"
+		screen.addstr(self.x - 1, self.y - int((len(text) / 2)), text)
+		screen.attron(curses.color_pair(240))
+		screen.addch(self.x, self.y, self.character)
+		screen.attroff(curses.color_pair(240))
+
+
+
+class SkeletonGrunt(Monster):
+	def __init__(self, x, y, state):
+		super().__init__("SkeletonGrunt", x, y, "S", state)
+
+	def action(self, run=False):
+		result = battle.Battle(self.state, monster.SkeletonGrunt(), "3", run=run).play()
+		return result
+
+	def draw(self, screen):
+		text = "SKG"
+		screen.addstr(self.x - 1, self.y - int((len(text) / 2)), text)
 		screen.attron(curses.color_pair(240))
 		screen.addch(self.x, self.y, self.character)
 		screen.attroff(curses.color_pair(240))

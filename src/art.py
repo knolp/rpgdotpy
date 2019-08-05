@@ -79,6 +79,12 @@ def draw_RatKing():
 
 	return return_list
 
+def draw_SkeletonGrunt():
+	return_list = []
+
+	return_list.append("A")
+
+	return return_list
 
 
 if __name__ == "__main__":

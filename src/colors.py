@@ -4,7 +4,7 @@ def main(stdscr):
 	curses.start_color()
 	curses.use_default_colors()
 	for i in range(0, curses.COLORS - 1):
-		curses.init_pair(i + 1, i, i - 1)
+		curses.init_pair(i + 1, i, - 1)
 	try:
 		for i in range(0, 255):
 			stdscr.attron(curses.color_pair(i + 1))

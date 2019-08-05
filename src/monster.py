@@ -193,6 +193,40 @@ class RatKing(Monster):
             return self.melee_attack()
 
 
+class SkeletonGrunt(Monster):
+    def __init__(self):
+        super().__init__("SkeletonGrunt")
+        self.race = "Skeleton"
+        self.description = [
+            "A skeleton of a human soldier who died."
+        ]
+        self.before_name = "a"
+        self.readable_name = "Skeleton Grunt"
+        self.art = art.draw_SkeletonGrunt()
+        self.max_health = 100
+        self.health = self.max_health
+        self.damage = 2
+        self.attack_styles = ["attacks", "claws", "bashes"]
+        self.buffed_turn = 0
+        self.loot = []
+        self.random_loot = ["LeatherBoots"]
+        self.special_loot = {
+            "Longsword" : 3
+        }
+        self.limbs = {
+            "head" : 2,
+            "body" : 1
+        }
+
+    def melee_attack(self):
+        pass
+
+    def special_attack(self):
+        pass
+
+    def attack(self):
+        pass
+
 
 if __name__ == "__main__":
     opp = Rat()

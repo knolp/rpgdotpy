@@ -24,35 +24,39 @@ class MapObject():
 
 	@classmethod
 	def tree(cls, x, y):
-		return cls(x, y, "T", walkable=False, color=24, name="Tree")
+		return cls(x, y, "T", walkable=False, color=134, name="Tree")
 
 	@classmethod
 	def wall(cls, x, y):
-		return cls(x, y, "#", walkable=False, color=96, name="Wall")
+		return cls(x, y, "#", walkable=False, color=138, name="Wall")
 
 	@classmethod
 	def floor(cls, x, y):
-		return cls(x, y, " ", walkable=True, color=54, name="Floor")
+		return cls(x, y, " ", walkable=True, color=0, name="Floor")
 
 	@classmethod
 	def grass(cls, x, y):
-		return cls(x, y, "'", walkable=True, color=42, name="Grass")
+		return cls(x, y, "'", walkable=True, color=134, name="Grass")
 
 	@classmethod
 	def water(cls, x, y):
-		return cls(x, y, "'", walkable=False, color=21, name="Water")
+		return cls(x, y, "~", walkable=False, color=137, name="Water")
 
 	@classmethod
 	def door(cls, x, y):
-		return cls(x, y, "'", walkable=True, color=209, executable=True, name="Door")
+		return cls(x, y, "%", walkable=True, color=135, executable=True, name="Door")
 
 	@classmethod
 	def bridge(cls, x, y):
-		return cls(x, y, "'", walkable=True, color=96, name="Bridge")
+		return cls(x, y, "-", walkable=True, color=138, name="Bridge")
 
 	@classmethod
 	def tall_grass(cls,x,y):
-		return cls(x, y, curses.ACS_PLMINUS, walkable=True, color=132, name="Tall Grass")
+		return cls(x, y, curses.ACS_PLMINUS, walkable=True, color=0, name="Tall Grass")
+
+	@classmethod
+	def hole(cls,x,y):
+		return cls(x, y, " ", walkable=True, color=0, name="Hole")
 
 
 
@@ -133,6 +137,8 @@ class GameMap():
 					self.background2[x][y] = MapObject.bridge(x + 1, y + 1)
 				elif self.raw_map[x][y] == "g":
 					self.background2[x][y] = MapObject.tall_grass(x + 1, y + 1) 
+				elif self.raw_map[x][y] == "h":
+					self.background2[x][y] = MapObject.hole(x + 1, y + 1)
 				else:
 					print(self.raw_map[x][y])
 					print("Could not create map tile from Text")

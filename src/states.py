@@ -640,6 +640,9 @@ class StarterTown(MapState):
 		elif self.state.player.x == 1:
 			events.StarterTown_north(self.state)
 
+		if self.state.player.x == 8 and self.state.player.y == 73:
+			events.StarterTown_haunted_house_entrance(self.state)
+
 		# Check NPCs
 		for npc in self.game_map.objects:
 			if self.state.player.x == npc.x and self.state.player.y == npc.y:
@@ -820,6 +823,35 @@ class StarterTown_house_basement_hallway(MapState):
 						self.game_map.objects.remove(item)
 					else:
 						self.state.player.x = 29
+
+class StarterTown_haunted_house_1(MapState):
+	name = "Haunted House"
+	raw_name = "StarterTown_haunted_house_1"
+	menu_commands = GameCommands
+	objects = []
+	game_map = mapper.GameMap("StarterTown_haunted_house_1.txt", objects)
+
+	def __init__(self, state):
+		super().__init__(state)
+		if state.first_time == True:
+			state.change_map_screen()
+			state.first_time = False
+		objects = [
+		]
+		self.game_map = mapper.GameMap("StarterTown_haunted_house_1.txt", objects)
+		self.menu = GameMenu
+		self.menu_commands = GameCommands
+		self.ingame_menu = IngameMenu
+
+
+	def draw(self):
+		self.game_map.draw_map(self.state.game_box)
+
+	def execute(self):
+		pass
+
+	def check_events(self):
+		pass
 
 
 class GreenForest(MapState):

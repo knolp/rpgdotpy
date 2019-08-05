@@ -275,6 +275,8 @@ def draw_menu(stdscr):
 	curses.init_pair(134, curses.COLOR_GREEN, -1)
 	curses.init_pair(135, curses.COLOR_CYAN, -1)
 	curses.init_pair(136, curses.COLOR_YELLOW, -1)
+	curses.init_pair(137, curses.COLOR_BLUE, - 1)
+	curses.init_pair(138, 130, -1)
 	#gamemap = mapper.GameMap("map1.txt", [npc.Human("Niklas", 8, 4)])
 
 	counter = 0
