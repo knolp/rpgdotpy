@@ -3,6 +3,7 @@ import random
 import time
 import npc
 import os
+import math
 
 curses.initscr()
 curses.start_color()
@@ -12,7 +13,7 @@ curses.use_default_colors()
 
 
 class MapObject():
-	def __init__(self, x, y, character, walkable=True, color=False, executable=False, colors=False, name=False):
+	def __init__(self, x, y, character, walkable=True, color=False, executable=False, colors=False, name=False, visible=True):
 		self.x = x
 		self.y = y
 		self.character = character
@@ -21,38 +22,39 @@ class MapObject():
 		self.colors = colors
 		self.executable = executable
 		self.name = name
+		self.visible = visible
 
 	@classmethod
 	def tree(cls, x, y):
-		return cls(x, y, "T", walkable=False, color=134, name="Tree")
+		return cls(x, y, "T", walkable=False, color=24, visible=False, name="Tree")
 
 	@classmethod
 	def wall(cls, x, y):
-		return cls(x, y, "#", walkable=False, color=138, name="Wall")
+		return cls(x, y, "#", walkable=False, color=96, visible=False, name="Wall")
 
 	@classmethod
 	def floor(cls, x, y):
-		return cls(x, y, " ", walkable=True, color=0, name="Floor")
+		return cls(x, y, " ", walkable=True, color=54, name="Floor")
 
 	@classmethod
 	def grass(cls, x, y):
-		return cls(x, y, "'", walkable=True, color=134, name="Grass")
+		return cls(x, y, "'", walkable=True, color=42, name="Grass")
 
 	@classmethod
 	def water(cls, x, y):
-		return cls(x, y, "~", walkable=False, color=137, name="Water")
+		return cls(x, y, "~", walkable=False, color=21, name="Water")
 
 	@classmethod
 	def door(cls, x, y):
-		return cls(x, y, "%", walkable=True, color=135, executable=True, name="Door")
+		return cls(x, y, "%", walkable=True, color=209, executable=True, visible=False, name="Door")
 
 	@classmethod
 	def bridge(cls, x, y):
-		return cls(x, y, "-", walkable=True, color=138, name="Bridge")
+		return cls(x, y, "-", walkable=True, color=96, name="Bridge")
 
 	@classmethod
 	def tall_grass(cls,x,y):
-		return cls(x, y, curses.ACS_PLMINUS, walkable=True, color=0, name="Tall Grass")
+		return cls(x, y, curses.ACS_PLMINUS, walkable=True, color=132, name="Tall Grass")
 
 	@classmethod
 	def hole(cls,x,y):
@@ -60,7 +62,7 @@ class MapObject():
 
 
 
-	def draw(self, screen):
+	def draw(self, screen, seen=False):
 
 		if self.colors:
 			if self.color == False:
@@ -69,9 +71,13 @@ class MapObject():
 				self.color, useless = self.colors
 			elif self.color == self.colors[0]:
 				useless, self.color = self.colors
-		if self.color:
+		if self.color and seen == False:
 			screen.attron(curses.color_pair(self.color))
 			screen.addch(self.x, self.y, self.character)
+			screen.attroff(curses.color_pair(self.color))
+		elif self.color and seen == True:
+			screen.attron(curses.color_pair(self.color))
+			screen.addch(self.x, self.y, self.character, curses.A_REVERSE)
 			screen.attroff(curses.color_pair(self.color))
 		else:
 			screen.addstr(self.x, self.y, self.character)
@@ -92,6 +98,8 @@ class GameMap():
 			self.events = events
 		else:
 			self.events = []
+		self.objects_to_draw = []
+		self.seen = []
 
 	def make_background2(self):
 		for x in range(len(self.raw_map)):
@@ -160,7 +168,49 @@ class GameMap():
 			item.draw(screen)
 		self.update_objects()
 
+	def draw_vision(self, state, screen):
+		self.objects_to_draw = []
+		object_coords = {}
+		for item in self.objects:
+			object_coords[(item.x - 1, item.y - 1)] = item
+		state.game_box.clear()
 
+		self.draw_seen(screen)
+
+		for i in range(0,360, 2):
+			x = math.cos(i * 0.01745)
+			y = math.sin(i * 0.01745)
+			self.do_fov(x, y, state, screen, object_coords, i)
+
+		for item in self.objects_to_draw:
+			item.draw(screen)
+		#self.update_objects()
+
+	def do_fov(self, x, y, state, screen, objects, a):
+		ox = state.player.x - 1 + 0.5
+		oy = state.player.y - 1 + 0.5
+		vision_range = 10
+		for i in range(vision_range + abs(round(5*math.sin(a * 0.01745)))):
+			if ox < 0 or oy < 0:
+				return
+			try:
+				self.background2[int(ox)][int(oy)].draw(screen)
+				if self.background2[int(ox)][int(oy)].visible == False:
+					if self.background2[int(ox)][int(oy)] not in self.seen:
+						self.seen.append(self.background2[int(ox)][int(oy)])
+					return
+			except IndexError:
+				pass
+			try:
+				self.objects_to_draw.append(objects[(int(ox), int(oy))])
+			except KeyError:
+				pass
+			
+			ox += x
+			oy += y
+	def draw_seen(self, screen):
+		for item in self.seen:
+			item.draw(screen, seen=True)
 if __name__ == '__main__':
 	gamemap = GameMap("map1.txt", [])
 	gamemap.make_background()

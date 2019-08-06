@@ -96,6 +96,12 @@ class SpeakErolKipman(Action):
 					"I recommend you check out the blacksmith, Osk'Ghar",
 					"if you are in need of a quest."]
 				continue
+			if answer.lower() in ["oskghar", "osk'ghar", "blacksmith", "smith"]:
+				text = [
+					"Osk'Ghar is the town blacksmith.",
+					"",
+					"He lives in the house next to where I am posted."
+				]
 
 
 class SpeakOskGhar(Action):

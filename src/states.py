@@ -629,6 +629,7 @@ class StarterTown(MapState):
 
 	def draw(self):
 		self.game_map.draw_map(self.state.game_box)
+		#self.game_map.draw_vision(self.state, self.state.game_box)
 
 	def execute(self):
 		pass
@@ -676,6 +677,7 @@ class StarterTown_house(MapState):
 
 	def draw(self):
 		self.game_map.draw_map(self.state.game_box)
+		#self.game_map.draw_vision(self.state, self.state.game_box)
 
 	def execute(self):
 		pass
@@ -726,7 +728,7 @@ class StarterTown_house_basement(MapState):
 
 
 	def draw(self):
-		self.game_map.draw_map(self.state.game_box)
+		self.game_map.draw_vision(self.state, self.state.game_box)
 
 	def execute(self):
 		pass
@@ -803,7 +805,8 @@ class StarterTown_house_basement_hallway(MapState):
 
 
 	def draw(self):
-		self.game_map.draw_map(self.state.game_box)
+		self.game_map.draw_vision(self.state, self.state.game_box)
+		#self.game_map.draw_map(self.state.game_box)
 
 	def execute(self):
 		pass
@@ -845,7 +848,7 @@ class StarterTown_haunted_house_1(MapState):
 
 
 	def draw(self):
-		self.game_map.draw_map(self.state.game_box)
+		self.game_map.draw_vision(self.state, self.state.game_box)
 
 	def execute(self):
 		pass
@@ -876,7 +879,7 @@ class GreenForest(MapState):
 
 
 	def draw(self):
-		self.game_map.draw_map(self.state.game_box)
+		self.game_map.draw_vision(self.state, self.state.game_box)
 
 	def execute(self):
 		pass
