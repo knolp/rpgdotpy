@@ -86,7 +86,7 @@ class Human(NPC):
 class ErolKipman(NPC):
 	def __init__(self, x, y):
 		name = "Erol Kipman"
-		super().__init__(name,x,y,"@")
+		super().__init__(name,x,y,"E")
 		self.original_x = x
 		self.original_y = y
 		self.old_timestamp = int(time.time())
@@ -101,7 +101,7 @@ class ErolKipman(NPC):
 class OskGhar(NPC):
 	def __init__(self, x, y):
 		name = "Osk'Ghar the Rock"
-		super().__init__(name,x,y,"B")
+		super().__init__(name,x,y,"O")
 		self.original_x = x
 		self.original_y = y
 		self.old_timestamp = int(time.time())

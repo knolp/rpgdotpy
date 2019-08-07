@@ -870,7 +870,7 @@ class GreenForest(MapState):
 			state.change_map_screen()
 			state.first_time = False
 		objects = [
-			npc.Rat(2,2,state)
+			
 		]
 		self.game_map = mapper.GameMap("GreenForest.txt", objects)
 		self.menu = GameMenu
@@ -879,7 +879,9 @@ class GreenForest(MapState):
 
 
 	def draw(self):
-		self.game_map.draw_vision(self.state, self.state.game_box)
+		#self.game_map.draw_vision(self.state, self.state.game_box)
+		self.game_map.draw_map(self.state.game_box)
+		#self.game_map.draw_map_efficient(self.state)
 
 	def execute(self):
 		pass
@@ -888,15 +890,5 @@ class GreenForest(MapState):
 		if self.state.player.x == 37:
 			events.GreenForest_south(self.state)
 
-		for item in self.game_map.objects:
-			path = pathfinding.astar(self.state.player.location.game_map.background2, (item.x, item.y), (self.state.player.x, self.state.player.y), self.state)
-			if isinstance(path, list) == False:
-				path = []
-			if path:
-				if path[1] == (self.state.player.x, self.state.player.y - 1):
-					result = battle.Battle(self.state, monster.Rat(), "3", run=False).play()
-					if result:
-						self.game_map.objects.remove(item)
-				item.x, item.y = path[1]
 
 			

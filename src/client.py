@@ -6,6 +6,7 @@ from pprint import pprint
 import json
 import math
 import random
+import time
 
 import states
 import player
@@ -230,9 +231,10 @@ def draw_menu(stdscr):
 
 	# Clear and refresh the screen for a blank canvas
 	#stdscr.clear()
-	stdscr.refresh()
+	#stdscr.refresh()
 	curses.curs_set(0)
-	curses.noecho()
+	#curses.noecho()
+	curses.noraw()
 	curses.mousemask(curses.ALL_MOUSE_EVENTS)
 
 	game_box = stdscr.derwin(39,99,0,1)
@@ -277,6 +279,7 @@ def draw_menu(stdscr):
 	curses.init_pair(136, curses.COLOR_YELLOW, -1)
 	curses.init_pair(137, curses.COLOR_BLUE, - 1)
 	curses.init_pair(138, 130, -1)
+	curses.init_pair(139, 238 , 242) #Cobblestone
 	#gamemap = mapper.GameMap("map1.txt", [npc.Human("Niklas", 8, 4)])
 
 	counter = 0
@@ -426,11 +429,11 @@ def draw_menu(stdscr):
 		# Print rest of text
 		#state_handler.game_box.move(cursor_y, cursor_x)
 		# Refresh the screen
-		stdscr.refresh()
+		#stdscr.refresh()
 
 
 		# Wait for next input
-		k = stdscr.getch()
+		#curses.napms(1)
 
 		if k == curses.KEY_MOUSE:
 			unused_1, last_mouse_x, last_mouse_y,unused_2,unused_3 = curses.getmouse()
@@ -465,6 +468,8 @@ def draw_menu(stdscr):
 			
 			battlemode = battle.Battle(state_handler, monster.RatKing(), "3")
 			battlemode.play()
+		stdscr.timeout(10000)
+		k = stdscr.getch()
 
 
 

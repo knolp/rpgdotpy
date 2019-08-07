@@ -67,7 +67,7 @@ class Player():
 		}
 
 	def draw(self, screen):
-		screen.addstr(self.x, self.y, "!")
+		screen.addstr(self.x, self.y, "@")
 
 
 if __name__ == '__main__':

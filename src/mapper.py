@@ -50,7 +50,7 @@ class MapObject():
 
 	@classmethod
 	def bridge(cls, x, y):
-		return cls(x, y, "-", walkable=True, color=96, name="Bridge")
+		return cls(x, y, ".", walkable=True, color=96, name="Bridge")
 
 	@classmethod
 	def tall_grass(cls,x,y):
@@ -59,6 +59,18 @@ class MapObject():
 	@classmethod
 	def hole(cls,x,y):
 		return cls(x, y, " ", walkable=True, color=0, name="Hole")
+	
+	@classmethod
+	def false_wall(cls,x,y):
+		return cls(x, y, "#", walkable=True, color=96, visible=False, name="Wall")
+
+	@classmethod
+	def castle_wall(cls,x,y):
+		return cls(x, y, "#", walkable=False, color=248, visible=False, name="Castle Wall")
+	
+	@classmethod
+	def cobblestone(cls, x, y):
+		return cls(x, y, curses.ACS_BULLET, walkable=True, color=139, name="Cobblestone")
 
 
 
@@ -147,6 +159,12 @@ class GameMap():
 					self.background2[x][y] = MapObject.tall_grass(x + 1, y + 1) 
 				elif self.raw_map[x][y] == "h":
 					self.background2[x][y] = MapObject.hole(x + 1, y + 1)
+				elif self.raw_map[x][y] == "w":
+					self.background2[x][y] = MapObject.false_wall(x + 1, y + 1)
+				elif self.raw_map[x][y] == "c":
+					self.background2[x][y] = MapObject.castle_wall(x + 1, y + 1)
+				elif self.raw_map[x][y] == "C":
+					self.background2[x][y] = MapObject.cobblestone(x + 1, y + 1)
 				else:
 					print(self.raw_map[x][y])
 					print("Could not create map tile from Text")
@@ -166,7 +184,23 @@ class GameMap():
 				self.background2[x][y].draw(screen)
 		for item in self.objects:
 			item.draw(screen)
-		self.update_objects()
+		
+		#self.update_objects()
+
+	def draw_map_efficient(self, state):
+		screen = state.game_box
+		player = state.player
+		for x in range(player.x - 10, player.x + 10):
+			print(x)
+			if x < 0 or x > 38:
+				continue
+			for y in range(player.y - 10, player.y + 10):
+				if y < 0 or y > 90:
+					continue
+				try:
+					self.background2[x][y].draw(screen)
+				except IndexError:
+					print(x, y)
 
 	def draw_vision(self, state, screen):
 		self.objects_to_draw = []
@@ -195,9 +229,10 @@ class GameMap():
 				return
 			try:
 				self.background2[int(ox)][int(oy)].draw(screen)
+				if self.background2[int(ox)][int(oy)].walkable == False or self.background2[int(ox)][int(oy)].visible == False:
+						if self.background2[int(ox)][int(oy)] not in self.seen:
+							self.seen.append(self.background2[int(ox)][int(oy)])
 				if self.background2[int(ox)][int(oy)].visible == False:
-					if self.background2[int(ox)][int(oy)] not in self.seen:
-						self.seen.append(self.background2[int(ox)][int(oy)])
 					return
 			except IndexError:
 				pass
