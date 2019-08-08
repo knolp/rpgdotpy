@@ -233,8 +233,11 @@ def draw_menu(stdscr):
 	#stdscr.clear()
 	#stdscr.refresh()
 	curses.curs_set(0)
+	curses.cbreak()
+	curses.nonl()
 	#curses.noecho()
-	curses.noraw()
+	#curses.noraw()
+	#curses.halfdelay(1)
 	curses.mousemask(curses.ALL_MOUSE_EVENTS)
 
 	game_box = stdscr.derwin(39,99,0,1)
@@ -280,6 +283,10 @@ def draw_menu(stdscr):
 	curses.init_pair(137, curses.COLOR_BLUE, - 1)
 	curses.init_pair(138, 130, -1)
 	curses.init_pair(139, 238 , 242) #Cobblestone
+	curses.init_pair(140, 237, 242) #Fence
+	curses.init_pair(141, 240, 40) #Grass Fence
+	curses.init_pair(142, 136, 40) #Tree Bot
+	curses.init_pair(143, 22, 22) #Tree Top
 	#gamemap = mapper.GameMap("map1.txt", [npc.Human("Niklas", 8, 4)])
 
 	counter = 0
@@ -288,6 +295,8 @@ def draw_menu(stdscr):
 	while (k != ord('q')):
 
 		stdscr.clear()
+
+		counter += 1
 
 		game_box.border()
 		command_box.border()
@@ -434,6 +443,8 @@ def draw_menu(stdscr):
 
 		# Wait for next input
 		#curses.napms(1)
+		k = stdscr.getch()
+		curses.flushinp()
 
 		if k == curses.KEY_MOUSE:
 			unused_1, last_mouse_x, last_mouse_y,unused_2,unused_3 = curses.getmouse()
@@ -468,8 +479,6 @@ def draw_menu(stdscr):
 			
 			battlemode = battle.Battle(state_handler, monster.RatKing(), "3")
 			battlemode.play()
-		stdscr.timeout(10000)
-		k = stdscr.getch()
 
 
 

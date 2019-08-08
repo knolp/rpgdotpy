@@ -318,9 +318,9 @@ class NewGame_2():
 				if item.text == "Starter Town":
 					self.state.create_player["location"] = "StarterTown"
 				elif item.text == "Orc'Theral":
-					self.state.create_player["location"] = "Orctheral"
+					self.state.create_player["location"] = "StarterTown"
 				elif item.text == "Blackcliff":
-					self.state.create_player["location"] = "Blackcliff"
+					self.state.create_player["location"] = "StarterTown"
 
 
 class NewGame_3():

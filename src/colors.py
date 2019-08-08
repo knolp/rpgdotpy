@@ -24,7 +24,7 @@ def main(stdscr):
 			
 			if k == ord("s"):
 				for i in range(0, curses.COLORS - 1):
-					curses.init_pair(i + 1, 255 - i, i)
+					curses.init_pair(i + 1, 7, i)
 
 				for i in range(0, 255):
 					stdscr.attron(curses.color_pair(i + 1))
@@ -55,6 +55,10 @@ def main(stdscr):
 				stdscr.attron(curses.color_pair(130))
 				stdscr.addstr(".")
 				stdscr.attroff(curses.color_pair(130))
+
+			if k == ord("t"):
+				for i in range(1,256):
+					stdscr.addstr(chr(i))
 			
 			stdscr.addstr(15,0, "BLINK", curses.A_BLINK)
 			stdscr.addstr(16,0, "BOLD", curses.A_BOLD)
@@ -104,6 +108,20 @@ def main(stdscr):
 				stdscr.addch(x,y,item)
 
 				y += 1
+
+			curses.init_pair(1, 136, 40)
+			curses.init_pair(2, 28, 40)
+
+			stdscr.attron(curses.color_pair(1))
+			stdscr.addch(31,0,"}", curses.A_BOLD)
+			stdscr.addch(31,1,"{")
+			stdscr.attroff(curses.color_pair(1))
+			stdscr.attron(curses.color_pair(2))		
+			stdscr.addch(30,0, "#")
+			stdscr.addch(30,1, "#")
+			stdscr.addch(29,0, "#")
+			stdscr.addch(29,1, "#")
+			stdscr.attroff(curses.color_pair(2))
 
 		except curses.ERR:
 			# End of screen reached

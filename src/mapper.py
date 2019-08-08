@@ -72,6 +72,41 @@ class MapObject():
 	def cobblestone(cls, x, y):
 		return cls(x, y, curses.ACS_BULLET, walkable=True, color=139, name="Cobblestone")
 
+	@classmethod
+	def fence_left(cls, x, y):
+		return cls(x, y, curses.ACS_LTEE, walkable=False, color=140, name="Fence Left")
+
+	@classmethod
+	def fence_middle(cls, x, y):
+		return cls(x, y, curses.ACS_PLUS, walkable=False, color=140, name="Fence middle")
+
+	@classmethod
+	def fence_right(cls, x, y):
+		return cls(x, y, curses.ACS_RTEE, walkable=False, color=140, name="Fence middle")
+	@classmethod
+	def grass_fence_left(cls, x, y):
+		return cls(x, y, curses.ACS_LTEE, walkable=False, color=141, name="Grass Fence Left")
+
+	@classmethod
+	def grass_fence_middle(cls, x, y):
+		return cls(x, y, curses.ACS_PLUS, walkable=False, color=141, name="Grass Fence middle")
+
+	@classmethod
+	def grass_fence_right(cls, x, y):
+		return cls(x, y, curses.ACS_RTEE, walkable=False, color=141, name="Grass Fence middle")
+
+	@classmethod
+	def tree_bot_left(cls, x, y):
+		return cls(x, y, "}", walkable=False, color=142, name="Tree Bot Left")
+
+	@classmethod
+	def tree_bot_right(cls, x, y):
+		return cls(x, y, "{", walkable=False, color=142, name="Tree Bot Right")
+
+	@classmethod
+	def tree_top(cls, x, y):
+		return cls(x, y, "#", walkable=False, color=143, name="Tree Top")
+
 
 
 	def draw(self, screen, seen=False):
@@ -165,6 +200,24 @@ class GameMap():
 					self.background2[x][y] = MapObject.castle_wall(x + 1, y + 1)
 				elif self.raw_map[x][y] == "C":
 					self.background2[x][y] = MapObject.cobblestone(x + 1, y + 1)
+				elif self.raw_map[x][y] == "(":
+					self.background2[x][y] = MapObject.fence_left(x + 1, y + 1)
+				elif self.raw_map[x][y] == ")":
+					self.background2[x][y] = MapObject.fence_right(x + 1, y + 1)
+				elif self.raw_map[x][y] == "-":
+					self.background2[x][y] = MapObject.fence_middle(x + 1, y + 1)
+				elif self.raw_map[x][y] == "{":
+					self.background2[x][y] = MapObject.grass_fence_left(x + 1, y + 1)
+				elif self.raw_map[x][y] == "}":
+					self.background2[x][y] = MapObject.grass_fence_right(x + 1, y + 1)
+				elif self.raw_map[x][y] == "_":
+					self.background2[x][y] = MapObject.grass_fence_middle(x + 1, y + 1)
+				elif self.raw_map[x][y] == "#":
+					self.background2[x][y] = MapObject.tree_top(x + 1, y + 1)
+				elif self.raw_map[x][y] == "<":
+					self.background2[x][y] = MapObject.tree_bot_left(x + 1, y + 1)
+				elif self.raw_map[x][y] == ">":
+					self.background2[x][y] = MapObject.tree_bot_right(x + 1, y + 1)
 				else:
 					print(self.raw_map[x][y])
 					print("Could not create map tile from Text")
