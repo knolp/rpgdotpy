@@ -209,11 +209,17 @@ def get_prev(state, command_box):
 
 
 
-
-
-
-
-
+def check_direction(state):
+	if state.player.x == state.player.last_pos[0]:
+		if state.player.y > state.player.last_pos[1]:
+			return "right"
+		else:
+			return "left"
+	else:
+		if state.player.x > state.player.last_pos[0]:
+			return "down"
+		else:
+			return "up"
 
 
 
@@ -228,7 +234,6 @@ def draw_menu(stdscr):
 	cursor_y = 0
 	name = ""
 
-
 	curses.curs_set(0)
 	#curses.cbreak()
 	curses.mousemask(curses.ALL_MOUSE_EVENTS)
@@ -238,6 +243,8 @@ def draw_menu(stdscr):
 
 	last_mouse_x = 0
 	last_mouse_y = 0
+
+	direction = "right"
 
 	path = []
 	closed_path = []
@@ -303,24 +310,28 @@ def draw_menu(stdscr):
 					name = ""
 
 				if k == curses.KEY_DOWN or k == ord("s"):
+					direction = "down"
 					next_direction = state_handler.player.x + 1
 					next_tile = next_direction, state_handler.player.y
 					if state_handler.player.x < 37 and state_handler.check_collision(next_tile):
 						state_handler.player.x = next_direction
 					k = 1
 				elif k == curses.KEY_UP or k == ord("w"):
+					direction = "up"
 					next_direction = state_handler.player.x - 1
 					next_tile = next_direction, state_handler.player.y
 					if state_handler.player.x > 1 and state_handler.check_collision(next_tile):
 						state_handler.player.x = next_direction
 					k = 1
 				elif k == curses.KEY_LEFT or k == ord("a"):
+					direction = "left"
 					next_direction = state_handler.player.y - 1
 					next_tile = state_handler.player.x, next_direction
 					if state_handler.player.y > 1 and state_handler.check_collision(next_tile):
 						state_handler.player.y = next_direction
 					k = 1
 				elif k == curses.KEY_RIGHT or k == ord("d"):
+					direction = "right"
 					next_direction = state_handler.player.y + 1
 					next_tile = state_handler.player.x, next_direction
 					if state_handler.player.y < 96 and state_handler.check_collision(next_tile):
@@ -409,7 +420,6 @@ def draw_menu(stdscr):
 		stdscr.addstr(height, 0, statusbarstr)
 		stdscr.attroff(curses.color_pair(3))
 
-
 		k = stdscr.getch()
 		curses.flushinp()
 
@@ -439,6 +449,16 @@ def draw_menu(stdscr):
 		if k == ord("c") and state_handler.player != False:
 			battlemode = battle.Battle(state_handler, monster.RatKing(), "3")
 			battlemode.play()
+
+		if k == ord("1"):
+			if direction == "up":
+				state_handler.player.x -= 4
+			elif direction == "down":
+				state_handler.player.x += 4
+			elif direction == "left":
+				state_handler.player.y -= 4
+			elif direction == "right":
+				state_handler.player.y += 4
 
 
 
