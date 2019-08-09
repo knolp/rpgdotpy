@@ -74,6 +74,19 @@ def StarterTown_haunted_house_entrance(state):
 
 	state.update_map()
 
+def StarterTown_haunted_house_exit(state):
+	state.player.location = getattr(states, "StarterTown")
+
+	state.player.x = 9
+	state.player.y = 73
+
+	state.update_map()
+
+def StarterTown_haunted_house_hole_entrance(state):
+	state.player.location = getattr(states, "StarterTown_haunted_house_2")
+
+	state.update_map()
+
 
 
 

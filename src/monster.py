@@ -128,7 +128,6 @@ class RatKing(Monster):
         self.buffed_turn = 0
         self.coins = 20
         self.loot = []
-        self.random_loot = []
         self.special_loot = {
             "RatFangNecklace" : 3
         }
@@ -208,8 +207,7 @@ class SkeletonGrunt(Monster):
         self.damage = 2
         self.attack_styles = ["attacks", "claws", "bashes"]
         self.buffed_turn = 0
-        self.loot = []
-        self.random_loot = ["LeatherBoots"]
+        self.loot = ["LeatherBoots"]
         self.special_loot = {
             "Longsword" : 3
         }
@@ -225,7 +223,10 @@ class SkeletonGrunt(Monster):
         pass
 
     def attack(self):
-        pass
+        return {
+            "combat_text" : "hehe",
+            "damage" : 0
+        }
 
 
 if __name__ == "__main__":

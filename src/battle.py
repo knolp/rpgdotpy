@@ -150,17 +150,20 @@ class Battle():
                     selected_item += 1
                     if selected_item >= len(spell_list) - 1:
                         selected_item = len(spell_list) - 1
+                curses.ungetch(curses.KEY_F0)
 
             if k == curses.KEY_UP:
                 if len(spell_list) != 0:
                     selected_item -= 1
                     if selected_item <= 0:
                         selected_item = 0
+                curses.ungetch(curses.KEY_F0)
 
             if k == ord(" "):
                 if len(spell_list) != 0:
                     self.selected_spell = selected_item
                     return self.player.spells.index(spell_list[selected_item])
+                curses.ungetch(curses.KEY_F0)
 
             k = self.screen.getch()
         return "False"
@@ -281,10 +284,13 @@ class Battle():
             if k == curses.KEY_UP:
                 if selected_command != 0:
                     selected_command -= 1
+                curses.ungetch(curses.KEY_F0)
 
             elif k == curses.KEY_DOWN:
                 if selected_command != len(self.commands) - 1:
                     selected_command += 1
+                curses.ungetch(curses.KEY_F0)
+                
 
             elif k == ord(" "):
                 self.turn += 1
@@ -318,6 +324,7 @@ class Battle():
                     self.check_effects()
                     self.check_opponent()
                     self.update_log(["neutral",""])
+                curses.ungetch(curses.KEY_F0)
             
     def loot(self, random_loot):
         k = -1

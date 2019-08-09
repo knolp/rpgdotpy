@@ -229,15 +229,8 @@ def draw_menu(stdscr):
 	name = ""
 
 
-	# Clear and refresh the screen for a blank canvas
-	#stdscr.clear()
-	#stdscr.refresh()
 	curses.curs_set(0)
-	curses.cbreak()
-	curses.nonl()
-	#curses.noecho()
-	#curses.noraw()
-	#curses.halfdelay(1)
+	#curses.cbreak()
 	curses.mousemask(curses.ALL_MOUSE_EVENTS)
 
 	game_box = stdscr.derwin(39,99,0,1)
@@ -250,13 +243,8 @@ def draw_menu(stdscr):
 	closed_path = []
 	open_path = []
 
-	#command_state = states.main_menu(game_box,command_box)
-	#game_state = states.Intro(game_box, command_state)
-	#command_state.commands[0].active = True
-
 	state_handler = StateHandler(game_box, command_box, stdscr)
 
-	# Start colors in curses
 	curses.start_color()
 
 	curses.use_default_colors()
@@ -287,12 +275,11 @@ def draw_menu(stdscr):
 	curses.init_pair(141, 240, 40) #Grass Fence
 	curses.init_pair(142, 136, 40) #Tree Bot
 	curses.init_pair(143, 22, 22) #Tree Top
-	#gamemap = mapper.GameMap("map1.txt", [npc.Human("Niklas", 8, 4)])
 
 	counter = 0
 
-	# Loop where k is the last character pressed
 	while (k != ord('q')):
+		
 
 		stdscr.clear()
 
@@ -353,10 +340,6 @@ def draw_menu(stdscr):
 			if last_mouse_x != 0:
 				state_handler.game_box.addstr(last_mouse_y, last_mouse_x - 1, name)
 
-
-			#Mer snappy events		
-			#state_handler.gamemap.check_events()
-
 		else:
 
 			if k == 9 and is_tab_enabled(state_handler):
@@ -407,11 +390,6 @@ def draw_menu(stdscr):
 			state_handler.game_state.draw()
 			draw_commands(state_handler.command_state, state_handler.command_box)
 
-		#print("gamemap = {}".format(state_handler.gamemap))
-		#print("game_state = {}".format(state_handler.game_state))
-		#print("command_state = {}".format(state_handler.command_state))
-		#print("ingame_menu = {}".format(state_handler.ingame_menu))
-
 		cursor_x = max(0, cursor_x)
 		cursor_x = min(width-1, cursor_x)
 
@@ -425,34 +403,19 @@ def draw_menu(stdscr):
 
 		
 
-		# Declaration of strings
 		statusbarstr = "{} | Mouse: x: {} , y: {} | Pos: {}, {} | {}x{} | Action: {}".format(name,last_mouse_x, last_mouse_y,cursor_x, cursor_y, width, height, state_handler.action)
 
-
-		# Render status bar
 		stdscr.attron(curses.color_pair(3))
 		stdscr.addstr(height, 0, statusbarstr)
 		stdscr.attroff(curses.color_pair(3))
 
 
-		# Print rest of text
-		#state_handler.game_box.move(cursor_y, cursor_x)
-		# Refresh the screen
-		#stdscr.refresh()
-
-
-		# Wait for next input
-		#curses.napms(1)
 		k = stdscr.getch()
 		curses.flushinp()
 
 		if k == curses.KEY_MOUSE:
 			unused_1, last_mouse_x, last_mouse_y,unused_2,unused_3 = curses.getmouse()
 			if last_mouse_x <= 97 and last_mouse_y <= 37 and state_handler.map_screen == True:
-				#state_handler.game_box.addstr(last_mouse_y, last_mouse_x,"?")
-				#path = pathfinding.astar(state_handler.player.location.game_map.background2, (state_handler.player.x, state_handler.player.y), (last_mouse_y, last_mouse_x), state_handler)
-				#if isinstance(path, list) == False:
-				#	path = []
 				for item in state_handler.gamemap.game_map.objects:
 					if item.y == (last_mouse_x - 1) and item.x == last_mouse_y:
 						name = item.name
@@ -474,9 +437,6 @@ def draw_menu(stdscr):
 			inventory.view_spellbook(state_handler.stdscr, state_handler)
 
 		if k == ord("c") and state_handler.player != False:
-			#helper.popup(state_handler.game_box, state_handler, ["Popup text"])
-			#helper.yes_no(state_handler.game_box, state_handler, ["Popup text"])
-			
 			battlemode = battle.Battle(state_handler, monster.RatKing(), "3")
 			battlemode.play()
 

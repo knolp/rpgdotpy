@@ -778,6 +778,9 @@ class StarterTown_house_basement(MapState):
 
 
 class StarterTown_house_basement_hallway(MapState):
+	"""
+		TOP FLOOR, EMPTY ROOM
+	"""
 	name = "Starter Town House Basement Hallway"
 	raw_name = "StarterTown_house_basement_hallway"
 	menu_commands = GameCommands
@@ -827,7 +830,11 @@ class StarterTown_house_basement_hallway(MapState):
 					else:
 						self.state.player.x = 29
 
+
 class StarterTown_haunted_house_1(MapState):
+	"""
+		After falling down the hole
+	"""
 	name = "Haunted House"
 	raw_name = "StarterTown_haunted_house_1"
 	menu_commands = GameCommands
@@ -854,7 +861,52 @@ class StarterTown_haunted_house_1(MapState):
 		pass
 
 	def check_events(self):
+		if self.state.player.x == 24 and self.state.player.y == 47:
+			events.StarterTown_haunted_house_exit(self.state)
+
+		if (self.state.player.x, self.state.player.y) in [(16,45),(16,46),(16,47),(17,44),(17,45),(17,46),(17,47),(17,48),(18,46),(18,47),(18,48)]:
+			events.StarterTown_haunted_house_hole_entrance(self.state)
+
+class StarterTown_haunted_house_2(MapState):
+	"""
+		After Falling down hole
+	"""
+	name = "Haunted House"
+	raw_name = "StarterTown_haunted_house_2"
+	menu_commands = GameCommands
+	objects = []
+	game_map = mapper.GameMap("StarterTown_haunted_house_1.txt", objects)
+
+	def __init__(self, state):
+		super().__init__(state)
+		if state.first_time == True:
+			state.change_map_screen()
+			state.first_time = False
+		objects = [
+			npc.SkeletonGrunt(6,43, self.state)
+		]
+		self.game_map = mapper.GameMap("StarterTown_haunted_house_2.txt", objects)
+		self.menu = GameMenu
+		self.menu_commands = GameCommands
+		self.ingame_menu = IngameMenu
+
+
+	def draw(self):
+		self.game_map.draw_vision(self.state, self.state.game_box)
+
+	def execute(self):
 		pass
+
+	def check_events(self):
+		for item in self.game_map.objects:
+			if self.state.player.x == item.x and self.state.player.y == item.y:
+				result = item.action()
+				if result:
+					self.game_map.objects.remove(item)
+				else:
+					self.state.player.x += 1
+
+
 
 
 class GreenForest(MapState):
