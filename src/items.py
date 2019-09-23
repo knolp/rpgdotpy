@@ -56,7 +56,9 @@ class IronMace(Item):
             if "Stun" not in list_of_effects:
                 opponent.status_effects.append(abilities.Stun(2, opponent.readable_name))
                 return {
-                    "combat_text" : "{}'s heavy weight knocks {} to the ground, causing {} to be stunned".format(self.readable_name, opponent.readable_name, opponent.readable_name)
+                    "combat_text" : [
+                        "{}'s heavy weight knocks {} to the ground".format(self.readable_name, opponent.readable_name),
+                        "causing {} to be stunned".format(opponent.readable_name)] 
                 }
             else:
                 return {
@@ -74,12 +76,18 @@ class Rapier(Item):
         self.damage_type = "Stab"
 
     def effect(self, player, opponent):
+        if "Bleed" in opponent.immune:
+            return {
+                "combat_text" : False
+            }
         if random.randint(1,100) > 70:
             list_of_effects = [effect.type for effect in opponent.status_effects]
             if "Bleed" not in list_of_effects:
                 opponent.status_effects.append(abilities.Bleed(5, 2, opponent.readable_name))
                 return {
-                    "combat_text" : "{}'s pointy tip makes a deep wound and causes {} to start to bleed.".format(self.readable_name, opponent.readable_name)
+                    "combat_text" : [
+                        "{}'s pointy tip makes a deep wound".format(self.readable_name),
+                        "and causes {} to bleed.".format(opponent.readable_name)] 
                 }
         else:
             return {
@@ -97,7 +105,7 @@ class MoonlightSword(Item):
         self.damage_type = "Slash"
 
     def modifier(self, player, opponent):
-        return player.stats["Intelligence"] * 0.3
+        return int(player.stats["Intelligence"] * 0.3)
 
 class RatSmasher(Item):
     def __init__(self):
@@ -205,6 +213,33 @@ class BasementKey(Item):
         self.readable_name = "Basement Key (Osk'Ghar)"
         self.equippable = False
         self.description = "Unlocks the basement door at Osk'Ghar"
+
+class Shovel(Item):
+    def __init__(self):
+        super().__init__("Shovel", False)
+        self.readable_name = "Shovel"
+        self.equippable = False
+        self.description = "Good for digging."
+
+
+
+
+
+
+
+#Crafting Material
+class DeverBerry(Item):
+    def __init__(self):
+        super().__init__("DeverBerry", False)
+        self.readable_name = "Deverberry"
+        self.equippable = False
+        self.description = "A cloudy, white berry. Smells atrocious."
+
+
+
+
+
+
 
 
 

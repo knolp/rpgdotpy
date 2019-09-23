@@ -82,7 +82,20 @@ def draw_RatKing():
 def draw_SkeletonGrunt():
 	return_list = []
 
-	return_list.append("A")
+	return_list.append("             .-.")
+	return_list.append("            (o.o)")
+	return_list.append("             |=|")
+	return_list.append("            __|__")
+	return_list.append("          //.=|=.\\\\")
+	return_list.append("         // .=|=. \\\\")
+	return_list.append("         \\\\ .=|=. //")
+	return_list.append("          \\\\(_=_)//")
+	return_list.append("           (:| |:)")
+	return_list.append("            || ||")
+	return_list.append("            () ()")
+	return_list.append("            || ||")
+	return_list.append("           ==' '==")
+
 
 	return return_list
 

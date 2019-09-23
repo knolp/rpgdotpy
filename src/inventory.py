@@ -131,7 +131,7 @@ def view_inventory(screen, state):
 				screen.attroff(curses.color_pair(color_dict[item.equippable]))
 			else:
 				#screen.attron(curses.color_pair(5))
-				screen.addstr(start, pos, item.readable_name[0:2], curses.A_BOLD)
+				screen.addstr(start, pos, item.readable_name[0:2], curses.A_UNDERLINE)
 				#screen.attroff(curses.color_pair(5))
 			pos += 3
 			if pos == 35:

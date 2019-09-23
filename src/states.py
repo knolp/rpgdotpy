@@ -833,7 +833,7 @@ class StarterTown_house_basement_hallway(MapState):
 
 class StarterTown_haunted_house_1(MapState):
 	"""
-		After falling down the hole
+		Before falling down the hole
 	"""
 	name = "Haunted House"
 	raw_name = "StarterTown_haunted_house_1"
@@ -883,7 +883,8 @@ class StarterTown_haunted_house_2(MapState):
 			state.change_map_screen()
 			state.first_time = False
 		objects = [
-			npc.SkeletonGrunt(6,43, self.state)
+			npc.SkeletonGrunt(6,43, self.state),
+			npc.DeverBerries(6,17, self.state)
 		]
 		self.game_map = mapper.GameMap("StarterTown_haunted_house_2.txt", objects)
 		self.menu = GameMenu
@@ -916,6 +917,7 @@ class GreenForest(MapState):
 	objects = []
 	game_map = mapper.GameMap("GreenForest.txt", objects)
 
+
 	def __init__(self, state):
 		super().__init__(state)
 		if state.first_time == True:
@@ -924,6 +926,7 @@ class GreenForest(MapState):
 		objects = [
 			
 		]
+		self.first_time = True
 		self.game_map = mapper.GameMap("GreenForest.txt", objects)
 		self.menu = GameMenu
 		self.menu_commands = GameCommands
@@ -931,9 +934,7 @@ class GreenForest(MapState):
 
 
 	def draw(self):
-		#self.game_map.draw_vision(self.state, self.state.game_box)
 		self.game_map.draw_map(self.state.game_box)
-		#self.game_map.draw_map_efficient(self.state)
 
 	def execute(self):
 		pass
@@ -941,6 +942,46 @@ class GreenForest(MapState):
 	def check_events(self):
 		if self.state.player.x == 37:
 			events.GreenForest_south(self.state)
+
+		if self.state.player.x == 10 and self.state.player.y == 21:
+			events.GreenForest_brown_bear_inn_entrance(self.state)
+
+
+class BrownBearInn(MapState):
+	name = "Brown Bear Inn"
+	raw_name = "BrownBearInn"
+	menu_commands = GameCommands
+	objects = []
+	game_map = mapper.GameMap("BrownBearInn.txt", objects)
+
+
+	def __init__(self, state):
+		super().__init__(state)
+		if state.first_time == True:
+			state.change_map_screen()
+			state.first_time = False
+		objects = [
+			npc.EvanKripter(19,31),
+			npc.BaldirKragg(19,17),
+			npc.BodvarKragg(23,17),
+			npc.LarsMagnus(23,35)
+		]
+		self.first_time = True
+		self.game_map = mapper.GameMap("BrownBearInn.txt", objects)
+		self.menu = GameMenu
+		self.menu_commands = GameCommands
+		self.ingame_menu = IngameMenu
+
+
+	def draw(self):
+		self.game_map.draw_map(self.state.game_box)
+
+	def execute(self):
+		pass
+
+	def check_events(self):
+		if self.state.player.x == 34 and self.state.player.y == 49:
+			events.BrownBearInn_exit(self.state)
 
 
 			

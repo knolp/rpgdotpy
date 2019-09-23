@@ -111,8 +111,64 @@ class OskGhar(NPC):
 
 	def action(self, screen, state):
 		actions.SpeakOskGhar(screen, state).execute()
-	
 
+
+# The 4 adventurers
+class BaldirKragg(NPC):
+	def __init__(self, x, y):
+		name = "Baldir Kragg"
+		super().__init__(name,x,y,"B")
+		self.original_x = x
+		self.original_y = y
+		self.old_timestamp = int(time.time())
+
+	def turn_action(self):
+		pass
+
+	def action(self, screen, state):
+		actions.SpeakBaldirKragg(screen, state).execute()
+
+class BodvarKragg(NPC):
+	def __init__(self, x, y):
+		name = "Bodvar Kragg"
+		super().__init__(name,x,y,"B")
+		self.original_x = x
+		self.original_y = y
+		self.old_timestamp = int(time.time())
+
+	def turn_action(self):
+		pass
+
+	def action(self, screen, state):
+		actions.SpeakBaldirKragg(screen, state).execute()
+
+class EvanKripter(NPC):
+	def __init__(self, x, y):
+		name = "Evan Kripter"
+		super().__init__(name,x,y,"E")
+		self.original_x = x
+		self.original_y = y
+		self.old_timestamp = int(time.time())
+
+	def turn_action(self):
+		pass
+
+	def action(self, screen, state):
+		actions.SpeakEvanKripter(screen, state).execute()
+	
+class LarsMagnus(NPC):
+	def __init__(self, x, y):
+		name = "Lars Magnus"
+		super().__init__(name,x,y,"L")
+		self.original_x = x
+		self.original_y = y
+		self.old_timestamp = int(time.time())
+
+	def turn_action(self):
+		pass
+
+	def action(self, screen, state):
+		actions.SpeakLarsMagnus(screen, state).execute()
 
 
 
@@ -273,6 +329,22 @@ class BasementChest(Usable):
 
 	def action(self, screen, state):
 		actions.BasementChestOpen(screen, state).execute()
+
+class DeverBerries(Usable):
+	def __init__(self, x, y, state):
+		name = "DeverBerries"
+		self.readable_name = "A patch of deverberries"
+		super().__init__(name,x,y,"%")
+		self.original_x = x
+		self.original_y = y
+		self.screen = state.stdscr
+		self.state = state
+
+	def turn_action(self):
+		pass
+
+	def action(self):
+		actions.DeverBerryPick(self.screen, self.state).execute()
 
 
 

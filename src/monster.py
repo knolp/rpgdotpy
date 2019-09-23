@@ -9,6 +9,7 @@ class Monster():
         self.limbs = {}
         self.has_limbs = True
         self.status_effects = []
+        self.immune = []
 
     
     def generate_loot(self):
@@ -205,28 +206,38 @@ class SkeletonGrunt(Monster):
         self.max_health = 100
         self.health = self.max_health
         self.damage = 2
-        self.attack_styles = ["attacks", "claws", "bashes"]
+        self.immune = ["Bleed"]
+        self.attack_styles = ["bashes his mace at", "swings his mace at"]
         self.buffed_turn = 0
         self.loot = ["LeatherBoots"]
         self.special_loot = {
             "Longsword" : 3
         }
         self.limbs = {
-            "head" : 2,
-            "body" : 1
+            "skull" : 2,
+            "ribcage" : 1,
+            "legs" : 1
         }
+    def __str__(self):
+        return self.name
 
     def melee_attack(self):
-        pass
+        combat_text = []
+
+        melee_damage = random.randint(0,self.damage)
+
+        combat_text.append("{} {} you for {} damage.".format(self.readable_name, random.choice(self.attack_styles), melee_damage))
+
+        return {
+            "combat_text" : combat_text,
+            "damage" : melee_damage
+        }
 
     def special_attack(self):
         pass
 
     def attack(self):
-        return {
-            "combat_text" : "hehe",
-            "damage" : 0
-        }
+        return self.melee_attack()
 
 
 if __name__ == "__main__":

@@ -1,4 +1,4 @@
-import sys,os,time
+import sys,os,time, fileinput
 import curses
 import curses.textpad as textpad
 import curses.ascii as asc
@@ -235,8 +235,9 @@ def draw_menu(stdscr):
 	name = ""
 
 	curses.curs_set(0)
-	#curses.cbreak()
+	curses.cbreak()
 	curses.mousemask(curses.ALL_MOUSE_EVENTS)
+	stdscr.keypad(1)
 
 	game_box = stdscr.derwin(39,99,0,1)
 	command_box = stdscr.derwin(39,48,0,101)
@@ -282,6 +283,8 @@ def draw_menu(stdscr):
 	curses.init_pair(141, 240, 40) #Grass Fence
 	curses.init_pair(142, 136, 40) #Tree Bot
 	curses.init_pair(143, 22, 22) #Tree Top
+	curses.init_pair(144, 220, 94) #Wooden chair
+	curses.init_pair(145, 94, 52) #Beer
 
 	counter = 0
 
@@ -306,10 +309,12 @@ def draw_menu(stdscr):
 			if state_handler.autowalk == False:
 				if k in [curses.KEY_DOWN, curses.KEY_UP, curses.KEY_LEFT, curses.KEY_RIGHT, ord("w"), ord("a"), ord("s"), ord("d")]:
 					state_handler.player.last_pos = state_handler.player.x, state_handler.player.y
-					state_handler.check_tall_grass()
+					#state_handler.check_tall_grass()
 					name = ""
 
 				if k == curses.KEY_DOWN or k == ord("s"):
+					if direction == "down":
+						curses.flushinp()
 					direction = "down"
 					next_direction = state_handler.player.x + 1
 					next_tile = next_direction, state_handler.player.y
@@ -317,6 +322,8 @@ def draw_menu(stdscr):
 						state_handler.player.x = next_direction
 					k = 1
 				elif k == curses.KEY_UP or k == ord("w"):
+					if direction == "up":
+						curses.flushinp()
 					direction = "up"
 					next_direction = state_handler.player.x - 1
 					next_tile = next_direction, state_handler.player.y
@@ -324,6 +331,8 @@ def draw_menu(stdscr):
 						state_handler.player.x = next_direction
 					k = 1
 				elif k == curses.KEY_LEFT or k == ord("a"):
+					if direction == "left":
+						curses.flushinp()
 					direction = "left"
 					next_direction = state_handler.player.y - 1
 					next_tile = state_handler.player.x, next_direction
@@ -331,6 +340,8 @@ def draw_menu(stdscr):
 						state_handler.player.y = next_direction
 					k = 1
 				elif k == curses.KEY_RIGHT or k == ord("d"):
+					if direction == "right":
+						curses.flushinp()
 					direction = "right"
 					next_direction = state_handler.player.y + 1
 					next_tile = state_handler.player.x, next_direction
@@ -421,7 +432,7 @@ def draw_menu(stdscr):
 		stdscr.attroff(curses.color_pair(3))
 
 		k = stdscr.getch()
-		curses.flushinp()
+		#curses.flushinp()
 
 		if k == curses.KEY_MOUSE:
 			unused_1, last_mouse_x, last_mouse_y,unused_2,unused_3 = curses.getmouse()

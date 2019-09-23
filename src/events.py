@@ -98,3 +98,19 @@ def GreenForest_south(state):
 	state.player.x = 2
 
 	state.update_map()
+
+def GreenForest_brown_bear_inn_entrance(state):
+	state.player.location = getattr(states, "BrownBearInn")
+	state.player.x = 33
+	state.player.y = 49
+
+	state.update_map()
+
+
+
+def BrownBearInn_exit(state):
+	state.player.location = getattr(states, "GreenForest")
+	state.player.x = 11
+	state.player.y = 21
+
+	state.update_map()

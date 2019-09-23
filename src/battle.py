@@ -110,7 +110,8 @@ class Battle():
         effect = weapon.effect(self.player, self.opponent)
         if effect:
             if effect["combat_text"] != False:
-                self.update_log(["player", effect["combat_text"]])
+                for item in effect["combat_text"]:
+                    self.update_log(["player", item])
 
 
     def select_spell(self):

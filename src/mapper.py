@@ -107,6 +107,13 @@ class MapObject():
 	def tree_top(cls, x, y):
 		return cls(x, y, "#", walkable=False, color=143, name="Tree Top")
 
+	@classmethod
+	def wooden_chair(cls, x, y):
+		return cls(x, y, curses.ACS_DIAMOND, walkable=True, color=145, name="Wooden Chair")
+
+	@classmethod
+	def beer(cls, x, y):
+		return cls(x, y, curses.ACS_DIAMOND, walkable=False, color=144, name="Glass of beer")
 
 
 	def draw(self, screen, seen=False):
@@ -218,6 +225,10 @@ class GameMap():
 					self.background2[x][y] = MapObject.tree_bot_left(x + 1, y + 1)
 				elif self.raw_map[x][y] == ">":
 					self.background2[x][y] = MapObject.tree_bot_right(x + 1, y + 1)
+				elif self.raw_map[x][y] == "*":
+					self.background2[x][y] = MapObject.wooden_chair(x + 1, y + 1)
+				elif self.raw_map[x][y] == "m":
+					self.background2[x][y] = MapObject.beer(x + 1, y + 1)
 				else:
 					print(self.raw_map[x][y])
 					print("Could not create map tile from Text")
@@ -229,8 +240,8 @@ class GameMap():
 			item.turn_action()
 
 	def draw_map(self, screen):
-		#for item in self.background:
-		#	item.draw(screen)
+		for item in self.background:
+			item.draw(screen)
 		for x in range(len(self.background2)):
 			for y in range(len(self.background2[x])):
 				#print("for x = {}, for y = {} obj_x = {} obj_y = {}".format(x,y,self.background2[x][y].x, self.background2[x][y].y))

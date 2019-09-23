@@ -38,7 +38,7 @@ class Player():
 			setattr(self, key, create_dict[key])
 		self.location = getattr(states, create_dict["location"])
 		self.inventory = [
-			items.BasementKey()
+			items.LeatherBoots()
 		]
 		self.stats = {
 			"Intelligence" : 13,
@@ -59,7 +59,7 @@ class Player():
 			"chest" : items.ChainMail(),
 			"legs" : items.StuddedLegs(),
 			"left_hand" : False,
-			"right_hand": items.IronMace(),
+			"right_hand": items.Rapier(),
 			"boots" : items.LeatherBoots(),
 			"ring_1" : False,
 			"ring_2" : False,
