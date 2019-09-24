@@ -17,6 +17,12 @@ class Flags():
 
         BasementChest = "BasementChest_item_taken_{ITEMNAME}"
 
+    def HauntedHouse(self, map):
+        skeleton_i_korsning = "HauntedHouse_skeleton_1_killed"
+
+        dungeon_door_left_opened = "HauntedHouse_dungeon_door_left_opened"
+        dungeon_door_right_opened = "HauntedHouse_dungeon_door_right_opened"
+
     
     def BrownBearInn(self, map):
         evankripter = {

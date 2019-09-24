@@ -283,8 +283,9 @@ def draw_menu(stdscr):
 	curses.init_pair(141, 240, 40) #Grass Fence
 	curses.init_pair(142, 136, 40) #Tree Bot
 	curses.init_pair(143, 22, 22) #Tree Top
-	curses.init_pair(144, 220, 94) #Wooden chair
-	curses.init_pair(145, 94, 52) #Beer
+	curses.init_pair(144, 220, 94) #Beer
+	curses.init_pair(145, 94, 52) #Wooden Chair
+	curses.init_pair(146, 237, 52) #floor fence
 
 	counter = 0
 

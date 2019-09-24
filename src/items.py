@@ -212,7 +212,14 @@ class BasementKey(Item):
         super().__init__("BasementKey", False)
         self.readable_name = "Basement Key (Osk'Ghar)"
         self.equippable = False
-        self.description = "Unlocks the basement door at Osk'Ghar"
+        self.description = "Unlocks the basement door at Osk'Ghar."
+
+class DungeonKeyHaunted(Item):
+    def __init__(self):
+        super().__init__("DungeonKeyHaunted", False)
+        self.readable_name = "Dungeon key (Haunted House)"
+        self.equippable = False
+        self.description = "Unlocks a dungeon door somewhere."
 
 class Shovel(Item):
     def __init__(self):

@@ -140,7 +140,7 @@ class BodvarKragg(NPC):
 		pass
 
 	def action(self, screen, state):
-		actions.SpeakBaldirKragg(screen, state).execute()
+		actions.SpeakBodvarKragg(screen, state).execute()
 
 class EvanKripter(NPC):
 	def __init__(self, x, y):
@@ -343,7 +343,7 @@ class DeverBerries(Usable):
 	def turn_action(self):
 		pass
 
-	def action(self):
+	def action(self, screen, state):
 		actions.DeverBerryPick(self.screen, self.state).execute()
 
 

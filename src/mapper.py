@@ -114,6 +114,14 @@ class MapObject():
 	@classmethod
 	def beer(cls, x, y):
 		return cls(x, y, curses.ACS_DIAMOND, walkable=False, color=144, name="Glass of beer")
+	
+	@classmethod
+	def floor_fence_middle(cls, x, y):
+		return cls(x, y, curses.ACS_PLUS, walkable=False, color=146, name="Floor Fence Middle")
+	
+	@classmethod
+	def visble_door(cls, x, y):
+		return cls(x, y, "%", walkable=True, color=209, executable=True, name="Door")
 
 
 	def draw(self, screen, seen=False):
@@ -229,6 +237,10 @@ class GameMap():
 					self.background2[x][y] = MapObject.wooden_chair(x + 1, y + 1)
 				elif self.raw_map[x][y] == "m":
 					self.background2[x][y] = MapObject.beer(x + 1, y + 1)
+				elif self.raw_map[x][y] == "+":
+					self.background2[x][y] = MapObject.floor_fence_middle(x + 1, y + 1)
+				elif self.raw_map[x][y] == "d":
+					self.background2[x][y] = MapObject.visble_door(x + 1, y + 1)
 				else:
 					print(self.raw_map[x][y])
 					print("Could not create map tile from Text")

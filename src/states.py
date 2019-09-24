@@ -883,9 +883,12 @@ class StarterTown_haunted_house_2(MapState):
 			state.change_map_screen()
 			state.first_time = False
 		objects = [
-			npc.SkeletonGrunt(6,43, self.state),
+			npc.SkeletonGrunt(12,64, self.state),
+			npc.SkeletonGrunt(18,66, self.state),
 			npc.DeverBerries(6,17, self.state)
 		]
+		if "HauntedHouse_skeleton_1" not in self.state.player.flags:
+			objects.append(npc.SkeletonGrunt(6,43, self.state))
 		self.game_map = mapper.GameMap("StarterTown_haunted_house_2.txt", objects)
 		self.menu = GameMenu
 		self.menu_commands = GameCommands
@@ -900,12 +903,19 @@ class StarterTown_haunted_house_2(MapState):
 
 	def check_events(self):
 		for item in self.game_map.objects:
-			if self.state.player.x == item.x and self.state.player.y == item.y:
+			if self.state.player.x == item.x and self.state.player.y == item.y and item.type == "monster":
 				result = item.action()
 				if result:
 					self.game_map.objects.remove(item)
+					if self.state.player.x == 6 and self.state.player.y == 43:
+						self.state.player.flags.append("HauntedHouse_skeleton_1")
 				else:
 					self.state.player.x += 1
+		if self.state.player.x == 29 and self.state.player.y == 66:
+			events.StarterTown_haunted_house_2_dungeon_door_left(self.state)
+		if self.state.player.x == 29 and self.state.player.y == 82:
+			events.StarterTown_haunted_house_2_dungeon_door_right(self.state)
+
 
 
 
