@@ -169,6 +169,120 @@ def view_inventory(screen, state):
 			if selected_item < 0:
 				selected_item = 0
 
+def view_inventory2(screen, state):
+	invent = state.player.inventory
+	k = -1
+
+	selected_tab = 0
+	tabs = ["Weapons", "Armors", "Key items", "Consumables"]
+	inv_type = ["weapon", "armor", "key", "consumable"]
+
+
+	selected_item = [0,0]
+
+	## TEMP SETTINGS FOR FIRST TIME
+	max_matrix_rows = 11
+	inv_matrix = [[False for i in range(10)] for i in range(10)]
+
+	while k != ord("q"):
+		screen.clear()
+		#print tabs
+		for i in range(len(tabs)):
+			start_offset = i * 10
+			if i == selected_tab:
+				screen.attron(curses.color_pair(145))
+				screen.addstr(0, start_offset, tabs[i])
+				screen.attroff(curses.color_pair(145))
+			else:
+				screen.addstr(0, start_offset, tabs[i])
+
+		show_inv = [x for x in invent if x.type == inv_type[selected_tab]]
+		if len(show_inv) != 0:
+
+			max_matrix_rows = len(show_inv) // 10 + 1
+			inv_matrix = [[False for i in range(10)] for i in range(max_matrix_rows)]
+			for i in range(len(inv_matrix)):
+				for j in range(len(inv_matrix[0])):
+					try:
+						inv_matrix[i][j] = show_inv.pop()
+					except IndexError:
+						break
+			col_counter = 4
+			for i in range(len(inv_matrix)):
+				for j in range(len(inv_matrix[0])):
+					if inv_matrix[i][j] != False:
+						if j == selected_item[1] and i == selected_item[0]:
+							screen.attron(curses.color_pair(145))
+						for idx, item in enumerate([curses.ACS_ULCORNER, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_URCORNER]):
+							screen.addch(col_counter, j * 6 + idx, item)
+						screen.addch(col_counter + 1, j * 6, curses.ACS_VLINE)
+						screen.addstr(col_counter + 1, j * 6 + 1, inv_matrix[i][j].readable_name[:3])
+						screen.addch(col_counter + 1, j * 6 + 4, curses.ACS_VLINE)
+
+						for idx, item in enumerate([curses.ACS_LLCORNER, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_LRCORNER]):
+							screen.addch(col_counter + 2, j * 6 + idx, item)
+						if j == selected_item[1] and i == selected_item[0]:
+							screen.attroff(curses.color_pair(145))
+				col_counter += 4
+
+
+			row_info_start = 70
+			col_info_start = 20
+			current = inv_matrix[selected_item[0]][selected_item[1]]
+
+			#Draw Art
+			art_start = (20 - len(current.art)) // 2
+			for item in current.art:
+				screen.addstr(art_start, row_info_start, item)
+				art_start += 1
+
+			#print item info
+
+			screen.addstr(col_info_start,row_info_start,f"Name: {current.readable_name}")
+			screen.addstr(col_info_start + 1, row_info_start, f"Description: {current.description}")
+			if current.equippable:
+				screen.addstr(col_info_start + 2, row_info_start, f"Attack: {current.attack}")
+				screen.addstr(col_info_start + 3, row_info_start, f"Defence: {current.defence}")
+		else:
+			screen.addstr(4,0,"No items here")
+
+		k = screen.getch()
+		#handle keys
+			#tab = changes tab + 1 (repeat)
+			#arrow-keys = look items
+
+		if k == 9:
+			selected_item = [0,0]
+			selected_tab += 1
+			if selected_tab >= len(tabs):
+				selected_tab = 0
+		
+		elif k == curses.KEY_DOWN:
+			selected_item[0] += 1
+			if selected_item[0] >= max_matrix_rows - 1:
+				selected_item[0] = max_matrix_rows - 1
+				if inv_matrix[selected_item[0]][selected_item[1]] == False:
+					selected_item[1] = 9
+				while inv_matrix[selected_item[0]][selected_item[1]] == False:
+					selected_item[1] -= 1
+
+
+		elif k == curses.KEY_UP:
+			selected_item[0] -= 1
+			if selected_item[0] < 0:
+				selected_item[0] = 0
+
+		elif k == curses.KEY_RIGHT:
+			selected_item[1] += 1
+			if selected_item[1] >= 10:
+				selected_item[1] = 9
+			if inv_matrix[selected_item[0]][selected_item[1]] == False:
+				selected_item[1] -= 1
+
+		elif k == curses.KEY_LEFT:
+			selected_item[1] -= 1
+			if selected_item[1] < 0:
+				selected_item[1] = 0
 
 	
 def select_new_item(slot, inventory, screen, old_item):

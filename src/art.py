@@ -100,6 +100,59 @@ def draw_SkeletonGrunt():
 	return return_list
 
 
+# ITEMS
+def draw_not_implemented():
+	return_list = []
+
+	return_list.append("N")
+	return_list.append("/")
+	return_list.append("A")
+
+	return return_list
+
+def draw_Longsword():
+	return_list = []
+
+	return_list.append("    /")
+	return_list.append("O===[====================-")
+	return_list.append("    \\")
+
+	return return_list
+
+def draw_RatFangNecklace():
+	return_list = []
+
+	return_list.append(" o--o--=:=--o--o")
+	return_list.append("/               \\")
+	return_list.append("o               o")
+	return_list.append(" \             /")
+	return_list.append("  o           o")
+	return_list.append("   \         /")
+	return_list.append("    o       o")
+	return_list.append("     \     /")
+	return_list.append("      o   o")
+	return_list.append("       \_/")
+	return_list.append("      /  \\")
+	return_list.append("      \  /")
+	return_list.append("       \/")
+
+	return return_list
+
+
+def draw_Rapier():
+	return_list = []
+	return_list.append("       |")
+	return_list.append("       /~\\")
+	return_list.append("Oxxxxx|  (|=========================-")
+	return_list.append(" \____/\_/")
+	return_list.append("       |")
+
+	return return_list
+
+
+
+
+
 if __name__ == "__main__":
 
 	for item in draw_RatKing():
