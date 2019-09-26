@@ -11,6 +11,7 @@ class Item():
         self.description = "Description not implemented"
         self.damage_type = False
         self.art = art.draw_not_implemented()
+        self.rarity = "common"
 
 
         self.attack_styles = {
@@ -112,6 +113,7 @@ class MoonlightSword(Item):
         self.defence = 0
         self.description = "A blade that glows ominously in the dark."
         self.damage_type = "Slash"
+        self.rarity = "epic"
 
     def modifier(self, player, opponent):
         return int(player.stats["Intelligence"] * 0.3)
@@ -126,6 +128,7 @@ class RatSmasher(Item):
         self.defence = 0
         self.description = "A wooden plank with a mithril nail poking out at the top."
         self.damage_type = "Stab"
+        self.rarity = "unique"
 
     def modifier(self, player, opponent):
         if opponent.race == "Rat":
@@ -169,6 +172,8 @@ class ChainHelmet(Item):
         self.attack = 0
         self.defence = 2
         self.description = "A hood made out of chainmail, quite heavy to wear."
+        self.art = art.draw_ChainHelmet()
+        self.rarity = "common"
 
 
 #CHEST
@@ -182,6 +187,8 @@ class ChainMail(Item):
         self.attack = 0
         self.defence = 2
         self.description = "A simple chainmail. Starting to get a bit rusty."
+        self.art = art.draw_ChainMail()
+        self.rarity = "rare"
 
 #LEGS
 
@@ -194,6 +201,7 @@ class StuddedLegs(Item):
         self.attack = 0
         self.defence = 2
         self.description = "Leather legs reinforced with iron studs."
+        self.rarity = "epic"
 
 #BOOTS
 
@@ -206,6 +214,7 @@ class LeatherBoots(Item):
         self.attack = 0
         self.defence = 1
         self.description = "Boots made out of cheap leather."
+        self.rarity = "legendary"
 
 #NECKLACES / JEWELERRY
 
@@ -219,6 +228,7 @@ class RatFangNecklace(Item):
         self.defence = 0
         self.description = "A \"necklace\" made out of a large rat fang."
         self.art = art.draw_RatFangNecklace()
+        self.rarity = "unique"
 
 
 

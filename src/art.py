@@ -150,6 +150,43 @@ def draw_Rapier():
 	return return_list
 
 
+def draw_ChainHelmet():
+	return_list = []
+
+	return_list.append("           §§§|§§§")
+	return_list.append("      §§§§§§§§|§§§§§§§§")
+	return_list.append("    §§§§§§§§§§|§§§§§§§§§§")
+	return_list.append("   |||||||||||||||||||||||")
+	return_list.append("   §§§§§   §§§|§§§   §§§§§")
+	return_list.append("   §§§§§   §§§|§§§   §§§§§")
+	return_list.append("   §§§§§§§§§§§|§§§§§§§§§§§")
+	return_list.append("   §§§§§§           §§§§§§")
+	return_list.append("   §§§§§             §§§§§")
+	return_list.append("   §§§§               §§§§")
+	return_list.append("   §§§                 §§§")
+
+	return return_list
+
+
+def draw_ChainMail():
+	return_list = []
+
+	return_list.append("        §§§§§§§§§§§§§§")
+	return_list.append("  §§§§§§§§§§§§§§§§§§§§§§§§§§")
+	return_list.append(" §§§§§§§§§§§§§§§§§§§§§§§§§§§§")
+	return_list.append("§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§")
+	return_list.append("§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§")
+	return_list.append("§§§§  §§§§§§§§§§§§§§§§§§  §§§§")
+	return_list.append("§§§   §§§§§§§§§§§§§§§§§§   §§§")
+	return_list.append("      §§§§§§§§§§§§§§§§§§")
+	return_list.append("      §§§§§§§§§§§§§§§§§§")
+	return_list.append("      §§§§§§§§§§§§§§§§§§")
+	return_list.append("      §§§§§§§§§§§§§§§§§§")
+	return_list.append("      §§§§§§§§§§§§§§§§§§")
+	return_list.append("      §§§§§§§§§§§§§§§§§§")
+	return_list.append("      §§§§§§§§§§§§§§§§§§")
+	return return_list
+
 
 
 

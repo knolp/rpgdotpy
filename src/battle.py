@@ -85,8 +85,25 @@ class Battle():
         limb, modifier = self.opponent.return_limb()
         return limb, modifier
 
+    def unarmed_attack(self):
+        damage = self.player.stats["Strength"]
+        self.update_log(["player", "{} attacks with fists".format(self.player.name)])
+        if self.opponent.has_limbs:
+            limb, modifier = self.limb_damage_modifier()
+            damage = int(damage * modifier)
+            self.update_log(["player", "It hits {} in the {}, dealing {} damage.".format(self.opponent.readable_name, limb, damage)])
+        else:
+            self.update_log(["player", "It hits {} for {} damage.".format(self.opponent.readable_name, limb, damage)])
+        self.opponent.health -= damage
+        recoil = random.randint(0,self.player.stats["Strength"])
+        self.update_log(["player", "The attack bruises {}'s knuckles, dealing {} damage in recoil.".format(self.player.name, recoil)])
+        self.player.health -= recoil
+
     def player_attack(self):
         weapon = self.player.equipment["right_hand"]
+        if weapon == False:
+            self.unarmed_attack()
+            return
         weapon_damage = random.randint(0,weapon.attack)
         strength_modifier = random.randint(int(0.75 * self.player.stats["Strength"]), self.player.stats["Strength"])
         self.update_log(["player", "{} attacks with {}".format(self.player.name, weapon.name)])

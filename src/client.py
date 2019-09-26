@@ -282,10 +282,11 @@ def draw_menu(stdscr):
 	curses.init_pair(140, 237, 242) #Fence
 	curses.init_pair(141, 240, 40) #Grass Fence
 	curses.init_pair(142, 136, 40) #Tree Bot
-	curses.init_pair(143, 22, 22) #Tree Top
+	curses.init_pair(143, 22, 40) #Tree Top
 	curses.init_pair(144, 220, 94) #Beer
 	curses.init_pair(145, 94, 52) #Wooden Chair
 	curses.init_pair(146, 237, 52) #floor fence
+	curses.init_pair(147, curses.COLOR_WHITE, -1)
 
 	counter = 0
 
@@ -461,6 +462,11 @@ def draw_menu(stdscr):
 		if k == ord("c") and state_handler.player != False:
 			battlemode = battle.Battle(state_handler, monster.Rat(), "3")
 			battlemode.play()
+
+		if k == ord("k") and state_handler.player != False:
+			item_list = [items.ChainHelmet, items.LeatherBoots, items.StuddedLegs, items.RatFangNecklace, items.ChainMail]
+			for i in range(150):
+				state_handler.player.inventory.append(random.choice(item_list)())
 
 		if k == ord("1"):
 			if direction == "up":
