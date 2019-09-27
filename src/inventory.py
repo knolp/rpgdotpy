@@ -96,80 +96,6 @@ def open_chest(screen, state, name, items):
 		return []
 
 def view_inventory(screen, state):
-	k = -1
-	selected_item = 0
-
-
-
-
-	if len(state.player.inventory) == 0:
-		helper.popup(screen, state, ["Inventory Empty"])
-		return
-
-	while k != ord("q"):
-		screen.clear()
-		start = 10
-		pos = 5
-		counter = 0
-
-		info_start = 5
-		info_pos = 100
-
-		info_list = ["Head", "Neck", "Chest", "Legs", "Right Hand", "Left Hand", "Boots", "Ring", "other"]
-
-		for idx, item in enumerate(info_list):
-			screen.attron(curses.color_pair(idx + 1))
-			screen.addstr(info_start + idx, info_pos, item)
-			screen.attroff(curses.color_pair(idx + 1))
-
-		
-
-		for item in state.player.inventory:
-			if counter != selected_item:
-				screen.attron(curses.color_pair(color_dict[item.equippable]))
-				screen.addstr(start, pos, item.readable_name[0:2])
-				screen.attroff(curses.color_pair(color_dict[item.equippable]))
-			else:
-				#screen.attron(curses.color_pair(5))
-				screen.addstr(start, pos, item.readable_name[0:2], curses.A_UNDERLINE)
-				#screen.attroff(curses.color_pair(5))
-			pos += 3
-			if pos == 35:
-				pos = 5
-				start += 1
-			counter += 1
-		counter = 0
-		screen.refresh()
-
-		screen.addstr(30,0,"---------------------------------------------------------")
-		screen.attron(curses.color_pair(color_dict[state.player.inventory[selected_item].equippable]))
-		screen.addstr(31,0,"Name: {}".format(state.player.inventory[selected_item].readable_name))
-		screen.attroff(curses.color_pair(color_dict[state.player.inventory[selected_item].equippable]))
-		screen.addstr(32,0,"Description: {}".format(state.player.inventory[selected_item].description))
-		if state.player.inventory[selected_item].equippable != False:
-			screen.addstr(34, 0, "Stats:")
-			screen.addstr(35, 0, "Attack: {}  Defence: {}".format(state.player.inventory[selected_item].attack, state.player.inventory[selected_item].defence))
-
-		k = screen.getch()
-
-		if k == curses.KEY_RIGHT:
-			selected_item += 1
-			if selected_item >= len(state.player.inventory):
-				selected_item = len(state.player.inventory) - 1
-		elif k == curses.KEY_LEFT:
-			selected_item -= 1
-			if selected_item < 0:
-				selected_item = 0
-		elif k == curses.KEY_DOWN:
-			selected_item += 30
-			if selected_item >= len(state.player.inventory):
-				selected_item = len(state.player.inventory) - 1
-		elif k == curses.KEY_UP:
-			selected_item -= 30
-			if selected_item < 0:
-				selected_item = 0
-
-def view_inventory2(screen, state):
 	invent = state.player.inventory
 	k = -1
 
@@ -208,7 +134,6 @@ def view_inventory2(screen, state):
 		if len(show_inv) != 0:
 
 			max_matrix_rows = len(show_inv) // 10 + 1
-			print(f"max = {max_matrix_rows}")
 			inv_matrix = [[False for i in range(10)] for i in range(max_matrix_rows)]
 			for i in range(len(inv_matrix)):
 				for j in range(len(inv_matrix[0])):
@@ -218,7 +143,6 @@ def view_inventory2(screen, state):
 						break
 			col_counter = 4
 			counter = 0
-			print(f"invscroll = {inv_scroll}")
 			for i in range(inv_scroll, len(inv_matrix)):
 				for j in range(len(inv_matrix[0])):
 					if inv_matrix[i][j] != False:
@@ -312,7 +236,37 @@ def view_inventory2(screen, state):
 			if selected_item[1] < 0:
 				selected_item[1] = 0
 
-	
+
+
+def trade(screen, state, npc):
+	screen.clear()
+	k = -1
+
+	p_inventory = state.player.inventory
+	player_view = False
+
+	selected_tab = 0
+	tabs = ["Weapons |", "Armors |", "Key items |", "Consumables |", "Crafting"]
+	inv_type = ["weapon", "armor", "key", "consumable", "crafting"]
+	rarity_colors = {
+		"common" : 147,
+		"rare" : 134,
+		"epic" : 133,
+		"unique" : 135,
+		"legendary" : 136
+	}
+
+	while k != ord("q"):
+		screen.clear()
+	# show player inventory
+	#	show selected item and items to sell
+	# show NPC inventory
+	#	show selected item and items to sell
+	# show information about selected item
+	# show information on sellprice, buy price and gold handed over (<- or ->)
+
+
+
 def select_new_item(slot, inventory, screen, old_item):
 
 	screen.clear()

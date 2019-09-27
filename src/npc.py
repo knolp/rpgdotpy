@@ -99,6 +99,9 @@ class ErolKipman(NPC):
 
 
 class OskGhar(NPC):
+	inventory = [
+		
+	]
 	def __init__(self, x, y):
 		name = "Osk'Ghar the Rock"
 		super().__init__(name,x,y,"O")

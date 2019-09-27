@@ -188,7 +188,24 @@ def draw_ChainMail():
 	return return_list
 
 
+def draw_LeatherBoots():
+	return_list = []
 
+
+	return_list.append(" ###########")
+	return_list.append(" :::::::::::")
+	return_list.append(" ###########")
+	return_list.append(" ###########")
+	return_list.append(" :::::::::::")
+	return_list.append(" ###########")
+	return_list.append(" ###########")
+	return_list.append(" ###########:")
+	return_list.append(' """:########::__')
+	return_list.append(" ###: :##########:_")
+	return_list.append(' ####: ""###########')
+	return_list.append(" ####################")
+
+	return return_list
 
 if __name__ == "__main__":
 

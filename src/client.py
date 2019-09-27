@@ -427,11 +427,11 @@ def draw_menu(stdscr):
 
 		
 
-		statusbarstr = "{} | Mouse: x: {} , y: {} | Pos: {}, {} | {}x{} | Action: {}".format(name,last_mouse_x, last_mouse_y,cursor_x, cursor_y, width, height, state_handler.action)
+		#statusbarstr = "Mouse: x: {} , y: {} | Pos: {}, {} | {}x{} | Action: {}".format(last_mouse_x, last_mouse_y,cursor_x, cursor_y, width, height, state_handler.action)
 
-		stdscr.attron(curses.color_pair(3))
-		stdscr.addstr(height, 0, statusbarstr)
-		stdscr.attroff(curses.color_pair(3))
+		#stdscr.attron(curses.color_pair(3))
+		#stdscr.addstr(height, 0, statusbarstr)
+		#stdscr.attroff(curses.color_pair(3))
 
 		k = stdscr.getch()
 		#curses.flushinp()
@@ -454,7 +454,7 @@ def draw_menu(stdscr):
 			inventory.view_equipment(state_handler.stdscr, state_handler)
 
 		if k == ord("i") and state_handler.player != False:
-			inventory.view_inventory2(state_handler.stdscr, state_handler)
+			inventory.view_inventory(state_handler.stdscr, state_handler)
 
 		if k == ord("p") and state_handler.player != False:
 			inventory.view_spellbook(state_handler.stdscr, state_handler)

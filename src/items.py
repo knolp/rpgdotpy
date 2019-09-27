@@ -214,6 +214,7 @@ class LeatherBoots(Item):
         self.attack = 0
         self.defence = 1
         self.description = "Boots made out of cheap leather."
+        self.art = art.draw_LeatherBoots()
         self.rarity = "legendary"
 
 #NECKLACES / JEWELERRY
