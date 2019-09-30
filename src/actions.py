@@ -226,6 +226,8 @@ class SpeakOskGhar(Action):
 					"Do I look like a merchant to you?",
 					"Actually yes, so implement trading here."
 				]
+				inventory.trade(npc.OskGhar, self.screen, self.state)
+
 			
 			elif answer.lower() in ["door", "locked"]:
 				text = [
@@ -260,7 +262,7 @@ class SpeakOskGhar(Action):
 					]
 				self.state.player.inventory.append(items.BasementKey())
 				continue
-			
+
 
 class SpeakBaldirKragg(Action):
 	def __init__(self, screen, state):
@@ -430,16 +432,6 @@ class SpeakLarsMagnus(Action):
 					text = [
 						"Huh?"
 					]
-
-
-
-
-
-
-
-
-
-
 
 
 

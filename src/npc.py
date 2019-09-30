@@ -4,6 +4,7 @@ import time
 import monster
 import battle
 import actions
+import items
 
 class NPC():
 	def __init__(self, name, x, y, character):
@@ -100,8 +101,11 @@ class ErolKipman(NPC):
 
 class OskGhar(NPC):
 	inventory = [
-		
+		items.Longsword(),
+		items.DeverBerry(),
+		items.BasementKey()
 	]
+	name = "Osk'Ghar the Rock"
 	def __init__(self, x, y):
 		name = "Osk'Ghar the Rock"
 		super().__init__(name,x,y,"O")
