@@ -251,6 +251,8 @@ def trade(npc, screen, state):
 	max_matrix_rows = 11
 	inv_matrix = [[False for i in range(10)] for i in range(10)]
 	inv_scroll = 0
+	max_matrix_rows_npc = 11
+	inv_matrix_npc = [[False for i in range(10)] for i in range(10)]
 	inv_scroll_npc = 0
 
 	selected_tab = 0
@@ -268,7 +270,7 @@ def trade(npc, screen, state):
 
 	while k != ord("q"):
 		screen.clear()
-	# show player inventory
+		# show player inventory
 		start_offset_tabs = 0
 		for i in range(len(tabs)):
 			if i == selected_tab:
@@ -331,26 +333,26 @@ def trade(npc, screen, state):
 		print(show_inv_npc)
 		if len(show_inv_npc) != 0:
 			max_matrix_rows = len(show_inv_npc) // 10 + 1
-			inv_matrix = [[False for i in range(10)] for i in range(max_matrix_rows)]
-			for i in range(len(inv_matrix)):
-				for j in range(len(inv_matrix[0])):
+			inv_matrix_npc = [[False for i in range(10)] for i in range(max_matrix_rows)]
+			for i in range(len(inv_matrix_npc)):
+				for j in range(len(inv_matrix_npc[0])):
 					try:
-						inv_matrix[i][j] = show_inv_npc.pop()
+						inv_matrix_npc[i][j] = show_inv_npc.pop()
 					except IndexError:
 						break
 			col_counter = 4
 			counter = 0
-			for i in range(inv_scroll_npc, len(inv_matrix)):
-				for j in range(len(inv_matrix[0])):
-					if inv_matrix[i][j] != False:
+			for i in range(inv_scroll_npc, len(inv_matrix_npc)):
+				for j in range(len(inv_matrix_npc[0])):
+					if inv_matrix_npc[i][j] != False:
 						if j == selected_item[1] and i == selected_item[0] and player_view == False:
 							screen.attron(curses.color_pair(145))
 						else:
-							screen.attron(curses.color_pair(rarity_colors[inv_matrix[i][j].rarity]))
+							screen.attron(curses.color_pair(rarity_colors[inv_matrix_npc[i][j].rarity]))
 						for idx, item in enumerate([curses.ACS_ULCORNER, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_URCORNER]):
 							screen.addch(col_counter, (j * 6 + idx) + 75, item)
 						screen.addch(col_counter + 1, (j * 6) + 75, curses.ACS_VLINE)
-						screen.addstr(col_counter + 1, (j * 6 + 1) + 75, inv_matrix[i][j].readable_name[:3])
+						screen.addstr(col_counter + 1, (j * 6 + 1) + 75, inv_matrix_npc[i][j].readable_name[:3])
 						screen.addch(col_counter + 1, (j * 6 + 4) + 75, curses.ACS_VLINE)
 
 						for idx, item in enumerate([curses.ACS_LLCORNER, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_LRCORNER]):
@@ -358,7 +360,7 @@ def trade(npc, screen, state):
 						if j == selected_item[1] and i == selected_item[0] and player_view == False:
 							screen.attroff(curses.color_pair(145))
 						else:
-							screen.attroff(curses.color_pair(rarity_colors[inv_matrix[i][j].rarity]))
+							screen.attroff(curses.color_pair(rarity_colors[inv_matrix_npc[i][j].rarity]))
 				col_counter += 4
 				counter += 1
 				if counter == 6:
@@ -397,6 +399,8 @@ def trade(npc, screen, state):
 				#selected_item[0] += 1
 
 		elif k == curses.KEY_RIGHT:
+			print("pressed right")
+			print(selected_item[1])
 			selected_item[1] += 1
 			if selected_item[1] >= 10:
 				selected_item[1] = 9
