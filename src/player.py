@@ -41,7 +41,7 @@ class Player():
 			items.LeatherBoots(),
 			items.DungeonKeyHaunted(),
 		]
-		
+
 		self.stats = {
 			"Intelligence" : 13,
 			"Strength" : 13,
@@ -55,6 +55,7 @@ class Player():
 
 		self.health = 1000
 		self.max_health = 1000
+		self.gold = 100
 
 		self.equipment = {
 			"head" : items.ChainHelmet(),

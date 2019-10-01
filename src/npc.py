@@ -102,11 +102,13 @@ class ErolKipman(NPC):
 class OskGhar(NPC):
 	inventory = [
 		items.Longsword(),
-		items.DeverBerry(),
-		items.BasementKey()
+		items.ChainHelmet(),
+		items.ChainMail(),
+		items.IronMace(),
+		items.Rapier(),
+		items.LeatherBoots(),
+		items.Buckler()
 	]
-	for i in range(107):
-		inventory.append(random.choice([items.ChainHelmet(), items.ChainMail(), items.LeatherBoots()]))
 	name = "Osk'Ghar the Rock"
 	def __init__(self, x, y):
 		name = "Osk'Ghar the Rock"

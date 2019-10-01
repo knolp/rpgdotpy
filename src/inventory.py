@@ -243,6 +243,7 @@ def trade(npc, screen, state):
 	k = -1
 	selected_item = [0,0]
 	selected_item_npc = [0,0]
+	return_to_speak = False
 
 	invent = state.player.inventory
 	npc_invent = npc.inventory
@@ -271,15 +272,55 @@ def trade(npc, screen, state):
 
 	while k != ord("q"):
 		screen.clear()
+		# Make borders
+		#screen.attron(curses.color_pair(133))
+		if player_view:
+			screen.addch(0,7, curses.ACS_ULCORNER)
+			screen.addch(0,67, curses.ACS_URCORNER)
+			screen.addch(27,7, curses.ACS_LLCORNER)
+			screen.addch(27,67, curses.ACS_LRCORNER)
+			screen.addch(0,8,curses.ACS_HLINE)
+			screen.addch(0,66,curses.ACS_HLINE)
+			screen.addch(27,66,curses.ACS_HLINE)
+			screen.addch(27,8,curses.ACS_HLINE)
+			screen.addch(1,7,curses.ACS_VLINE)
+			screen.addch(1,67,curses.ACS_VLINE)
+			screen.addch(26,67,curses.ACS_VLINE)
+			screen.addch(26,7,curses.ACS_VLINE)
+		else:
+			screen.addch(0,79, curses.ACS_ULCORNER)
+			screen.addch(0,142, curses.ACS_URCORNER)
+			screen.addch(27,79, curses.ACS_LLCORNER)
+			screen.addch(27,142, curses.ACS_LRCORNER)
+			screen.addch(0,80,curses.ACS_HLINE)
+			screen.addch(0,141,curses.ACS_HLINE)
+			screen.addch(27,80,curses.ACS_HLINE)
+			screen.addch(27,141,curses.ACS_HLINE)
+			screen.addch(1,79,curses.ACS_VLINE)
+			screen.addch(1,142,curses.ACS_VLINE)
+			screen.addch(26,79,curses.ACS_VLINE)
+			screen.addch(26,142,curses.ACS_VLINE)
+		#screen.attroff(curses.color_pair(133))
+
+		screen.addstr(32, 1, "Current gold:")
+		screen.addstr(33, 1, str(state.player.gold))
+
+		screen.addstr(32, 118, "Q: Quit")
+		screen.addstr(33, 118, "B: Back to chat")
+		screen.addstr(34, 118, "Tab: Change tab")
+		screen.addstr(35, 118, "C: Change view")
+		screen.addstr(36, 118, "Space: Buy / Sell")
+
+
 		# show player inventory
 		start_offset_tabs = 8
 		for i in range(len(tabs)):
 			if i == selected_tab:
 				screen.attron(curses.color_pair(145))
-				screen.addstr(0, start_offset_tabs, tabs[i])
+				screen.addstr(1, start_offset_tabs, tabs[i])
 				screen.attroff(curses.color_pair(145))
 			else:
-				screen.addstr(0, start_offset_tabs, tabs[i])
+				screen.addstr(1, start_offset_tabs, tabs[i])
 			start_offset_tabs += len(tabs[i]) + 1
 
 		show_inv = [x for x in invent if x.type == inv_type[selected_tab]]
@@ -318,18 +359,23 @@ def trade(npc, screen, state):
 				counter += 1
 				if counter == 6:
 					break
+		else:
+			inv_matrix = [[False for i in range(10)] for i in range(max_matrix_rows)]
 
 		#	show selected item and items to sell
 		# 		show selected_item_frame
 		frame_start = 35
 		frame_end = 115
 		screen.addch(28, frame_start, curses.ACS_ULCORNER)
-		screen.addch(39, frame_start, curses.ACS_LLCORNER)
+		screen.addch(38, frame_start, curses.ACS_LLCORNER)
 		for i in range(frame_start + 1, frame_end):
 			screen.addch(28, i, curses.ACS_HLINE)
-			screen.addch(39, i, curses.ACS_HLINE)
+			screen.addch(38, i, curses.ACS_HLINE)
+		for i in range(28 +1, 38):
+			screen.addch(i, frame_start, curses.ACS_VLINE)
+			screen.addch(i, frame_end, curses.ACS_VLINE)
 		screen.addch(28, frame_end, curses.ACS_URCORNER)
-		screen.addch(39, frame_end, curses.ACS_LRCORNER)
+		screen.addch(38, frame_end, curses.ACS_LRCORNER)
 
 		# show NPC inventory
 		#	show selected item and items to buy
@@ -337,10 +383,10 @@ def trade(npc, screen, state):
 		for i in range(len(npc_tabs)):
 			if i == selected_tab_npc:
 				screen.attron(curses.color_pair(145))
-				screen.addstr(0, start_offset_tabs_npc, npc_tabs[i])
+				screen.addstr(1, start_offset_tabs_npc, npc_tabs[i])
 				screen.attroff(curses.color_pair(145))
 			else:
-				screen.addstr(0, start_offset_tabs_npc, npc_tabs[i])
+				screen.addstr(1, start_offset_tabs_npc, npc_tabs[i])
 			start_offset_tabs_npc += len(npc_tabs[i]) + 1
 
 		offset_items_npc = 80
@@ -379,19 +425,53 @@ def trade(npc, screen, state):
 				counter += 1
 				if counter == 6:
 					break
+		else:
+			inv_matrix_npc = [[False for i in range(10)] for i in range(max_matrix_rows_npc)]
 		# show information about selected item
+		if player_view:
+			current = inv_matrix[selected_item[0]][selected_item[1]]
+		else:
+			current = inv_matrix_npc[selected_item_npc[0]][selected_item_npc[1]]
+
+		screen.attron(curses.color_pair(136))
+		if current:
+			screen.addstr(29,frame_start + 1, f"Name: {current.readable_name}")
+			screen.addstr(30, frame_start + 1, f"Description: {current.description}")
+			if current.equippable:
+				screen.addstr(31, frame_start + 1, f"Attack: {current.attack}")
+				screen.addstr(32, frame_start + 1, f"Defence: {current.defence}")
+				if current.effect_description:
+					screen.addstr(33, frame_start + 1, f"Effect: {current.effect_description}")
+			if player_view:
+				screen.addstr(37, frame_start + 1, f"Sell price: {current.sell_price} gold")
+			else:
+				if state.player.gold >= current.buy_price:
+					screen.attron(curses.color_pair(134))
+					screen.addstr(37, frame_start + 1, f"Buy price: {current.buy_price} gold")
+					screen.attroff(curses.color_pair(134))
+				else:
+					screen.attron(curses.color_pair(133))
+					screen.addstr(37, frame_start + 1, f"Buy price: {current.buy_price} gold")
+					screen.attroff(curses.color_pair(133))
+		else:
+			screen.addstr(33,frame_start + 40 - int(len("No item selected") / 2), "No item selected")
+
+		screen.attroff(curses.color_pair(136))
+
 		# show information on sellprice, buy price and gold handed over (<- or ->)
 		k = screen.getch()
 
 		if k == 9:
 			if player_view:
 				selected_item = [0,0]
+				inv_scroll = 0
 				selected_tab += 1
 				if selected_tab >= len(tabs):
 					selected_tab = 0
 			else:
 				selected_item_npc = [0,0]
 				selected_tab_npc += 1
+				inv_scroll_npc = 0
 				if selected_tab_npc >= len(npc_tabs):
 					selected_tab_npc = 0
 		
@@ -459,11 +539,34 @@ def trade(npc, screen, state):
 					selected_item_npc[1] = 0
 
 		elif k == ord(" "):
-			pass
+			if player_view:
+				if not current:
+					continue
+				sell = helper.yes_no(screen, state, [f"Sell {current.readable_name} for {current.sell_price} gold?"])
+				if sell:
+					state.player.gold += current.sell_price
+					state.player.inventory.pop(state.player.inventory.index(current))
 
+			else:
+				if not current:
+					continue
+				if state.player.gold < current.buy_price:
+					helper.popup(screen, state, ["You cannot afford that."])
+					continue
+				buy = helper.yes_no(screen, state, [f"Buy {current.readable_name} for {current.buy_price} gold?"])
+				if buy:
+					state.player.gold -= current.buy_price
+					state.player.inventory.append(current)
+				else:
+					continue
 
-		elif k == ord("k"):
+		elif k == ord("c"):
 			player_view = not player_view
+
+		elif k == ord("b"):
+			return False 
+
+	return True
 
 
 

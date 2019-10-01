@@ -13,6 +13,8 @@ class Item():
         self.art = art.draw_not_implemented()
         self.rarity = "common"
         self.sell_price = 10
+        self.buy_price = int(self.sell_price * 1.5)
+        self.effect_description = False
 
 
         self.attack_styles = {
@@ -57,6 +59,7 @@ class IronMace(Item):
         self.defence = 0
         self.description = "A mace made of iron, great for smashing."
         self.damage_type = "Blunt"
+        self.effect_description = "Has a chance to cause stun."
 
     def effect(self, player, opponent):
         if random.randint(1,100) > 50:
@@ -83,6 +86,7 @@ class Rapier(Item):
         self.defence = 0
         self.description = "A pointy rapier."
         self.damage_type = "Stab"
+        self.effect_description = "Has a chance to cause bleed."
         self.art = art.draw_Rapier()
 
     def effect(self, player, opponent):
@@ -115,6 +119,7 @@ class MoonlightSword(Item):
         self.description = "A blade that glows ominously in the dark."
         self.damage_type = "Slash"
         self.rarity = "epic"
+        self.effect_description = "Scales with intelligence"
 
     def modifier(self, player, opponent):
         return int(player.stats["Intelligence"] * 0.3)
@@ -130,6 +135,7 @@ class RatSmasher(Item):
         self.description = "A wooden plank with a mithril nail poking out at the top."
         self.damage_type = "Stab"
         self.rarity = "unique"
+        self.effect_description = "Deals double damage to rats"
 
     def modifier(self, player, opponent):
         if opponent.race == "Rat":

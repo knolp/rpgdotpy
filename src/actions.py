@@ -144,7 +144,6 @@ class SpeakOskGhar(Action):
 	
 	@add_ungetch
 	def execute(self):
-		print(self.state.player.flags)
 		if "RatMenace_started" in self.state.player.flags:
 			text_state = 2
 			if "RatMenace_rat1_killed" in self.state.player.flags:
@@ -223,10 +222,10 @@ class SpeakOskGhar(Action):
 
 			elif answer.lower() in ["trade", "barter"]:
 				text = [
-					"Do I look like a merchant to you?",
-					"Actually yes, so implement trading here."
+					"Anything else I can do for you?"
 				]
-				inventory.trade(npc.OskGhar, self.screen, self.state)
+				if inventory.trade(npc.OskGhar, self.screen, self.state):
+					return
 
 			
 			elif answer.lower() in ["door", "locked"]:
