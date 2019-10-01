@@ -12,6 +12,7 @@ class Item():
         self.damage_type = False
         self.art = art.draw_not_implemented()
         self.rarity = "common"
+        self.sell_price = 10
 
 
         self.attack_styles = {

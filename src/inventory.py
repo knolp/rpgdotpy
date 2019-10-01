@@ -242,6 +242,7 @@ def trade(npc, screen, state):
 	screen.clear()
 	k = -1
 	selected_item = [0,0]
+	selected_item_npc = [0,0]
 
 	invent = state.player.inventory
 	npc_invent = npc.inventory
@@ -319,6 +320,9 @@ def trade(npc, screen, state):
 
 		#	show selected item and items to sell
 
+
+		# show NPC inventory
+		#	show selected item and items to buy
 		start_offset_tabs_npc = 75
 		for i in range(len(npc_tabs)):
 			if i == selected_tab_npc:
@@ -330,10 +334,9 @@ def trade(npc, screen, state):
 			start_offset_tabs_npc += len(npc_tabs[i]) + 1
 
 		show_inv_npc = [x for x in npc_invent if x.type == inv_type[selected_tab_npc]]
-		print(show_inv_npc)
 		if len(show_inv_npc) != 0:
-			max_matrix_rows = len(show_inv_npc) // 10 + 1
-			inv_matrix_npc = [[False for i in range(10)] for i in range(max_matrix_rows)]
+			max_matrix_rows_npc = len(show_inv_npc) // 10 + 1
+			inv_matrix_npc = [[False for i in range(10)] for i in range(max_matrix_rows_npc)]
 			for i in range(len(inv_matrix_npc)):
 				for j in range(len(inv_matrix_npc[0])):
 					try:
@@ -345,7 +348,7 @@ def trade(npc, screen, state):
 			for i in range(inv_scroll_npc, len(inv_matrix_npc)):
 				for j in range(len(inv_matrix_npc[0])):
 					if inv_matrix_npc[i][j] != False:
-						if j == selected_item[1] and i == selected_item[0] and player_view == False:
+						if j == selected_item_npc[1] and i == selected_item_npc[0] and player_view == False:
 							screen.attron(curses.color_pair(145))
 						else:
 							screen.attron(curses.color_pair(rarity_colors[inv_matrix_npc[i][j].rarity]))
@@ -357,7 +360,7 @@ def trade(npc, screen, state):
 
 						for idx, item in enumerate([curses.ACS_LLCORNER, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_HLINE, curses.ACS_LRCORNER]):
 							screen.addch(col_counter + 2, (j * 6 + idx) + 75, item)
-						if j == selected_item[1] and i == selected_item[0] and player_view == False:
+						if j == selected_item_npc[1] and i == selected_item_npc[0] and player_view == False:
 							screen.attroff(curses.color_pair(145))
 						else:
 							screen.attroff(curses.color_pair(rarity_colors[inv_matrix_npc[i][j].rarity]))
@@ -365,52 +368,88 @@ def trade(npc, screen, state):
 				counter += 1
 				if counter == 6:
 					break
-		# show NPC inventory
-		#	show selected item and items to sell
 		# show information about selected item
 		# show information on sellprice, buy price and gold handed over (<- or ->)
 		k = screen.getch()
 
 		if k == 9:
-			selected_item = [0,0]
-			selected_tab += 1
-			if selected_tab >= len(tabs):
-				selected_tab = 0
+			if player_view:
+				selected_item = [0,0]
+				selected_tab += 1
+				if selected_tab >= len(tabs):
+					selected_tab = 0
+			else:
+				selected_item_npc = [0,0]
+				selected_tab_npc += 1
+				if selected_tab_npc >= len(npc_tabs):
+					selected_tab_npc = 0
 		
 		elif k == curses.KEY_DOWN:
-			selected_item[0] += 1
-			if selected_item[0] >= max_matrix_rows - 1:
-				selected_item[0] = max_matrix_rows - 1
-				if inv_matrix[selected_item[0]][selected_item[1]] == False:
-					selected_item[0] -= 1
-			if selected_item[0] > inv_scroll + 6:
-				inv_scroll += 1
-				if inv_scroll > max_matrix_rows - 6:
-					inv_scroll -= 1
-					selected_item[0] -= 1
+			if player_view:
+				selected_item[0] += 1
+				if selected_item[0] >= max_matrix_rows - 1:
+					selected_item[0] = max_matrix_rows - 1
+					if inv_matrix[selected_item[0]][selected_item[1]] == False:
+						selected_item[0] -= 1
+				if selected_item[0] > inv_scroll + 5:
+					inv_scroll += 1
+					if inv_scroll > max_matrix_rows - 5:
+						inv_scroll -= 1
+						selected_item[0] -= 1
+			else:
+				selected_item_npc[0] += 1
+				if selected_item_npc[0] >= max_matrix_rows_npc - 1:
+					selected_item_npc[0] = max_matrix_rows_npc - 1
+					if inv_matrix_npc[selected_item_npc[0]][selected_item_npc[1]] == False:
+						selected_item_npc[0] -= 1
+				if selected_item_npc[0] > inv_scroll_npc + 5:
+					inv_scroll_npc += 1
+					if inv_scroll_npc > max_matrix_rows_npc - 5:
+						inv_scroll_npc -= 1
+						selected_item_npc[0] -= 1
 
 
 		elif k == curses.KEY_UP:
-			selected_item[0] -= 1
-			if selected_item[0] < 0:
-				selected_item[0] = 0
-			if selected_item[0] < inv_scroll:
-				inv_scroll -= 1
-				#selected_item[0] += 1
+			if player_view:
+				selected_item[0] -= 1
+				if selected_item[0] < 0:
+					selected_item[0] = 0
+				if selected_item[0] < inv_scroll:
+					inv_scroll -= 1
+			else:
+				selected_item_npc[0] -= 1
+				if selected_item_npc[0] < 0:
+					selected_item_npc[0] = 0
+				if selected_item_npc[0] < inv_scroll_npc:
+					inv_scroll_npc -= 1
 
 		elif k == curses.KEY_RIGHT:
-			print("pressed right")
-			print(selected_item[1])
-			selected_item[1] += 1
-			if selected_item[1] >= 10:
-				selected_item[1] = 9
-			if inv_matrix[selected_item[0]][selected_item[1]] == False:
-				selected_item[1] -= 1
+			if player_view:
+				selected_item[1] += 1
+				if selected_item[1] >= 10:
+					selected_item[1] = 9
+				if inv_matrix[selected_item[0]][selected_item[1]] == False:
+					selected_item[1] -= 1
+			else:
+				selected_item_npc[1] += 1
+				if selected_item_npc[1] >= 10:
+					selected_item_npc[1] = 9
+				if inv_matrix_npc[selected_item_npc[0]][selected_item_npc[1]] == False:
+					selected_item_npc[1] -= 1
 
 		elif k == curses.KEY_LEFT:
-			selected_item[1] -= 1
-			if selected_item[1] < 0:
-				selected_item[1] = 0
+			if player_view:
+				selected_item[1] -= 1
+				if selected_item[1] < 0:
+					selected_item[1] = 0
+			else:
+				selected_item_npc[1] -= 1
+				if selected_item_npc[1] < 0:
+					selected_item_npc[1] = 0
+
+
+		elif k == ord("k"):
+			player_view = not player_view
 
 
 
