@@ -71,9 +71,6 @@ class StateHandler():
 		with open("save.json", "r") as f:
 			load_dict = json.load(f)
 
-		for k,v in load_dict.items():
-			print(type(v))
-
 		self.player = player.Player(load_dict)
 		for item in load_dict["inventory"]:
 			#self.player.inventory.append(items.item_dict[item["name"]]())
