@@ -7,6 +7,7 @@ import json
 import math
 import random
 import time
+import locale
 
 import states
 import player
@@ -228,7 +229,7 @@ def check_direction(state):
 
 
 def draw_menu(stdscr):
-
+	locale.setlocale(locale.LC_ALL, "")
 	k = 0
 	cursor_x = 0
 	cursor_y = 0
@@ -291,11 +292,7 @@ def draw_menu(stdscr):
 	counter = 0
 
 	while (k != ord('q')):
-		
-
-		stdscr.clear()
-
-		counter += 1
+		stdscr.erase()
 
 		game_box.border()
 		command_box.border()
@@ -432,6 +429,7 @@ def draw_menu(stdscr):
 		#stdscr.attron(curses.color_pair(3))
 		#stdscr.addstr(height, 0, statusbarstr)
 		#stdscr.attroff(curses.color_pair(3))
+		stdscr.refresh()
 
 		k = stdscr.getch()
 		#curses.flushinp()
@@ -460,7 +458,7 @@ def draw_menu(stdscr):
 			inventory.view_spellbook(state_handler.stdscr, state_handler)
 
 		if k == ord("c") and state_handler.player != False:
-			battlemode = battle.Battle(state_handler, monster.Rat(), "3")
+			battlemode = battle.Battle(state_handler, monster.RatKing(), "3")
 			battlemode.play()
 
 		if k == ord("k") and state_handler.player != False:
@@ -477,8 +475,6 @@ def draw_menu(stdscr):
 				state_handler.player.y -= 4
 			elif direction == "right":
 				state_handler.player.y += 4
-
-
 
 
 def main():

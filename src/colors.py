@@ -1,4 +1,5 @@
 import curses
+import random
 
 def numb_gen():
 	for item in range(255):
@@ -57,9 +58,48 @@ def main(stdscr):
 				stdscr.attroff(curses.color_pair(130))
 
 			if k == ord("t"):
-				for i in range(1,256):
+				print(chr(97))
+				for i in range(220):
 					stdscr.addstr(chr(i))
-			
+
+			if k == ord("l"):
+				lis = [
+					["UL","HW","HW","HW","HW","HW","HW","HW","HW","UR"],
+					["VW","FF","FF","FF","FF","FF","FF","FF","FF","VW"],
+					["VW","FF","FF","FF","FF","FF","FF","FF","FF","VW"],
+					["VW","FF","FF","FF","FF","FF","FF","FF","FF","VW"],
+					["VW","FF","FF","FF","FF","SS","FF","FF","FF","VW"],
+					["VW","FF","FF","FF","FF","FF","FF","FF","FF","VW"],
+					["VW","FF","FF","FF","FF","FF","FF","FF","FF","VW"],
+					["VW","FF","FF","FF","FF","FF","FF","FF","FF","VW"],
+					["VW","FF","FF","FF","FF","FF","FF","FF","FF","VW"],
+					["LL","HW","HW","HW","HW","HW","HW","HW","HW","LR"]
+				]
+
+				for i in range(len(lis)):
+					for j in range(len(lis[0])):
+						if lis[i][j] == "HW":
+							stdscr.addch(i,j,curses.ACS_HLINE)
+						if lis[i][j] == "VW":
+							stdscr.addch(i,j,curses.ACS_VLINE)
+						if lis[i][j] == "UL":
+							stdscr.addch(i,j,curses.ACS_ULCORNER)
+						if lis[i][j] == "UR":
+							stdscr.addch(i,j,curses.ACS_URCORNER)
+						if lis[i][j] == "LL":
+							stdscr.addch(i,j,curses.ACS_LLCORNER)
+						if lis[i][j] == "LR":
+							stdscr.addch(i,j,curses.ACS_LRCORNER)
+						if lis[i][j] == "FF":
+							stdscr.addch(i,j,"=")
+						if lis[i][j] == "SS":
+							stdscr.addch(i,j,">")
+
+			if k == ord("r"):
+				lista = [curses.ACS_URCORNER, curses.ACS_LRCORNER, curses.ACS_LLCORNER, curses.ACS_ULCORNER, curses.ACS_VLINE, curses.ACS_HLINE,curses.ACS_LTEE, curses.ACS_RTEE, curses.ACS_BTEE, curses.ACS_TTEE]
+				for i in range(10):
+					for j in range(50):
+						stdscr.addch(i, j, random.choice(lista))			
 			stdscr.addstr(15,0, "BLINK", curses.A_BLINK)
 			stdscr.addstr(16,0, "BOLD", curses.A_BOLD)
 			stdscr.addstr(17,0, "DIM", curses.A_DIM)

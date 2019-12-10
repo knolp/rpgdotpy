@@ -62,7 +62,7 @@ class Player():
 			"chest" : items.ChainMail(),
 			"legs" : items.StuddedLegs(),
 			"left_hand" : False,
-			"right_hand": items.Rapier(),
+			"right_hand": items.IronMace(),
 			"boots" : items.LeatherBoots(),
 			"ring_1" : False,
 			"ring_2" : False,

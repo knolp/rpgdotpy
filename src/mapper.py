@@ -38,7 +38,7 @@ class MapObject():
 
 	@classmethod
 	def grass(cls, x, y):
-		return cls(x, y, "'", walkable=True, color=42, name="Grass")
+		return cls(x, y, "'", walkable=True, color=[42], name="Grass")
 
 	@classmethod
 	def water(cls, x, y):
@@ -125,6 +125,8 @@ class MapObject():
 
 
 	def draw(self, screen, seen=False):
+		if type(self.color) == list:
+			self.color = random.choice(self.color)
 
 		if self.colors:
 			if self.color == False:
@@ -252,11 +254,10 @@ class GameMap():
 			item.turn_action()
 
 	def draw_map(self, screen):
-		for item in self.background:
-			item.draw(screen)
+		#for item in self.background:
+		#	item.draw(screen)
 		for x in range(len(self.background2)):
 			for y in range(len(self.background2[x])):
-				#print("for x = {}, for y = {} obj_x = {} obj_y = {}".format(x,y,self.background2[x][y].x, self.background2[x][y].y))
 				self.background2[x][y].draw(screen)
 		for item in self.objects:
 			item.draw(screen)
@@ -267,7 +268,6 @@ class GameMap():
 		screen = state.game_box
 		player = state.player
 		for x in range(player.x - 10, player.x + 10):
-			print(x)
 			if x < 0 or x > 38:
 				continue
 			for y in range(player.y - 10, player.y + 10):
@@ -276,8 +276,7 @@ class GameMap():
 				try:
 					self.background2[x][y].draw(screen)
 				except IndexError:
-					print(x, y)
-
+					pass
 	def draw_vision(self, state, screen):
 		self.objects_to_draw = []
 		object_coords = {}

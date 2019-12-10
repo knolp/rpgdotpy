@@ -383,8 +383,6 @@ class SpeakLarsMagnus(Action):
 
 		while True:
 			answer = input_text(self.name, self.vocation, self.screen, text, self.state)
-			print(answer)
-
 			if answer.lower() in ["e", "exit", "bye", "q", "quit"]:
 				return False
 
@@ -487,6 +485,8 @@ class BasementChestOpen(Action):
 
 		])
 		loot = []
+		if "BasementChest_item_taken_Rapier" not in self.state.player.flags:
+			loot.append("Rapier")
 		if "BasementChest_item_taken_MoonlightSword" not in self.state.player.flags:
 			loot.append("MoonlightSword")
 		if answer == True:

@@ -70,6 +70,7 @@ def open_chest(screen, state, name, items):
 		else:
 			screen.addstr(start, offset, "No loot")
 
+		k = screen.getch()
 		if k == curses.KEY_DOWN:
 			if len(loot_list) != 0:
 				selected_item += 1
@@ -87,8 +88,6 @@ def open_chest(screen, state, name, items):
 				taken.append(loot_list[selected_item])
 				player.inventory.append(loot_list.pop(selected_item))
 			curses.ungetch(curses.KEY_F0)
-
-		k = screen.getch()
 	curses.ungetch(curses.KEY_F0)
 	if taken:
 		return taken

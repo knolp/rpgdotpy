@@ -190,3 +190,29 @@ class Burn():
                 "done" : False,
                 "damage" : self.damage
             }
+
+
+class Chilled():
+    def __init__(self, turns, weakness, opponent_name):
+        self.type = "Chill"
+        self.max_turn = turns + 1
+        self.turns_left = turns + 1
+        self.weakness = weakness
+        self.opponent_name = opponent_name
+        self.combat_text = "{} is chilled and takes {} more damage from frost abilities.".format(self.opponent_name, self.damage)
+        self.combat_text_over = "{} is no longer chilled".format(self.opponent_name)
+
+    def execute(self):
+        self.turns_left -= 1
+        if self.turns_left == 0:
+            return {
+                "combat_text" : self.combat_text_over,
+                "done" : True,
+                "damage" : False
+            }
+        else:
+            return {
+                "combat_text" : self.combat_text,
+                "done" : False,
+                "damage" : self.damage
+            }
