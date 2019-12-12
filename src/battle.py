@@ -295,6 +295,11 @@ class Battle():
             for i,v in enumerate(self.opponent.description):
                 self.screen.addstr(opponent_offset + i + 1, 100, v)
             self.screen.addstr(opponent_offset + 5, 100, "HP: {} / {}".format(self.opponent.health, self.opponent.max_health))
+            self.screen.addstr(opponent_offset + 7, 100, "Debuffs:")
+            for i, status in enumerate(self.opponent.status_effects):
+                self.screen.attron(curses.color_pair(status.color))
+                self.screen.addstr(opponent_offset + 8 + i, 120, "{} ({})".format(status.type, status.turns_left))
+                self.screen.attroff(curses.color_pair(status.color))
             
 
             k = self.screen.getch()

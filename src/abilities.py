@@ -119,6 +119,7 @@ class Scorch(Ability):
 class Bleed():
     def __init__(self, turns, damage, opponent_name):
         self.type = "Bleed"
+        self.color = 133
         self.max_turn = turns + 1
         self.turns_left = turns + 1
         self.damage = damage
@@ -144,6 +145,7 @@ class Bleed():
 class Stun():
     def __init__(self, turns, opponent_name):
         self.type = "Stun"
+        self.color = 133
         self.max_turn = turns + 1
         self.turns_left = turns + 1
         self.opponent_name = opponent_name
@@ -169,6 +171,7 @@ class Stun():
 class Burn():
     def __init__(self, turns, damage, opponent_name):
         self.type = "Burn"
+        self.color = 133
         self.max_turn = turns + 1
         self.turns_left = turns + 1
         self.damage = damage
@@ -195,6 +198,7 @@ class Burn():
 class Chilled():
     def __init__(self, turns, weakness, opponent_name):
         self.type = "Chill"
+        self.color = 133
         self.max_turn = turns + 1
         self.turns_left = turns + 1
         self.weakness = weakness
