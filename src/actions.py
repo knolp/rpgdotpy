@@ -489,6 +489,8 @@ class BasementChestOpen(Action):
 			loot.append("Rapier")
 		if "BasementChest_item_taken_MoonlightSword" not in self.state.player.flags:
 			loot.append("MoonlightSword")
+		if "BasementChest_item_taken_ChromaticBlade" not in self.state.player.flags:
+			loot.append("ChromaticBlade")
 		if answer == True:
 			taken = inventory.open_chest(self.screen, self.state, self.readable_name, loot)
 			for item in taken:

@@ -143,6 +143,40 @@ class RatSmasher(Item):
         else:
             return False
 
+
+class ChromaticBlade(Item):
+    def __init__(self):
+        super().__init__("ChromaticBlade", False)
+        self.readable_name = "Chromatic Blade"
+        self.type = "weapon"
+        self.equippable = "right_hand"
+        self.attack = 1
+        self.defence = 0
+        self.description = "A blade flashing with color."
+        self.damage_type = "Stab"
+        self.rarity = "unique"
+        self.effect_description = "Can inflict multiple status effects."
+
+    def effect(self, player, opponent):
+        if random.randint(1,100) > 70:
+            list_of_effects = [effect.type for effect in opponent.status_effects]
+            if "Bleed" not in list_of_effects and "Bleed" not in opponent.immune:
+                opponent.status_effects.append(abilities.Bleed(int(random.randint(1,7)), 2, opponent.readable_name))
+            if "Chill" not in list_of_effects and "Chill" not in opponent.immune:
+                opponent.status_effects.append(abilities.Chill(int(random.randint(1,7)), 2, opponent.readable_name))
+            if "Burn" not in list_of_effects and "Burn" not in opponent.immune:
+                opponent.status_effects.append(abilities.Burn(int(random.randint(1,7)), 2, opponent.readable_name))
+            
+            return {
+                "combat_text" : [
+                    "{} flashes as it hits it target".format(self.readable_name),
+                    "and causes {} to experience a multiple of effects.".format(opponent.readable_name)] 
+            }
+        else:
+            return {
+                "combat_text" : False
+            }
+
 #OFF_HANDS
 class Buckler(Item):
     def __init__(self):

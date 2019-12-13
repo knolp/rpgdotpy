@@ -198,7 +198,7 @@ class SkeletonGrunt(Monster):
         super().__init__("SkeletonGrunt")
         self.race = "Skeleton"
         self.description = [
-            "A skeleton of a human soldier who died."
+            "A skeleton of a human soldier."
         ]
         self.before_name = "a"
         self.readable_name = "Skeleton Grunt"
