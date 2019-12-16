@@ -196,13 +196,16 @@ class LarsMagnus(NPC):
 #Monsters
 
 class Monster():
-	def __init__(self, name, x, y, character, state):
+	def __init__(self, name, x, y, character, state, flag=False, radar=False):
 		self.name = name
 		self.x = x
 		self.y = y
 		self.character = character
 		self.state = state
 		self.type = "monster"
+		self.flag = flag
+		self.radar = radar
+		self.path_to_target = []
 
 	def draw(self, screen):
 		screen.addstr(self.x -1, self.y - 1, "N/A")
@@ -219,8 +222,9 @@ class Monster():
 
 
 class Rat(Monster):
-	def __init__(self, x, y, state):
-		super().__init__("Rat", x, y, "R", state)
+	def __init__(self, x, y, state, flag=False, radar=False):
+		super().__init__("Rat", x, y, "R", state, flag=flag, radar=radar)
+		self.color = 240
 
 	def action(self):
 		result = battle.Battle(self.state, monster.Rat(), "3").play()
@@ -229,13 +233,13 @@ class Rat(Monster):
 	def draw(self, screen):
 		text = "RAT"
 		screen.addstr(self.x - 1, self.y - int((len(text) / 2)), text)
-		screen.attron(curses.color_pair(240))
+		screen.attron(curses.color_pair(self.color))
 		screen.addch(self.x, self.y, self.character)
-		screen.attroff(curses.color_pair(240))
+		screen.attroff(curses.color_pair(self.color))
 
 class RatKing(Monster):
-	def __init__(self, x, y, state):
-		super().__init__("RatKing", x, y, "R", state)
+	def __init__(self, x, y, state, flag=False, radar=False):
+		super().__init__("RatKing", x, y, "R", state, flag=flag, radar=radar)
 
 	def action(self, run=True):
 		result = battle.Battle(self.state, monster.RatKing(), "3", run=run).play()
@@ -251,8 +255,8 @@ class RatKing(Monster):
 
 
 class SkeletonGrunt(Monster):
-	def __init__(self, x, y, state):
-		super().__init__("SkeletonGrunt", x, y, "S", state)
+	def __init__(self, x, y, state, flag=False, radar=False):
+		super().__init__("SkeletonGrunt", x, y, "S", state, flag=flag, radar=radar)
 
 	def action(self, run=False):
 		result = battle.Battle(self.state, monster.SkeletonGrunt(), "3", run=run).play()

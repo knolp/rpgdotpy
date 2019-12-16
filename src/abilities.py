@@ -220,3 +220,25 @@ class Chill():
                 "done" : False,
                 "damage" : 0
             }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#Outerworld spells
+
+class MindVision():
+    def __init__(self, turns):
+        self.turns = turns
+
+    def execute():
+        pass

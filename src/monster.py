@@ -10,7 +10,6 @@ class Monster():
         self.has_limbs = True
         self.status_effects = []
         self.immune = []
-
     
     def generate_loot(self):
         loot_chances = [100,75, 50, 25, 0]

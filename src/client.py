@@ -32,6 +32,7 @@ class MenuObject():
 
 class StateHandler():
 	def __init__(self, game_box, command_box, stdscr):
+		self.curses = curses
 		self.game_box = game_box
 		self.command_box = command_box
 		self.last_game_state = False
@@ -41,7 +42,7 @@ class StateHandler():
 		self.ingame_menu = False
 		self.first_time = True
 		self.stdscr = stdscr
-		self.autowalk = False
+		self.able_to_move = True
 
 		self.action = "None"
 
@@ -305,7 +306,67 @@ def draw_menu(stdscr):
 				k = 1
 				state_handler.change_map_screen()
 				continue
-			if state_handler.autowalk == False:
+
+
+			for item in state_handler.gamemap.game_map.objects:
+					if item.type == "monster":
+						if item.path_to_target or item.radar == False:
+							break
+						#check target
+						target_direction = False
+						breakable = False
+						_directions = {
+							"d" : (1,0),
+							"u" : (-1, 0),
+							"l" : (0,-1),
+							"r" : (0, 1)
+						}
+						original_position = (item.x, item.y)
+
+						for key,v in _directions.items():
+							check = [original_position[0], original_position[1]]
+							for i in range(5):
+								check[0] += v[0]
+								check[1] += v[1]
+
+								if check[0] == state_handler.player.x and check[1] == state_handler.player.y:
+									target_direction = key
+									breakable = True
+									break
+							if breakable:
+								break
+
+						if breakable:
+							state_handler.able_to_move = False
+							check = [original_position[0], original_position[1]]
+							while check[0] != state_handler.player.x or check[1] != state_handler.player.y:
+								item.path_to_target.append((check[0],check[1]))
+								check[0] += _directions[target_direction][0]
+								check[1] += _directions[target_direction][1]
+							item.path_to_target.append((check[0], check[1]))
+							curses.ungetch(curses.KEY_F0)
+
+
+
+			if state_handler.able_to_move == False:
+				curses.halfdelay(2)
+				for item in state_handler.gamemap.game_map.objects:
+					if item.type == "monster" and item.path_to_target:
+						item.color = 133
+						item.x, item.y = item.path_to_target[0]
+						item.path_to_target.pop(0)
+					if item.x == state_handler.player.x and item.y == state_handler.player.y:
+						result = item.action()
+						if result:
+							state_handler.able_to_move = True
+							if item.flag:
+								state_handler.player.flags.append(item.flag)
+							state_handler.gamemap.game_map.objects.remove(item)
+							
+
+
+
+			if state_handler.able_to_move == True:
 				if k in [curses.KEY_DOWN, curses.KEY_UP, curses.KEY_LEFT, curses.KEY_RIGHT, ord("w"), ord("a"), ord("s"), ord("d")]:
 					state_handler.player.last_pos = state_handler.player.x, state_handler.player.y
 					#state_handler.check_tall_grass()
@@ -352,6 +413,52 @@ def draw_menu(stdscr):
 					state_handler.check_npc_action()
 
 			state_handler.gamemap.check_events()
+			for item in state_handler.gamemap.game_map.objects:
+					if item.type == "monster":
+						if item.path_to_target or item.radar == False:
+							break
+						#check target
+						target_direction = False
+						breakable = False
+						_directions = {
+							"d" : (1,0),
+							"u" : (-1, 0),
+							"l" : (0,-1),
+							"r" : (0, 1)
+						}
+						original_position = (item.x, item.y)
+
+						for key,v in _directions.items():
+							check = [original_position[0], original_position[1]]
+							for i in range(5):
+								check[0] += v[0]
+								check[1] += v[1]
+
+								if check[0] == state_handler.player.x and check[1] == state_handler.player.y:
+									target_direction = key
+									breakable = True
+									break
+							if breakable:
+								break
+
+						if breakable:
+							state_handler.able_to_move = False
+							check = [original_position[0], original_position[1]]
+							while check[0] != state_handler.player.x or check[1] != state_handler.player.y:
+								item.path_to_target.append((check[0],check[1]))
+								check[0] += _directions[target_direction][0]
+								check[1] += _directions[target_direction][1]
+							item.path_to_target.append((check[0], check[1]))
+							curses.ungetch(curses.KEY_F0)
+
+			for item in state_handler.gamemap.game_map.objects:
+				if item.type == "monster" and state_handler.player.x == item.x and state_handler.player.y == item.y:
+					result = item.action()
+					if result:
+						if item.flag:
+							state_handler.player.flags.append(item.flag)
+						state_handler.gamemap.game_map.objects.remove(item)
+						curses.cbreak()
 
 
 			state_handler.gamemap.draw()
