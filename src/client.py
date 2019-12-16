@@ -309,45 +309,6 @@ def draw_menu(stdscr):
 				continue
 
 
-			for item in state_handler.gamemap.game_map.objects:
-					if item.type == "monster":
-						if item.path_to_target or item.radar == False:
-							break
-						#check target
-						target_direction = False
-						breakable = False
-						_directions = {
-							"d" : (1,0),
-							"u" : (-1, 0),
-							"l" : (0,-1),
-							"r" : (0, 1)
-						}
-						original_position = (item.x, item.y)
-
-						for key,v in _directions.items():
-							check = [original_position[0], original_position[1]]
-							for i in range(5):
-								check[0] += v[0]
-								check[1] += v[1]
-
-								if check[0] == state_handler.player.x and check[1] == state_handler.player.y:
-									target_direction = key
-									breakable = True
-									break
-							if breakable:
-								break
-
-						if breakable:
-							state_handler.able_to_move = False
-							check = [original_position[0], original_position[1]]
-							while check[0] != state_handler.player.x or check[1] != state_handler.player.y:
-								item.path_to_target.append((check[0],check[1]))
-								check[0] += _directions[target_direction][0]
-								check[1] += _directions[target_direction][1]
-							item.path_to_target.append((check[0], check[1]))
-							curses.ungetch(curses.KEY_F0)
-
-
 
 			if state_handler.able_to_move == False:
 				curses.halfdelay(2)
@@ -590,8 +551,7 @@ def draw_menu(stdscr):
 				state_handler.player.y += 4
 
 		if k == ord("2"):
-			owspell = abilities.MindVision()
-			owspell.execute(state_handler.player)
+			state_handler.player.hotkeys["2"].execute(state_handler.player)
 
 
 def main():

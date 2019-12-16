@@ -41,6 +41,14 @@ class Player():
 			items.LeatherBoots(),
 			items.DungeonKeyHaunted(),
 		]
+		self.hotkeys = {
+			"1" : False,
+			"2" : abilities.MindVision(),
+			"3" : False,
+			"4" : False,
+			"5" : False,
+			"6" : False,
+		}
 
 		self.stats = {
 			"Intelligence" : 13,
