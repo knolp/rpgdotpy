@@ -27,17 +27,18 @@ class NPC():
 
 
 class Usable():
-	def __init__(self, name, x, y, character):
+	def __init__(self, name, x, y, character, color=142):
 		self.name = name
 		self.x = x
 		self.y = y
 		self.character = character
 		self.type = "usable"
+		self.color = color
 
 	def draw(self, screen):
-		screen.attron(curses.color_pair(142))
+		screen.attron(curses.color_pair(self.color))
 		screen.addch(self.x, self.y, self.character)
-		screen.attroff(curses.color_pair(142))
+		screen.attroff(curses.color_pair(self.color))
 
 	def turn_action(self):
 		pass
@@ -205,13 +206,14 @@ class Monster():
 		self.type = "monster"
 		self.flag = flag
 		self.radar = radar
+		self.color = 240
 		self.path_to_target = []
 
 	def draw(self, screen):
 		screen.addstr(self.x -1, self.y - 1, "N/A")
-		screen.attron(curses.color_pair(240))
+		screen.attron(curses.color_pair(self.color))
 		screen.addch(self.x, self.y, self.character)
-		screen.attroff(curses.color_pair(240))
+		screen.attroff(curses.color_pair(self.color))
 
 	def turn_action(self):
 		pass
@@ -224,7 +226,6 @@ class Monster():
 class Rat(Monster):
 	def __init__(self, x, y, state, flag=False, radar=False):
 		super().__init__("Rat", x, y, "R", state, flag=flag, radar=radar)
-		self.color = 240
 
 	def action(self):
 		result = battle.Battle(self.state, monster.Rat(), "3").play()
@@ -248,9 +249,9 @@ class RatKing(Monster):
 	def draw(self, screen):
 		text = "RATKING"
 		screen.addstr(self.x - 1, self.y - int((len(text) / 2)), text)
-		screen.attron(curses.color_pair(240))
+		screen.attron(curses.color_pair(self.color))
 		screen.addch(self.x, self.y, self.character)
-		screen.attroff(curses.color_pair(240))
+		screen.attroff(curses.color_pair(self.color))
 
 
 
@@ -265,9 +266,9 @@ class SkeletonGrunt(Monster):
 	def draw(self, screen):
 		text = "SKG"
 		screen.addstr(self.x - 1, self.y - int((len(text) / 2)), text)
-		screen.attron(curses.color_pair(240))
+		screen.attron(curses.color_pair(self.color))
 		screen.addch(self.x, self.y, self.character)
-		screen.attroff(curses.color_pair(240))
+		screen.attroff(curses.color_pair(self.color))
 
 
 
@@ -349,7 +350,7 @@ class DeverBerries(Usable):
 	def __init__(self, x, y, state):
 		name = "DeverBerries"
 		self.readable_name = "A patch of deverberries"
-		super().__init__(name,x,y,"%")
+		super().__init__(name,x,y,"%",color=147)
 		self.original_x = x
 		self.original_y = y
 		self.screen = state.stdscr

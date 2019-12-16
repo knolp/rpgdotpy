@@ -69,6 +69,11 @@ class Player():
 			"neck" : False
 		}
 
+
+
+		#Spellstuff
+		self.mindvision = 0
+
 	def draw(self, screen):
 		screen.addstr(self.x, self.y, "@")
 

@@ -905,17 +905,6 @@ class StarterTown_haunted_house_2(MapState):
         pass
 
     def check_events(self):
-        #for item in self.game_map.objects:
-        #    if self.state.player.x == item.x and self.state.player.y == item.y and item.type == "monster":
-        #        result = item.action()
-        #        print(result)
-        #        if result:
-        #            self.game_map.objects.remove(item)
-        #            if self.state.player.x == 6 and self.state.player.y == 43:
-        #                self.state.player.flags.append("HauntedHouse_skeleton_1")
-        #        else:
-        #            self.state.player.x += 1
-
         if self.state.player.x == 29 and self.state.player.y == 66:
             events.StarterTown_haunted_house_2_dungeon_door_left(self.state)
         if self.state.player.x == 29 and self.state.player.y == 82:

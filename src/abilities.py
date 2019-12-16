@@ -237,8 +237,20 @@ class Chill():
 #Outerworld spells
 
 class MindVision():
-    def __init__(self, turns):
-        self.turns = turns
+    def __init__(self):
+        self.name = "MindVision"
+        self.readable_name = "Mind Vision"
+        self.description = "Feel the presence of enemies in the dark for a couple of turns."
 
-    def execute():
-        pass
+    def execute(self, player):
+        player.mindvision = player.stats["Intelligence"] + player.stats["Attunement"]
+
+
+class Teleport():
+    def __init__(self):
+        self.name = "Teleport"
+        self.readable_name = "Teleport"
+        self.description = "Teleport a few steps in the direction you are facing."
+
+    def execute(self, player):
+        print("Must be implemented")

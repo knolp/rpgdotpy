@@ -21,6 +21,7 @@ import battle
 import monster
 import pathfinding
 import pathfinding2
+import abilities
 
 class MenuObject():
 	def __init__(self, x, y, title):
@@ -464,6 +465,11 @@ def draw_menu(stdscr):
 			state_handler.gamemap.draw()
 			draw_commands(state_handler.ingame_menu, state_handler.command_box)
 			state_handler.player.draw(game_box)
+			print(state_handler.player.mindvision)
+			if state_handler.player.mindvision:
+				state_handler.player.mindvision -= 1
+				for item in state_handler.gamemap.game_map.objects:
+					item.draw(game_box)
 
 			if last_mouse_x != 0:
 				state_handler.game_box.addstr(last_mouse_y, last_mouse_x - 1, name)
@@ -582,6 +588,10 @@ def draw_menu(stdscr):
 				state_handler.player.y -= 4
 			elif direction == "right":
 				state_handler.player.y += 4
+
+		if k == ord("2"):
+			owspell = abilities.MindVision()
+			owspell.execute(state_handler.player)
 
 
 def main():
