@@ -341,7 +341,7 @@ class SpeakEvanKripter(Action):
 				return False
 			elif answer.lower() in ["brew", "potion", "wake up", "wakeup", "wake", "elven brew"]:
 				text = [
-					"Ah yes, I spoke of the Adr'al brew.",
+					"Ah yes, I spoke of the [Adr'al brew].",
 					"",
 					"If you can get me some [deverberries] I am happy to make it for you.",
 					"Can be difficult and dangerous to find around here though."
@@ -351,6 +351,17 @@ class SpeakEvanKripter(Action):
 					"[Deverberries] can usually be found near the burial sites of the dead",
 					"They grow exceptionally often where necromancy or dark arts have been performed."
 				]
+
+			elif answer.lower() in ["ad'ral brew", "adral brew"]:
+				text = [
+					"The Ad'ral brew is a known elven concoction that has been proven",
+					"to be a great wake up cure.",
+					"",
+					"[Deverberry] juice, some [Barbura] leaves and water.",
+					""
+				]
+				if self.state.player.stats["Alchemy"] > 4:
+					text.append("I'll be happy to share the [formula] with you.")
 
 			else:
 					text = [
@@ -395,7 +406,7 @@ class SpeakLarsMagnus(Action):
 						"You should talk to [Evan Kripter].",
 						"He spoke of some elven brew that might help before you came in"
 					]
-			elif answer.lower() == "dwarf brothers":
+			elif answer.lower() in ["dwarf brothers", "brothers", "dwarven brothers"]:
 				text = [
 					"Ah yes, the lovely gentlement at the other end of the table.",
 					"",
@@ -410,20 +421,21 @@ class SpeakLarsMagnus(Action):
 				]
 
 			elif answer.lower() in ["quests", "quest"]:
-				text = [
+				if "WakeUpCall_started" in self.state.player.flags:
+					text = [
+						"We still need to wake up these dwarves before we head out.",
+						"Let me know if you got any potions or brews"
+					]
+				else:
+					text = [
 					"Unfortunately we have no quest for you.",
 					"",
 					"We are actually heading on our own quest, to a cave of necromancers up north.",
 					"As soon as we can get these two [Dwarf brothers] to wake up that is.",
 					"",
 					"Do you think you could help us out with that?"
-				]
-				if "WakeUpCall_started" in self.state.player.flags:
-					text = [
-						"We still need to wake up these dwarves before we head out.",
-						"Let me know if you got any potions or brews"
 					]
-				text_state = 1
+					text_state = 1
 
 			else:
 					text = [

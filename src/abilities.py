@@ -254,3 +254,10 @@ class Teleport():
 
     def execute(self, player):
         print("Must be implemented")
+
+
+class HomeTeleport():
+    def __init__(self):
+        self.name = "HomeTeleport"
+        self.readable_name = "Home Teleport"
+        self.description = "Teleport to your home."

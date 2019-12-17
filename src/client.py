@@ -99,6 +99,10 @@ class StateHandler():
 			temp_spellbook_list.append(helper.get_spell(item["name"])())
 		self.player.spellbook = temp_spellbook_list
 
+		for k,v in load_dict["hotkeys"].items():
+			if v != False:
+				self.player.hotkeys[k] = helper.get_spell(v["name"])()
+
 	def save_player(self):
 		params = {}
 
@@ -126,6 +130,11 @@ class StateHandler():
 			if k == "spellbook":
 				for i in range(len(params[k])):
 					params[k][i] = params[k][i].__dict__
+			
+			if k == "hotkeys":
+				for key, value in params[k].items():
+					if params[k][key] != False:
+						params[k][key] = value.__dict__
 
 		with open("save.json", "w") as f:
 			json.dump(params,f)
@@ -426,7 +435,6 @@ def draw_menu(stdscr):
 			state_handler.gamemap.draw()
 			draw_commands(state_handler.ingame_menu, state_handler.command_box)
 			state_handler.player.draw(game_box)
-			print(state_handler.player.mindvision)
 			if state_handler.player.mindvision:
 				state_handler.player.mindvision -= 1
 				for item in state_handler.gamemap.game_map.objects:
