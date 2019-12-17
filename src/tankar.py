@@ -26,7 +26,7 @@ class Flags():
     
     def BrownBearInn(self, map):
         evankripter = {
-            "EvanKripter_met" = "har träffat evan kripter i brown bear inn"
+            "EvanKripter_met" = "har träffat Evan Kripter i brown bear inn"
         }
         larsmagnus = {
             "LarsMagnus_met" = "har träffat Lars Magnus i brown bear inn"
@@ -52,6 +52,7 @@ class HurBattleSkaFungera():
         sen = "lägga på multipliers"
         multipliers = {
             "limbs" : "typ om man träffar huvudet, definieras i monster.py per opponent",
+            "weapon-type" : "t.ex stab = pierce armor, slash = ???, blunt = mer limb modifier"
             "critical strike" : "kolla om man crittar helt enkelt",
             "buffs" : "typ battleroars eller lightning-infused blade eller vad som helst",
             "debuffs" : "effekt från opponents",
@@ -74,5 +75,7 @@ class PlayerHousing():
             "säng" : "kanske ger regenbuff eller recover HP eller liknande",
             "andra crafting-saker" : "Typ leatherworking eller göra pilar eller vad som",
             "egen levelup service-grej" : "Slippa gå till altars för att levla upp",
-            "altars" : "attuna med sin gud i hemmet, ge offergåvor eller något"
+            "altars" : "attuna med sin gud i hemmet, ge offergåvor eller något",
+            "farming-beds" : "kunna odla herbs",
+            "make-a-spell" : "hitta runstenar man kan kombinera till spells, typ 1x AoE, 2x Fire = Great Fireball"
         }
