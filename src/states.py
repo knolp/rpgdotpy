@@ -947,11 +947,37 @@ class GreenForest(MapState):
         if self.state.player.x == 37:
             events.GreenForest_south(self.state)
 
+        # BROWN BEAR INN
+        
         if self.state.player.x == 10 and self.state.player.y == 21:
             events.GreenForest_brown_bear_inn_entrance(self.state)
 
+        if self.state.player.x == 10 and self.state.player.y == 22:
+            helper.popup(self.state.stdscr, self.state, [
+                "BROWN BEAR INN",
+                "",
+                "Come inside and have a drink or rent a room for the night"
+                ])
+            self.state.player.x, self.state.player.y = self.state.player.last_pos
+
+        # HALL OF JUSTICE
+
         if self.state.player.x == 14 and self.state.player.y in [72,73]:
             events.GreenForest_hall_of_justice_entrance(self.state)
+        
+        if self.state.player.x == 14 and self.state.player.y == 74:
+            helper.popup(self.state.stdscr, self.state, [
+                "Hall of Justice",
+                "",
+                "For all your goverment needs."
+                ])
+            self.state.player.x, self.state.player.y = self.state.player.last_pos
+
+
+        # PLAYER HOUSE
+
+
+        # TANNER
 
 
 class BrownBearInn(MapState):
@@ -1005,7 +1031,7 @@ class HallOfJustice(MapState):
             state.change_map_screen()
             state.first_time = False
         objects = [
-
+            npc.BeccaLithe(21,17)
         ]
         self.first_time = True
         self.game_map = mapper.GameMap("HallOfJustice.txt", objects)
@@ -1023,6 +1049,12 @@ class HallOfJustice(MapState):
     def check_events(self):
         if self.state.player.x == 34 and self.state.player.y == 48:
             events.HallOfJustice_exit(self.state)
+
+        if self.state.player.x in [20,21,22,23] and self.state.player.y == 15 and self.state.check_action:
+            for item in self.game_map.objects:
+                print(item.name)
+                if item.name == "Becca Lithe":
+                    item.action(self.state.game_box, self.state)
 
 
 

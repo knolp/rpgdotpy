@@ -184,6 +184,24 @@ class LarsMagnus(NPC):
 
 
 
+# HALL OF JUSTICE
+
+class BeccaLithe(NPC):
+	def __init__(self, x, y):
+		name = "Becca Lithe"
+		super().__init__(name,x,y,"B")
+		self.original_x = x
+		self.original_y = y
+		self.old_timestamp = int(time.time())
+
+	def turn_action(self):
+		pass
+
+	def action(self, screen, state):
+		actions.SpeakBeccaLithe(screen, state).execute()
+
+
+
 
 
 

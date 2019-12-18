@@ -301,6 +301,14 @@ class Shovel(Item):
         self.equippable = False
         self.description = "Good for digging."
 
+class StarterTownHouseKey(Item):
+    def __init__(self):
+        super().__init__("StarterTownHouseKey", False)
+        self.readable_name = "House Key (Starter Town)"
+        self.type = "key"
+        self.equippable = False
+        self.description = "Unlocks the front door at the house in Starter Town"
+
 
 
 

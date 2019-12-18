@@ -33,6 +33,7 @@ class MenuObject():
 
 class StateHandler():
 	def __init__(self, game_box, command_box, stdscr):
+		self.check_action = False
 		self.curses = curses
 		self.game_box = game_box
 		self.command_box = command_box
@@ -381,7 +382,13 @@ def draw_menu(stdscr):
 					k = 1
 
 				elif k == ord(" "):
+					state_handler.check_action = True
 					state_handler.check_npc_action()
+
+				if k != ord(" "):
+					#Check for when you are not on top of NPCS, so I can define actions in states.py
+					#for example over countertops at Hall of justice or shops
+					state_handler.check_action = False
 
 			state_handler.gamemap.check_events()
 			for item in state_handler.gamemap.game_map.objects:

@@ -444,7 +444,92 @@ class SpeakLarsMagnus(Action):
 
 
 
+class SpeakBeccaLithe(Action):
+	def __init__(self, screen, state):
+		super().__init__(screen, state, "Speak")
+		self.name = "Becca Lithe"
+		self.vocation = "Human Estate Agent"
+		self.house_price = 1300
+	
+	@add_ungetch
+	def execute(self):
+		#0 = No house bought, not any yes/no so far
+		#1 = answer yes/no to buying house
+		text_state = 0
+		if "BeccaLithe_met" not in self.state.player.flags:
+			text = [
+				"Hello there, my name is Becca!",
+				"",
+				"Are you new in town and looking to buy a [house]?",
+				"",
+				"If so, you are in luck, a new one just came on the market!"
+			]
+			self.state.player.flags.append("BeccaLithe_met")
+		elif "StarterTown_house_bought" not in self.state.player.flags:
+			text = [
+				"hello again!",
+				"",
+				"Let me know if you are interested in buying a [house]"
+			]
+		else:
+			text = [
+				"Hello again!",
+				"",
+				"Let me know if you want to [upgrade] your house."
+			]
+		
+		while True:
+			answer = input_text(self.name, self.vocation, self.screen, text, self.state)
+			if answer.lower() in ["e", "exit", "bye", "q", "quit"]:
+				return False
+			
+			if answer.lower() in ["yes", "y"] and text_state == 1:
+				if self.state.player.gold >= self.house_price:
+					self.state.player.gold -= self.house_price
+					self.state.player.flags.append("StarterTown_house_bought")
+					self.state.player.inventory.append(items.StarterTownHouseKey())
+					text = [
+						"Great!",
+						"",
+						"Here are the keys",
+						"",
+						"			[House Key] added to inventory.",
+						"",
+						"Let me know if you want to purchase [upgrades] as well"
+					]
+				else:
+					text = [
+						"Hmm, it seems you are unable to afford it.",
+						"",
+						"Since you seem interested I will hold it for you",
+						"until you can afford it."
+					]
+				text_state = 0
+			elif answer.lower() in ["no", "n"] and text_state == 1:
+				text = [
+					"Maybe another time.",
+					"",
+					"Feel free to come back if you change your mind."
+				]
+				text_state = 0
 
+			elif answer.lower() in ["house", "home"]:
+				if "StarterTown_house_bought" not in self.state.player.flags:
+					text = [
+						"Glad to hear you are interested!",
+						"",
+						"The house is located right here in town, south of the Inn",
+						"and next to the tanner, Mr Burton.",
+						"",
+						f"The price is [{self.house_price} gold coins]."
+						"",
+						"Would you like to buy it?"
+					]
+				text_state = 1
+			else:
+				text = [
+					"I do not know what that means."
+				]
 
 # Objects
 

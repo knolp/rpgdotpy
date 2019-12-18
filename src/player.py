@@ -63,7 +63,7 @@ class Player():
 
 		self.health = 1000
 		self.max_health = 1000
-		self.gold = 100
+		self.gold = 10000
 
 		self.equipment = {
 			"head" : items.ChainHelmet(),
