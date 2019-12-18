@@ -300,6 +300,7 @@ def draw_menu(stdscr):
 	curses.init_pair(145, 94, 52) #Wooden Chair
 	curses.init_pair(146, 237, 52) #floor fence
 	curses.init_pair(147, curses.COLOR_WHITE, -1)
+	curses.init_pair(148, curses.COLOR_YELLOW, 238)
 
 	counter = 0
 

@@ -125,7 +125,11 @@ class MapObject():
 
 	@classmethod
 	def under_wall(cls, x, y):
-		return cls(x, y, curses.ACS_CKBOARD, walkable=False, color=101, name="Under Wall")
+		return cls(x, y, curses.ACS_BOARD, walkable=False, color=240, name="Wall")
+
+	@classmethod
+	def under_wall_torch(cls, x, y):
+		return cls(x,y, curses.ACS_DEGREE, walkable=False, color=148, name="Wall Torch")
 
 	@classmethod
 	def sign(cls,x,y):
@@ -253,6 +257,8 @@ class GameMap():
 					self.background2[x][y] = MapObject.visble_door(x + 1, y + 1)
 				elif self.raw_map[x][y] == "U":
 					self.background2[x][y] = MapObject.under_wall(x + 1, y + 1)
+				elif self.raw_map[x][y] == "u":
+					self.background2[x][y] = MapObject.under_wall_torch(x + 1, y + 1)
 				elif self.raw_map[x][y] == "s":
 					self.background2[x][y] = MapObject.sign(x + 1, y + 1)
 				else:

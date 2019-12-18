@@ -356,8 +356,11 @@ class SpeakEvanKripter(Action):
 				text = [
 					"The Ad'ral brew is a known elven concoction that has been proven",
 					"to be a great wake up cure.",
+					"It consists of,",
 					"",
-					"[Deverberry] juice, some [Barbura] leaves and water.",
+					"[Deverberry] juice",
+					"[Barbura] leaves",
+					"and some water, basic stuff.",
 					""
 				]
 				if self.state.player.stats["Alchemy"] > 4:

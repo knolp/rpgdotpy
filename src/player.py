@@ -56,7 +56,7 @@ class Player():
 			"Charisma" : 13,
 			"Agility" : 13,
 			"Attunement" : 13,
-			"Alchemy" : 3
+			"Alchemy" : 13
 		}
 
 		self.last_pos = False
