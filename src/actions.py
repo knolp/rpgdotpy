@@ -406,7 +406,7 @@ class SpeakLarsMagnus(Action):
 						"You should talk to [Evan Kripter].",
 						"He spoke of some elven brew that might help before you came in"
 					]
-			elif answer.lower() in ["dwarf brothers", "brothers", "dwarven brothers"]:
+			elif answer.lower() in ["dwarf brothers", "brothers", "dwarven brothers", "dwarves"]:
 				text = [
 					"Ah yes, the lovely gentlement at the other end of the table.",
 					"",

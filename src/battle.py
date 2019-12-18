@@ -106,7 +106,7 @@ class Battle():
             return
         weapon_damage = random.randint(0,weapon.attack)
         strength_modifier = random.randint(int(0.75 * self.player.stats["Strength"]), self.player.stats["Strength"])
-        self.update_log(["player", "{} attacks with {}".format(self.player.name, weapon.name)])
+        self.update_log(["player", "{} attacks with {}".format(self.player.name, weapon.readable_name)])
 
         # MODIFIERS and DAMAGE CALC
 

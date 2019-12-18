@@ -950,6 +950,9 @@ class GreenForest(MapState):
         if self.state.player.x == 10 and self.state.player.y == 21:
             events.GreenForest_brown_bear_inn_entrance(self.state)
 
+        if self.state.player.x == 14 and self.state.player.y in [72,73]:
+            events.GreenForest_hall_of_justice_entrance(self.state)
+
 
 class BrownBearInn(MapState):
     name = "Brown Bear Inn"
@@ -986,6 +989,41 @@ class BrownBearInn(MapState):
     def check_events(self):
         if self.state.player.x == 34 and self.state.player.y == 49:
             events.BrownBearInn_exit(self.state)
+
+
+class HallOfJustice(MapState):
+    name = "Hall of Justice"
+    raw_name = "HallOfJustice"
+    menu_commands = GameCommands
+    objects = []
+    game_map = mapper.GameMap("HallOfJustice.txt", objects)
+
+
+    def __init__(self, state):
+        super().__init__(state)
+        if state.first_time == True:
+            state.change_map_screen()
+            state.first_time = False
+        objects = [
+
+        ]
+        self.first_time = True
+        self.game_map = mapper.GameMap("HallOfJustice.txt", objects)
+        self.menu = GameMenu
+        self.menu_commands = GameCommands
+        self.ingame_menu = IngameMenu
+
+
+    def draw(self):
+        self.game_map.draw_map(self.state.game_box)
+
+    def execute(self):
+        pass
+
+    def check_events(self):
+        if self.state.player.x == 34 and self.state.player.y == 48:
+            events.HallOfJustice_exit(self.state)
+
 
 
             

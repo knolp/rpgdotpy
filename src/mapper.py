@@ -123,6 +123,10 @@ class MapObject():
 	def visble_door(cls, x, y):
 		return cls(x, y, "%", walkable=True, color=209, executable=True, name="Door")
 
+	@classmethod
+	def under_wall(cls, x, y):
+		return cls(x, y, curses.ACS_CKBOARD, walkable=False, color=101, name="Under Wall")
+
 
 	def draw(self, screen, seen=False):
 		if type(self.color) == list:
@@ -243,6 +247,8 @@ class GameMap():
 					self.background2[x][y] = MapObject.floor_fence_middle(x + 1, y + 1)
 				elif self.raw_map[x][y] == "d":
 					self.background2[x][y] = MapObject.visble_door(x + 1, y + 1)
+				elif self.raw_map[x][y] == "U":
+					self.background2[x][y] = MapObject.under_wall(x + 1, y + 1)
 				else:
 					print(self.raw_map[x][y])
 					print("Could not create map tile from Text")

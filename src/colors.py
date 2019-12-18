@@ -57,10 +57,17 @@ def main(stdscr):
 				stdscr.addstr(".")
 				stdscr.attroff(curses.color_pair(130))
 
+			if k == ord("c"):
+				for i in range(255):
+					stdscr.addstr(chr(i))
+
 			if k == ord("t"):
 				print(chr(97))
 				for i in range(220):
-					stdscr.addstr(chr(i))
+					try:
+						stdscr.addstr(chr(i))
+					except:
+						pass
 
 			if k == ord("l"):
 				lis = [

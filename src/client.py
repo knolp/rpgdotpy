@@ -561,6 +561,10 @@ def draw_menu(stdscr):
 		if k == ord("2"):
 			state_handler.player.hotkeys["2"].execute(state_handler.player)
 
+		if k == ord("3"):
+			print(f"x = {state_handler.player.x}")
+			print(f"y = {state_handler.player.y}")
+
 
 def main():
 	curses.wrapper(draw_menu)
