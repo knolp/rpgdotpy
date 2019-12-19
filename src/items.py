@@ -324,6 +324,46 @@ class DeverBerry(Item):
         self.equippable = False
         self.description = "A cloudy, white berry. Smells atrocious."
 
+class DeverBerryJuice(Item):
+    def __init__(self):
+        super().__init__("DeverBerryJuice", False)
+        self.readable_name = "Deverberry Juice"
+        self.type = "crafting"
+        self.equippable = False
+        self.description = "A hideous smelling juice made from Deverberries"
+
+class DeverBerrySkin(Item):
+    def __init__(self):
+        super().__init__("DeverBerrySkin", False)
+        self.readable_name = "Deverberry Skin"
+        self.type = "crafting"
+        self.equippable = False
+        self.description = "Probably has a better smell when dried."
+
+class DeverBerrySkinDried(Item):
+    def __init__(self):
+        super().__init__("DeverBerrySkinDried", False)
+        self.readable_name = "Deverberry Skin (Dried)"
+        self.type = "crafting"
+        self.equippable = False
+        self.description = "Leathery skin of a dried deverberry."
+
+class BarburaLeaf(Item):
+    def __init__(self):
+        super().__init__("BarburaLeaf", False)
+        self.readable_name = "Barbura Leaf"
+        self.type = "crafting"
+        self.equippable = False
+        self.description = "Yellow leaf picked from a Barbura bush."
+
+class BarburaLeafDried(Item):
+    def __init__(self):
+        super().__init__("BarburaLeafDried", False)
+        self.readable_name = "Barbura Leaf (Dried)"
+        self.type = "crafting"
+        self.equippable = False
+        self.description = "A crunchy, sweet smelling leaf."
+
 #Consumable
 class MinorHealthPotion(Item):
     def __init__(self):

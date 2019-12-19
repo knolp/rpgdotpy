@@ -31,6 +31,14 @@ class Flags():
         larsmagnus = {
             "LarsMagnus_met" = "har träffat Lars Magnus i brown bear inn"
         }
+    
+    def HallOfJustice(self, map):
+        beccalithe = {
+            "BeccaLithe_met" = "har träffat Becca Lithe och sett intro message"
+        }
+
+    def PlayerHousing(self, map):
+        köpt_hus = "StarterTown_house_bought"
 
     def WakeUpCall(self, quest):
         questgiver = "Lars Magnus"

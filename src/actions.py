@@ -529,6 +529,21 @@ class SpeakBeccaLithe(Action):
 						"Would you like to buy it?"
 					]
 				text_state = 1
+
+			elif answer.lower() in ["upgrade", "upgrades", "house upgrades", "house upgrades"]:
+				if "StarterTown_house_bought" in self.state.player.flags:
+					text = [
+						"Our upgrade options are currently:",
+						"",
+						"[Alchemy Table] for all your medical needs.",
+						"[Herb Pots] for your beautiful garden.",
+						"[Teleportation Station] to travel straight from home."
+						]
+				else:
+					text = [
+						"You need to buy a [house] to be able to upgrade",
+						"your [house]."
+					]
 			else:
 				text = [
 					"I do not know what that means."
