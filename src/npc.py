@@ -383,6 +383,27 @@ class DeverBerries(Usable):
 
 
 
+# Player Housing Upgrades
+
+class AlchemyTable(Usable):
+	def __init__(self, x, y, state):
+		name = "AlchemyTable"
+		self.readable_name = "Alchemy Table"
+		super().__init__(name, x, y, curses.ACS_PI, color=147)
+		self.original_x = x
+		self.original_y = y
+		self.screen = state.stdscr
+		self.sate = state
+
+	def turn_action(self):
+		pass
+
+	def action(self, screen, state):
+		print("action Alchemy Table performed")
+
+
+
+
 
 
 

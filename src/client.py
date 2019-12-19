@@ -7,6 +7,7 @@ import json
 import math
 import random
 import time
+import threading
 import locale
 
 import states
@@ -28,7 +29,6 @@ class MenuObject():
 		self.x = x
 		self.y = y
 		self.title = title
-
 
 
 class StateHandler():
@@ -329,6 +329,7 @@ def draw_menu(stdscr):
 						item.x, item.y = item.path_to_target[0]
 						item.path_to_target.pop(0)
 					if item.x == state_handler.player.x and item.y == state_handler.player.y:
+						curses.flash()
 						result = item.action()
 						if result:
 							state_handler.able_to_move = True
@@ -578,6 +579,9 @@ def draw_menu(stdscr):
 		if k == ord("3"):
 			print(f"x = {state_handler.player.x}")
 			print(f"y = {state_handler.player.y}")
+
+		if k == ord("4"):
+			curses.flash()
 
 
 def main():
