@@ -59,7 +59,7 @@ class Player():
 			"Alchemy" : 13
 		}
 
-		self.last_pos = False
+		self.last_pos = (3,3)
 
 		self.health = 1000
 		self.max_health = 1000

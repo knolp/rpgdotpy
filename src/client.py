@@ -443,6 +443,12 @@ def draw_menu(stdscr):
 			state_handler.gamemap.draw()
 			draw_commands(state_handler.ingame_menu, state_handler.command_box)
 			state_handler.player.draw(game_box)
+
+
+			#If adding pets or followers later, this is the "formula" for translating last pos to draw
+			#stdscr.addch(state_handler.player.last_pos[0], state_handler.player.last_pos[1] + 1, "h")
+
+
 			if state_handler.player.mindvision:
 				state_handler.player.mindvision -= 1
 				for item in state_handler.gamemap.game_map.objects:

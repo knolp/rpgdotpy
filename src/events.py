@@ -178,3 +178,17 @@ def HallOfJustice_exit(state):
 	state.player.y = 72
 
 	state.update_map()
+
+def GreenForest_player_house_entrance(state):
+	state.player.location = getattr(states, "StarterTownPlayerHouse")
+	state.player.x = 33
+	state.player.y = 48
+
+	state.update_map()
+
+def StarterTown_player_house_exit(state):
+	state.player.location = getattr(states, "GreenForest")
+	state.player.x = 25
+	state.player.y = 31
+
+	state.update_map()

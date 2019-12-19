@@ -975,7 +975,8 @@ class GreenForest(MapState):
 
 
         # PLAYER HOUSE
-
+        if self.state.player.x == 24 and self.state.player.y == 31:
+            events.GreenForest_player_house_entrance(self.state)
 
         # TANNER
 
@@ -1056,6 +1057,37 @@ class HallOfJustice(MapState):
                 if item.name == "Becca Lithe":
                     item.action(self.state.game_box, self.state)
 
+class StarterTownPlayerHouse(MapState):
+    name = "Starter Town Player House"
+    raw_name = "StarterTownPlayerHouse"
+    menu_commands = GameCommands
+    objects = []
+    game_map = mapper.GameMap("StarterTownPlayerHouse.txt", objects)
+
+
+    def __init__(self, state):
+        super().__init__(state)
+        if state.first_time == True:
+            state.change_map_screen()
+            state.first_time = False
+        objects = [
+        ]
+        self.first_time = True
+        self.game_map = mapper.GameMap("StarterTownPlayerHouse.txt", objects)
+        self.menu = GameMenu
+        self.menu_commands = GameCommands
+        self.ingame_menu = IngameMenu
+
+
+    def draw(self):
+        self.game_map.draw_map(self.state.game_box)
+
+    def execute(self):
+        pass
+
+    def check_events(self):
+        if self.state.player.x == 34 and self.state.player.y == 48:
+            events.StarterTown_player_house_exit(self.state)
 
 
             
