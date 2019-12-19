@@ -1053,7 +1053,6 @@ class HallOfJustice(MapState):
 
         if self.state.player.x in [20,21,22,23] and self.state.player.y == 15 and self.state.check_action:
             for item in self.game_map.objects:
-                print(item.name)
                 if item.name == "Becca Lithe":
                     item.action(self.state.game_box, self.state)
 
@@ -1072,6 +1071,8 @@ class StarterTownPlayerHouse(MapState):
             state.first_time = False
         objects = [
         ]
+        if "StarterTown_house_alchemy_table" in state.player.flags:
+            objects.append(npc.AlchemyTable(16, 75, state))
         self.first_time = True
         self.game_map = mapper.GameMap("StarterTownPlayerHouse.txt", objects)
         self.menu = GameMenu

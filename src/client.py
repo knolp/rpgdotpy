@@ -304,13 +304,15 @@ def draw_menu(stdscr):
 
 	counter = 0
 
+	height, width = state_handler.stdscr.getmaxyx()
+	print(f"height = {height}, width = {width}")
+
+
 	while (k != ord('q')):
 		stdscr.erase()
 
 		game_box.border()
 		command_box.border()
-
-		height, width = state_handler.game_box.getmaxyx()
 
 		if state_handler.map_screen == True:
 			
@@ -448,6 +450,7 @@ def draw_menu(stdscr):
 
 			#If adding pets or followers later, this is the "formula" for translating last pos to draw
 			#stdscr.addch(state_handler.player.last_pos[0], state_handler.player.last_pos[1] + 1, "h")
+			stdscr.addstr(45,35,"hehe")
 
 
 			if state_handler.player.mindvision:

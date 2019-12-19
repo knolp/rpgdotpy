@@ -453,11 +453,13 @@ class SpeakBeccaLithe(Action):
 		self.name = "Becca Lithe"
 		self.vocation = "Human Estate Agent"
 		self.house_price = 1300
+		self.alchemy_price = 500
 	
 	@add_ungetch
 	def execute(self):
-		#0 = No house bought, not any yes/no so far
+		#0 = No house bought or not any yes/no so far
 		#1 = answer yes/no to buying house
+		#2 = answer yes/no to buying alchemy table
 		text_state = 0
 		if "BeccaLithe_met" not in self.state.player.flags:
 			text = [
@@ -483,10 +485,17 @@ class SpeakBeccaLithe(Action):
 		
 		while True:
 			answer = input_text(self.name, self.vocation, self.screen, text, self.state)
+			
 			if answer.lower() in ["e", "exit", "bye", "q", "quit"]:
 				return False
 			
-			if answer.lower() in ["yes", "y"] and text_state == 1:
+			elif answer.lower() in ["no", "n"] and text_state != 0:
+				text = [
+					"Maybe another time."
+				]
+				text_state = 0
+
+			elif answer.lower() in ["yes", "y"] and text_state == 1:
 				if self.state.player.gold >= self.house_price:
 					self.state.player.gold -= self.house_price
 					self.state.player.flags.append("StarterTown_house_bought")
@@ -508,6 +517,28 @@ class SpeakBeccaLithe(Action):
 						"until you can afford it."
 					]
 				text_state = 0
+
+			elif answer.lower() in ["yes", "y"] and text_state == 2:
+				if self.state.player.gold >= self.alchemy_price:
+					self.state.player.gold -= self.alchemy_price
+					self.state.player.flags.append("StarterTown_house_alchemy_table")
+					text = [
+						"Great!",
+						"",
+						"We will deliver it right away, probably before you even get home.",
+						"",
+						"			[Alchemy Table] added to house",
+						"",
+						"Let me know if you want to purchase any more [upgrades]."
+					]
+				else:
+					text = [
+						"Hmm, it seems you are unable to afford it.",
+						"",
+						"Let me know if you change your mind"
+					]
+				text_state = 0
+
 			elif answer.lower() in ["no", "n"] and text_state == 1:
 				text = [
 					"Maybe another time.",
@@ -544,6 +575,15 @@ class SpeakBeccaLithe(Action):
 						"You need to buy a [house] to be able to upgrade",
 						"your [house]."
 					]
+			elif answer.lower() in ["alchemy", "alchemy table", "alchemy station"]:
+				if "StarterTown_house_alchemy_table" not in self.state.player.flags:
+					text = [
+						"Do you want to purchase this beautiful hand-made ceramic kettle",
+						"wood-burner, and assortment of bottles for your house?",
+						"",
+						f"If so, it's gonna be [{self.alchemy_price} gold coins]."
+					]
+					text_state = 2
 			else:
 				text = [
 					"I do not know what that means."
