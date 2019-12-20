@@ -364,6 +364,46 @@ class BarburaLeafDried(Item):
         self.equippable = False
         self.description = "A crunchy, sweet smelling leaf."
 
+class AriamSeed(Item):
+    def __init__(self):
+        super().__init__("AriamSeed", False)
+        self.readable_name = "Ariam Seed"
+        self.type = "crafting"
+        self.equippable = False
+        self.description = "A small seed from an Ariam plant."
+
+class ButterflyWing(Item):
+    def __init__(self):
+        super().__init__("ButterflyWing", False)
+        self.readable_name = "Butterfly Wing"
+        self.type = "crafting"
+        self.equippable = False
+        self.description = "A shimmering wing."
+
+class ArcaneDust(Item):
+    def __init__(self):
+        super().__init__("ArcaneDust", False)
+        self.readable_name = "Arcane Dust"
+        self.type = "crafting"
+        self.equippable = False
+        self.description = "A bottle containing a flowing sand-like material."
+
+class TrollHair(Item):
+    def __init__(self):
+        super().__init__("TrollHair", False)
+        self.readable_name = "Troll Hair"
+        self.type = "crafting"
+        self.equippable = False
+        self.description = "A bunch of troll hairs tied together."
+
+class DesertSalt(Item):
+    def __init__(self):
+        super().__init__("DesertSalt", False)
+        self.readable_name = "Desert Salt"
+        self.type = "crafting"
+        self.equippable = False
+        self.description = "A bottle of salt with the brand 'HMC', mined in the eastern desert."
+
 #Consumable
 class MinorHealthPotion(Item):
     def __init__(self):

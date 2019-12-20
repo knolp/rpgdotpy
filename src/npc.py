@@ -5,6 +5,8 @@ import monster
 import battle
 import actions
 import items
+import alchemy
+
 
 class NPC():
 	def __init__(self, name, x, y, character):
@@ -399,7 +401,8 @@ class AlchemyTable(Usable):
 		pass
 
 	def action(self, screen, state):
-		print("action Alchemy Table performed")
+		print(alchemy.select_ingredient(state))
+
 
 
 

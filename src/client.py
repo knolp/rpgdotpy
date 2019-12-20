@@ -305,7 +305,7 @@ def draw_menu(stdscr):
 	counter = 0
 
 	height, width = state_handler.stdscr.getmaxyx()
-	print(f"height = {height}, width = {width}")
+
 
 
 	while (k != ord('q')):
@@ -447,10 +447,30 @@ def draw_menu(stdscr):
 			draw_commands(state_handler.ingame_menu, state_handler.command_box)
 			state_handler.player.draw(game_box)
 
-
 			#If adding pets or followers later, this is the "formula" for translating last pos to draw
 			#stdscr.addch(state_handler.player.last_pos[0], state_handler.player.last_pos[1] + 1, "h")
-			stdscr.addstr(45,35,"hehe")
+
+			#Drawing 'player interface'
+			interface_start = 41
+			interface_end = 49
+			stdscr.addch(39,1,curses.ACS_ULCORNER)
+			stdscr.addch(48,1,curses.ACS_LLCORNER)
+			stdscr.addch(39,13,curses.ACS_URCORNER)
+			stdscr.addch(48,13,curses.ACS_LRCORNER)
+
+			stdscr.addstr(39,17,f"Name: {state_handler.player.name}")
+			stdscr.addstr(40,17,f"Type: {state_handler.player.race} {state_handler.player.vocation}")
+			stdscr.addstr(42,17,f"Stats:")
+			stdscr.addstr(44,17,f"Strength: {state_handler.player.stats['Strength']}")
+			stdscr.addstr(45,17,f"Agility: {state_handler.player.stats['Agility']}")
+			stdscr.addstr(46,17,f"Intelligence: {state_handler.player.stats['Intelligence']}")
+			stdscr.addstr(47,17,f"Charisma: {state_handler.player.stats['Charisma']}")
+			stdscr.addstr(48,17,f"Alchemy: {state_handler.player.stats['Alchemy']}")
+
+
+
+			ppos = f"Player-Pos: X: {state_handler.player.x}  Y: {state_handler.player.y}"
+			stdscr.addstr(45,int((150 - len(ppos)) / 2),ppos)
 
 
 			if state_handler.player.mindvision:

@@ -3,6 +3,14 @@ import items
 import abilities
 from curses.textpad import Textbox, rectangle
 
+
+def add_ungetch(f):
+	def return_func(self):
+		res = f(self)
+		curses.ungetch(curses.KEY_F0)
+		return res
+	return return_func
+
 def input_text(screen, text, state):
 	screen.clear()
 	start = 10

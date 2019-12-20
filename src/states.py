@@ -976,7 +976,34 @@ class GreenForest(MapState):
 
         # PLAYER HOUSE
         if self.state.player.x == 24 and self.state.player.y == 31:
-            events.GreenForest_player_house_entrance(self.state)
+            if "StarterTown_house_bought" in self.state.player.flags:
+                events.GreenForest_player_house_entrance(self.state)
+            else:
+                helper.popup(self.state.stdscr, self.state,[
+                    "The door is locked.",
+                    "",
+                    "You do not have the required key."
+                ])
+                self.state.player.x, self.state.player.y = self.state.player.last_pos
+
+        if self.state.player.x == 24 and self.state.player.y == 32:
+            if "StarterTown_house_bought" not in self.state.player.flags:
+                text = [
+                    "House for sale.",
+                    "",
+                    "Speak to us at the Hall of Justice for purchase.",
+                    "",
+                    "Regards,",
+                    "Becca Lithe"
+                ]
+            else:
+                text = [
+                    "",
+                    "",
+                    f"{self.state.player.name}'s House"
+                ]
+            helper.popup(self.state.stdscr, self.state, text)
+            self.state.player.x, self.state.player.y = self.state.player.last_pos
 
         # TANNER
 

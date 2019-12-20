@@ -38,8 +38,21 @@ class Player():
 			setattr(self, key, create_dict[key])
 		self.location = getattr(states, create_dict["location"])
 		self.inventory = [
-			items.LeatherBoots(),
-			items.DungeonKeyHaunted(),
+			items.DeverBerry(),
+			items.DeverBerry(),
+			items.DeverBerryJuice(),
+			items.BarburaLeaf(),
+			items.BarburaLeaf(),
+			items.BarburaLeaf(),
+			items.BarburaLeaf(),
+			items.BarburaLeafDried(),
+			items.ButterflyWing(),
+			items.DesertSalt(),
+			items.TrollHair(),
+			items.ArcaneDust(),
+			items.AriamSeed(),
+			items.DeverBerrySkin(),
+			items.DeverBerrySkinDried()
 		]
 		self.hotkeys = {
 			"1" : False,
