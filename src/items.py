@@ -421,6 +421,14 @@ class MinorHealthPotion(Item):
         self.equippable = False
         self.description = "A small vial of red fluid."
 
+class AdralBrew(Item):
+    def __init__(self):
+        super()._init__("AdralBrew", False)
+        self.readable_name = "Ad'ral Brew"
+        self.type = "consumable"
+        self.equippable = False
+        self.description = "A vial of brown fluid, created by the elves, said to heighten the senses."
+
 
 
 

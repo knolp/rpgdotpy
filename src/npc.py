@@ -401,7 +401,7 @@ class AlchemyTable(Usable):
 		pass
 
 	def action(self, screen, state):
-		print(alchemy.select_ingredient(state))
+		print(alchemy.make_potion(state))
 
 
 

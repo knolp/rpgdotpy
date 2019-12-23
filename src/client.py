@@ -301,6 +301,8 @@ def draw_menu(stdscr):
 	curses.init_pair(146, 237, 52) #floor fence
 	curses.init_pair(147, curses.COLOR_WHITE, -1)
 	curses.init_pair(148, curses.COLOR_YELLOW, 238)
+	curses.init_pair(149,94,-1) #brown fg, black bg
+	curses.init_pair(150,242,-1) #grey fg, black bg
 
 	counter = 0
 

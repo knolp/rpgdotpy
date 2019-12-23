@@ -55,6 +55,8 @@ class Player():
 			items.DeverBerrySkinDried(),
 			items.ObsidianShard()
 		]
+
+		self.temp_alchemy_inventory = []
 		self.hotkeys = {
 			"1" : False,
 			"2" : abilities.MindVision(),
