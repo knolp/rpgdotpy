@@ -453,10 +453,10 @@ def draw_menu(stdscr):
 			#Drawing 'player interface'
 			interface_start = 41
 			interface_end = 49
-			stdscr.addch(39,1,curses.ACS_ULCORNER)
-			stdscr.addch(48,1,curses.ACS_LLCORNER)
-			stdscr.addch(39,13,curses.ACS_URCORNER)
-			stdscr.addch(48,13,curses.ACS_LRCORNER)
+			stdscr.addch(39,1,curses.ACS_ULCORNER, curses.color_pair(136))
+			stdscr.addch(48,1,curses.ACS_LLCORNER, curses.color_pair(136))
+			stdscr.addch(39,13,curses.ACS_URCORNER, curses.color_pair(136))
+			stdscr.addch(48,13,curses.ACS_LRCORNER, curses.color_pair(136))
 
 			stdscr.addstr(39,17,f"Name: {state_handler.player.name}")
 			stdscr.addstr(40,17,f"Type: {state_handler.player.race} {state_handler.player.vocation}")
@@ -582,7 +582,7 @@ def draw_menu(stdscr):
 			battlemode.play()
 
 		if k == ord("k") and state_handler.player != False:
-			item_list = [items.ChainHelmet, items.LeatherBoots, items.StuddedLegs, items.RatFangNecklace, items.ChainMail]
+			item_list = [items.DeverBerrySkinDried, items.ObsidianShard, items.TrollHair, items.DesertSalt, items.ArcaneDust]
 			for i in range(150):
 				state_handler.player.inventory.append(random.choice(item_list)())
 

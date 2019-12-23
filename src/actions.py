@@ -584,6 +584,10 @@ class SpeakBeccaLithe(Action):
 						f"If so, it's gonna be [{self.alchemy_price} gold coins]."
 					]
 					text_state = 2
+				else:
+					text = [
+						"You already own an [Alchemy table]."
+					]
 			else:
 				text = [
 					"I do not know what that means."

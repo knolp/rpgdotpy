@@ -404,6 +404,14 @@ class DesertSalt(Item):
         self.equippable = False
         self.description = "A bottle of salt with the brand 'HMC', mined in the eastern desert."
 
+class ObsidianShard(Item):
+    def __init__(self):
+        super().__init__("ObsidianShard", False)
+        self.readable_name = "Obsidian Shard"
+        self.type = "crafting"
+        self.equippable = False
+        self.description = "A shard of pure black obsidian from the eastern desert."
+
 #Consumable
 class MinorHealthPotion(Item):
     def __init__(self):

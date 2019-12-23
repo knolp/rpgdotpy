@@ -52,7 +52,8 @@ class Player():
 			items.ArcaneDust(),
 			items.AriamSeed(),
 			items.DeverBerrySkin(),
-			items.DeverBerrySkinDried()
+			items.DeverBerrySkinDried(),
+			items.ObsidianShard()
 		]
 		self.hotkeys = {
 			"1" : False,
