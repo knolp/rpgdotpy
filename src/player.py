@@ -4,6 +4,7 @@ import items
 import helper
 import random
 import abilities
+import recipes
 
 def create_player(create_player):
 	return Player(create_player)
@@ -57,6 +58,7 @@ class Player():
 		]
 
 		self.temp_alchemy_inventory = []
+		self.recipes = [recipes.AdralBrew()]
 		self.hotkeys = {
 			"1" : False,
 			"2" : abilities.MindVision(),

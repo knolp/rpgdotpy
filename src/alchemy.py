@@ -210,7 +210,7 @@ def make_potion(state):
 
         if potion_done:
             screen.addstr(45, ingredient_y, "You created the ")
-            screen.addstr(45,ingredient_y + len("You created the "), "Ad'ral Brew", curses.color_pair(136))
+            screen.addstr(45,ingredient_y + len("You created the "), f"{potion_done}", curses.color_pair(136))
         
         if no_ingredients:
             screen.addstr(45, ingredient_y, "You have no ingredients.")
@@ -248,8 +248,19 @@ def make_potion(state):
                     no_ingredients = True
             else:
                 potion_done = True
-                player.temp_alchemy_inventory = []
-                ingredients = ["Empty","Empty","Empty","Empty"]
+                if player.recipes:
+                    list_of_recipe_ingredients = [(sorted(x.ingredients), x) for x in player.recipes]
+                    for item in list_of_recipe_ingredients:
+                        if item[0] == sorted(ingredients):
+                            player.inventory.append(item[1].result())
+                            potion_done = item[1].result().readable_name
+                            break
+                        else:
+                            potion_done = "Nothing."
+                
+                if potion_done != "Nothing.":
+                    player.temp_alchemy_inventory = []
+                    ingredients = ["Empty","Empty","Empty","Empty"]
 
     
     curses.cbreak()

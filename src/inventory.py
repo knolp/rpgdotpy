@@ -188,6 +188,8 @@ def view_inventory(screen, state):
 			if current.equippable:
 				screen.addstr(col_info_start + 2, row_info_start, f"Attack: {current.attack}")
 				screen.addstr(col_info_start + 3, row_info_start, f"Defence: {current.defence}")
+			if current.effect_description:
+				screen.addstr(col_info_start + 4, row_info_start, f"Effect: {current.effect_description}")
 		else:
 			screen.addstr(4,0,"No items here")
 

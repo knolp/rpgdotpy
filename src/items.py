@@ -415,7 +415,7 @@ class ObsidianShard(Item):
 #Consumable
 class MinorHealthPotion(Item):
     def __init__(self):
-        super()._init__("MinorHealthPotion", False)
+        super().__init__("MinorHealthPotion", False)
         self.readable_name = "Minor health potion"
         self.type = "consumable"
         self.equippable = False
@@ -423,11 +423,12 @@ class MinorHealthPotion(Item):
 
 class AdralBrew(Item):
     def __init__(self):
-        super()._init__("AdralBrew", False)
+        super().__init__("AdralBrew", False)
         self.readable_name = "Ad'ral Brew"
         self.type = "consumable"
         self.equippable = False
-        self.description = "A vial of brown fluid, created by the elves, said to heighten the senses."
+        self.description = "A vial of brown fluid, created by the elves."
+        self.effect_description = "+1 perception, +1 strength"
 
 
 
