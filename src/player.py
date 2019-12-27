@@ -40,7 +40,6 @@ class Player():
 		self.location = getattr(states, create_dict["location"])
 		self.inventory = [
 			items.DeverBerry(),
-			items.DeverBerry(),
 			items.DeverBerryJuice(),
 			items.BarburaLeaf(),
 			items.BarburaLeaf(),

@@ -403,6 +403,22 @@ class AlchemyTable(Usable):
 	def action(self, screen, state):
 		print(alchemy.make_potion(state))
 
+class Juicer(Usable):
+	def __init__(self, x, y, state):
+		name = "Juicer"
+		self.readable_name = "Juicer"
+		super().__init__(name, x, y, "J", color=147)
+		self.original_x = x
+		self.original_y = y
+		self.screen = state.stdscr
+		self.sate = state
+
+	def turn_action(self):
+		pass
+
+	def action(self, screen, state):
+		print(alchemy.make_juice(state))
+
 
 
 

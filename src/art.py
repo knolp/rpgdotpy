@@ -239,8 +239,6 @@ def draw_alchemy_alternate():
 def draw_alchemy_fire():
 	return_list = []
 
-	#return_list.append("   .(")
-	#return_list.append("  /%/\\")
 	return_list.append(" ((%(%))")
 	return_list.append(".-'...`-.")
 	return_list.append("`-'..'`-'")
@@ -250,11 +248,38 @@ def draw_alchemy_fire():
 def draw_alchemy_fire_alternate():
 	return_list = []
 
-	#return_list.append("   .)")
-	#return_list.append("  /&/\\")
 	return_list.append(" ))&)&((")
 	return_list.append(".-'...`-.")
 	return_list.append("`-'..'`-'")
+
+	return return_list
+
+
+def draw_juicer():
+	return_list = []
+
+	return_list.append("    |-------\\")
+	return_list.append("  \\===/     |")
+	return_list.append("   |        |")
+	return_list.append("     |      |")
+	return_list.append(" .=====.    |")
+	return_list.append(" |     |    |")
+	return_list.append(" \_____/  __|__")
+
+
+	return return_list
+
+def draw_juicer_alternate():
+	return_list = []
+
+	return_list.append("    |-------\\")
+	return_list.append("  \\===/     |")
+	return_list.append("     |      |")
+	return_list.append("  |         |")
+	return_list.append(" .=====.    |")
+	return_list.append(" |     |    |")
+	return_list.append(" \_____/  __|__")
+
 
 	return return_list
 

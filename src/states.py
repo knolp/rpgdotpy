@@ -1100,6 +1100,8 @@ class StarterTownPlayerHouse(MapState):
         ]
         if "StarterTown_house_alchemy_table" in state.player.flags:
             objects.append(npc.AlchemyTable(16, 75, state))
+        if "StarterTown_house_alchemy_table" in state.player.flags:
+            objects.append(npc.Juicer(16,74, state))
         self.first_time = True
         self.game_map = mapper.GameMap("StarterTownPlayerHouse.txt", objects)
         self.menu = GameMenu

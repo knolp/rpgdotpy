@@ -1,12 +1,13 @@
 import curses
 import items
 import abilities
+import recipes
 from curses.textpad import Textbox, rectangle
 
 
 def add_ungetch(f):
-	def return_func(self):
-		res = f(self)
+	def return_func(self, *args, **kwargs):
+		res = f(self, *args, **kwargs)
 		curses.ungetch(curses.KEY_F0)
 		return res
 	return return_func
@@ -87,6 +88,15 @@ def get_item(item):
 			continue
 		if var == item:
 			return getattr(items, var)
+
+def get_recipe(recipe):
+	for var in dir(recipes):
+		if var.startswith("__"):
+			continue
+		if var == "Recipe":
+			continue
+		if var == recipe:
+			return getattr(recipes, var)
 
 def get_spell(spell):
 	for var in dir(abilities):

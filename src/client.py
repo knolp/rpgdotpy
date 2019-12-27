@@ -104,6 +104,10 @@ class StateHandler():
 			if v != False:
 				self.player.hotkeys[k] = helper.get_spell(v["name"])()
 
+		for item in load_dict["recipes"]:
+			#self.player.inventory.append(items.item_dict[item["name"]]())
+			self.player.recipes.append(helper.get_recipe(item["name"])())
+
 	def save_player(self):
 		params = {}
 
@@ -136,6 +140,11 @@ class StateHandler():
 				for key, value in params[k].items():
 					if params[k][key] != False:
 						params[k][key] = value.__dict__
+
+			if k == "recipes":
+				for i in range(len(params[k])):
+					params[k][i] = params[k][i].__dict__
+
 
 		with open("save.json", "w") as f:
 			json.dump(params,f)

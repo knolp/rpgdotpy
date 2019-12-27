@@ -1,6 +1,118 @@
 import curses
 import helper
 import art
+import items
+
+
+
+@helper.add_ungetch
+def make_juice(state):
+    screen = state.stdscr
+    player = state.player
+    height, width = screen.getmaxyx()
+    curses.halfdelay(3)
+    k = -1
+
+    offset_x = 10
+    offset_art = 20
+    offset_y = 64
+
+    text = "Empty"
+    real = ""
+    counter = 0
+
+
+    selected_item = 0
+    juice_done = False
+    no_ingredients = False
+    nothing_selected = False
+    result = []
+
+    while k != ord("q"):
+        counter += 1
+        screen.clear()
+        title_text = "Select a berry or fruit to juice."
+        screen.addstr(2, int((width - len(title_text)) / 2), title_text)
+
+
+        #Draw Select ingredient button
+
+        add_border(offset_x, offset_y, screen)
+        if selected_item == 0:
+            screen.addstr(offset_x, offset_y, f"1: {text}", curses.color_pair(5))
+        else:
+            screen.addstr(offset_x, offset_y, f"1: {text}")
+
+        #Draw juice animation
+        if counter % 2 == 0:
+            for idx, item in enumerate(art.draw_juicer()):
+                screen.addstr(offset_art + idx, offset_y + 6, item)
+        else:
+            for idx, item in enumerate(art.draw_juicer_alternate()):
+                screen.addstr(offset_art + idx, offset_y + 6, item)
+
+        #Draw Make Button
+        add_border(35,offset_y + 8, screen, button=True)
+        if selected_item == 1:
+            screen.addstr(35, offset_y + 11, "JUICE", curses.color_pair(5))
+        else:
+            screen.addstr(35, offset_y + 11, "JUICE", curses.color_pair(6))
+
+        if juice_done:
+            screen.addstr(40, offset_y, f"{done_text}", curses.color_pair(136))
+            screen.addstr(42, offset_y, "Was processed into:")
+            for i in range(len(processed)):
+                screen.addstr(44 + i, offset_y, processed[i], curses.color_pair(136))
+        
+        if no_ingredients:
+            screen.addstr(40, offset_y, "You do not have any ingredients to juice.", curses.color_pair(133))
+
+        if nothing_selected:
+            screen.addstr(40,offset_y, "You cannot make juice out of nothing.", curses.color_pair(133))
+
+
+
+        #Draw result
+
+        k = screen.getch()
+
+        if k == curses.KEY_DOWN:
+            selected_item = 1
+        elif k == curses.KEY_UP:
+            selected_item = 0
+        elif k == ord(" "):
+            if selected_item == 1 and text == "Empty":
+                nothing_selected = True
+                juice_done = False
+            elif selected_item == 1 and text != "Empty":
+                nothing_selected = False
+                juice_done = True
+                done_text = player.temp_alchemy_inventory[0].readable_name
+                processed = []
+                result = player.temp_alchemy_inventory[0].result
+                player.temp_alchemy_inventory = []
+                for item in result:
+                    temp = getattr(items, item)()
+                    player.inventory.append(temp)
+                    processed.append(temp.readable_name)
+                    
+                text = "Empty"
+            elif selected_item == 0:
+                juice_done = False
+                if text != "Empty":
+                    player.inventory.append(player.temp_alchemy_inventory[0])
+                    player.temp_alchemy_inventory = []
+                text = select_ingredient(state, juicable=True)
+                if not text:
+                    no_ingredients = True
+                    text = "Empty"
+                else:
+                    no_ingredients = False
+
+    for item in player.temp_alchemy_inventory:
+        player.inventory.append(item)
+    curses.cbreak()
+
 
 
 def add_border(x,y,screen,button=False):
@@ -21,7 +133,7 @@ def add_border(x,y,screen,button=False):
         screen.addch(x+1,y+i,curses.ACS_HLINE)
 
 @helper.add_ungetch
-def select_ingredient(state):
+def select_ingredient(state, juicable=False):
     screen = state.stdscr
     player = state.player
     height, width = screen.getmaxyx()
@@ -37,11 +149,17 @@ def select_ingredient(state):
 
     for item in player.inventory:
         if item.type == "crafting":
+            if juicable:
+                if not item.juicable:
+                    continue
             if item.readable_name not in _craft_dict.keys():
                 _craft_dict[item.readable_name] = 1
                 _description_dict[item.readable_name] = item.description
             else:
                 _craft_dict[item.readable_name] += 1
+
+    if len(_craft_dict.keys()) == 0:
+        return False
 
     list_of_ingredients = sorted([x for x in _craft_dict.keys()])
     #MAIN LOOP
@@ -106,7 +224,7 @@ def select_ingredient(state):
                     break
             return list_of_ingredients[selected_item]
 
-    return False
+    return "Empty"
 
 @helper.add_ungetch
 def make_potion(state):
@@ -136,7 +254,8 @@ def make_potion(state):
 
     while k != ord("q"):
         screen.clear()
-
+        title_text = "Select ingredients to brew with."
+        screen.addstr(2, int((width - len(title_text)) / 2), title_text)
         
         add_border(10,ingredient_y, screen)
         if selected_item == 0:
@@ -252,8 +371,9 @@ def make_potion(state):
                     list_of_recipe_ingredients = [(sorted(x.ingredients), x) for x in player.recipes]
                     for item in list_of_recipe_ingredients:
                         if item[0] == sorted(ingredients):
-                            player.inventory.append(item[1].result())
-                            potion_done = item[1].result().readable_name
+                            player.inventory.append(getattr(items,item[1].result)())
+                            potion_done = getattr(items,item[1].result)().readable_name
+                            print(potion_done)
                             break
                         else:
                             potion_done = "Nothing."

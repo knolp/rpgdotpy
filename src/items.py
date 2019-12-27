@@ -16,6 +16,11 @@ class Item():
         self.buy_price = int(self.sell_price * 1.5)
         self.effect_description = False
 
+        #Alchemy stuff
+        self.dryable = False
+        self.juicable = False
+        self.result = False
+
 
         self.attack_styles = {
             "Slash" : ["swings", "attacks", "slashes"],
@@ -323,6 +328,8 @@ class DeverBerry(Item):
         self.type = "crafting"
         self.equippable = False
         self.description = "A cloudy, white berry. Smells atrocious."
+        self.juicable = True
+        self.result = ["DeverBerryJuice", "DeverBerrySkin"]
 
 class DeverBerryJuice(Item):
     def __init__(self):
@@ -339,6 +346,8 @@ class DeverBerrySkin(Item):
         self.type = "crafting"
         self.equippable = False
         self.description = "Probably has a better smell when dried."
+        self.dryable = True
+        self.result = ["DeverBerrySkinDried"]
 
 class DeverBerrySkinDried(Item):
     def __init__(self):
@@ -355,6 +364,8 @@ class BarburaLeaf(Item):
         self.type = "crafting"
         self.equippable = False
         self.description = "Yellow leaf picked from a Barbura bush."
+        self.dryable = True
+        self.result = ["BarburaLeafDried"]
 
 class BarburaLeafDried(Item):
     def __init__(self):
