@@ -37,6 +37,8 @@ class Player():
 
 		for key in create_dict:
 			setattr(self, key, create_dict[key])
+		
+		self.time = 0
 		self.location = getattr(states, create_dict["location"])
 		self.inventory = [
 			items.DeverBerry(),

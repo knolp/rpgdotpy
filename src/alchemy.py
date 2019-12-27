@@ -29,8 +29,10 @@ def make_juice(state):
     result = []
 
     while k != ord("q"):
-        counter += 1
         screen.clear()
+        for k,v in state.timer.get_real_time().items():
+            screen.addstr(f"{k}: {v}")
+        counter += 1
         title_text = "Select a berry or fruit to juice."
         screen.addstr(2, int((width - len(title_text)) / 2), title_text)
 
@@ -111,6 +113,7 @@ def make_juice(state):
 
     for item in player.temp_alchemy_inventory:
         player.inventory.append(item)
+    player.temp_alchemy_inventory = []
     curses.cbreak()
 
 

@@ -24,6 +24,42 @@ import pathfinding
 import pathfinding2
 import abilities
 
+class Timer():
+	def __init__(self, tid):
+		self.tid = tid
+		self.terminated = False
+
+	def terminate(self):
+		self.terminated = True
+
+	def run(self):
+		while not self.terminated:
+			self.tid = self.tid + 100
+			time.sleep(1)
+
+	def get_real_time(self):
+		_day_dict = {
+			"0" : "Monday",
+			"1" : "Tuesday",
+			"2" : "Wednesday",
+			"3" : "Thursday",
+			"4" : "Friday",
+			"5" : "Saturday",
+			"6" : "Sunday"
+		}
+		real_time = time.gmtime(self.tid)
+		_dict = {
+			"year" : real_time.tm_year - 1200,
+			"month" : real_time.tm_mon,
+			"day" : real_time.tm_mday,
+			"real-day" : _day_dict[str(real_time.tm_yday)],
+			"hour" : real_time.tm_hour,
+			"minute" : real_time.tm_min,
+			"second" : real_time.tm_sec
+		}
+
+		return _dict
+
 class MenuObject():
 	def __init__(self, x, y, title):
 		self.x = x
@@ -49,6 +85,9 @@ class StateHandler():
 		self.action = "None"
 
 		self.player = False
+		self.timer = False
+		self.timer_started = False
+		self.t = False # thread for timer
 
 		self.create_player = {}
 
@@ -173,6 +212,12 @@ class StateHandler():
 		if self.gamemap.game_map.background2[self.player.x - 1][self.player.y - 1].name == "Tall Grass":
 			if random.randint(1,100) < 16:
 				battle.Battle(self, random.choice(self.gamemap.random_monsters)(), "3").play()
+	
+	def start_timer(self):
+		self.timer = Timer(self.player.time)
+		self.t = threading.Thread(target=self.timer.run)
+		self.t.start()
+		self.timer_started = True
 
 
 def is_tab_enabled(state):
@@ -325,6 +370,8 @@ def draw_menu(stdscr):
 
 		game_box.border()
 		command_box.border()
+		if state_handler.player != False and state_handler.timer_started == False:
+			state_handler.start_timer()
 
 		if state_handler.map_screen == True:
 			
@@ -615,11 +662,13 @@ def draw_menu(stdscr):
 			state_handler.player.hotkeys["2"].execute(state_handler.player)
 
 		if k == ord("3"):
-			print(f"x = {state_handler.player.x}")
-			print(f"y = {state_handler.player.y}")
+			for k,v in state_handler.timer.get_real_time().items():
+				print(f"{k}: {v}")
 
 		if k == ord("4"):
-			curses.flash()
+			state_handler.timer.terminate()
+	
+	state_handler.timer.terminate()
 
 
 def main():
