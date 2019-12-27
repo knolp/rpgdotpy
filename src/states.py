@@ -939,6 +939,7 @@ class GreenForest(MapState):
 
     def draw(self):
         self.game_map.draw_map(self.state.game_box)
+        self.state.stdscr.addstr(11,72,"H.O.J", curses.color_pair(151))
 
     def execute(self):
         pass

@@ -362,6 +362,7 @@ def make_potion(state):
                             if item.readable_name == ingredients[selected_item]:
                                 player.inventory.append(item)
                                 player.temp_alchemy_inventory.pop(player.temp_alchemy_inventory.index(item))
+                                break
                         ingredients[selected_item] = select_ingredient(state)
                 else:
                     no_ingredients = True
@@ -381,11 +382,17 @@ def make_potion(state):
                 if potion_done != "Nothing.":
                     player.temp_alchemy_inventory = []
                     ingredients = ["Empty","Empty","Empty","Empty"]
+                else:
+                    for item in player.temp_alchemy_inventory:
+                        player.inventory.append(item)
+                    player.temp_alchemy_inventory = []
+                    ingredients = ["Empty","Empty","Empty","Empty"]
 
     
     curses.cbreak()
     for item in player.temp_alchemy_inventory:
         player.inventory.append(item)
+    player.temp_alchemy_inventory = []
     return False
 
 

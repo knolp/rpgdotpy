@@ -275,7 +275,7 @@ def draw_juicer_alternate():
 	return_list.append("    |-------\\")
 	return_list.append("  \\===/     |")
 	return_list.append("     |      |")
-	return_list.append("  |         |")
+	return_list.append("   |        |")
 	return_list.append(" .=====.    |")
 	return_list.append(" |     |    |")
 	return_list.append(" \_____/  __|__")

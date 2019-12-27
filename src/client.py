@@ -312,6 +312,7 @@ def draw_menu(stdscr):
 	curses.init_pair(148, curses.COLOR_YELLOW, 238)
 	curses.init_pair(149,94,-1) #brown fg, black bg
 	curses.init_pair(150,242,-1) #grey fg, black bg
+	curses.init_pair(151,curses.COLOR_WHITE,247)
 
 	counter = 0
 
@@ -482,6 +483,9 @@ def draw_menu(stdscr):
 
 			ppos = f"Player-Pos: X: {state_handler.player.x}  Y: {state_handler.player.y}"
 			stdscr.addstr(45,int((150 - len(ppos)) / 2),ppos)
+
+			temp_invent = f"Temp_ALCH: {''.join(state_handler.player.temp_alchemy_inventory)}"
+			stdscr.addstr(46,int((150 - len(ppos)) / 2),temp_invent)
 
 
 			if state_handler.player.mindvision:

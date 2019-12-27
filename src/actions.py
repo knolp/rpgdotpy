@@ -3,6 +3,7 @@ import items
 import helper
 import inventory
 import curses
+import recipes
 from curses.textpad import Textbox, rectangle
 # Actions the player can do, such as read signs and interact with NPC:s, should either do stuff or open dialog box etc
 
@@ -335,10 +336,34 @@ class SpeakEvanKripter(Action):
 			]
 
 		while True:
+			recipe_learned = False
+			for item in self.state.player.recipes:
+					if "AdralBrew" == item.name:
+						recipe_learned = True
 			answer = input_text(self.name, self.vocation, self.screen, text, self.state)
 
 			if answer.lower() in ["e", "exit", "bye", "q", "quit"]:
 				return False
+
+			elif answer.lower() in ["formula"]:
+				if self.state.player.stats["Alchemy"] > 4:
+					if not recipe_learned:
+						text = [
+							"Here, I wrote it down for you.",
+							"		[He hands you a piece of paper with the recipe]",
+							"Use it wisely."
+						]
+						self.player.recipes.append(recipes.AdralBrew())
+					else:
+						text = [
+							"I cannot teach you what you already know."
+						]
+				else:
+					text = [
+						"You cannot handle this formula",
+						"",
+						"Come back when you are more versed in Alchemy."
+					]
 			elif answer.lower() in ["brew", "potion", "wake up", "wakeup", "wake", "elven brew"]:
 				text = [
 					"Ah yes, I spoke of the [Adr'al brew].",
@@ -363,7 +388,7 @@ class SpeakEvanKripter(Action):
 					"and some water, basic stuff.",
 					""
 				]
-				if self.state.player.stats["Alchemy"] > 4:
+				if self.state.player.stats["Alchemy"] > 4 and not recipe_learned:
 					text.append("I'll be happy to share the [formula] with you.")
 
 			else:
