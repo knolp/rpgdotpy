@@ -40,26 +40,11 @@ class Player():
 		
 		self.time = 0
 		self.location = getattr(states, create_dict["location"])
-		self.inventory = [
-			items.DeverBerry(),
-			items.DeverBerryJuice(),
-			items.BarburaLeaf(),
-			items.BarburaLeaf(),
-			items.BarburaLeaf(),
-			items.BarburaLeaf(),
-			items.BarburaLeafDried(),
-			items.ButterflyWing(),
-			items.DesertSalt(),
-			items.TrollHair(),
-			items.ArcaneDust(),
-			items.AriamSeed(),
-			items.DeverBerrySkin(),
-			items.DeverBerrySkinDried(),
-			items.ObsidianShard()
-		]
+		self.inventory = []
 
 		self.temp_alchemy_inventory = []
-		self.recipes = [recipes.AdralBrew()]
+		self.recipes = []
+		self.active_farms = []
 		self.hotkeys = {
 			"1" : False,
 			"2" : abilities.MindVision(),

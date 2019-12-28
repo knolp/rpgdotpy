@@ -395,7 +395,7 @@ class AlchemyTable(Usable):
 		self.original_x = x
 		self.original_y = y
 		self.screen = state.stdscr
-		self.sate = state
+		self.state = state
 
 	def turn_action(self):
 		pass
@@ -411,7 +411,7 @@ class Juicer(Usable):
 		self.original_x = x
 		self.original_y = y
 		self.screen = state.stdscr
-		self.sate = state
+		self.state = state
 
 	def turn_action(self):
 		pass
@@ -419,6 +419,29 @@ class Juicer(Usable):
 	def action(self, screen, state):
 		print(alchemy.make_juice(state))
 
+
+#Farming patch ids
+#StarterTown_house_1 = första från vänster i starter town house
+#StarterTown_house_2 = ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#StarterTown_house_3 = ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+#StarterTown_house_4 = ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+class FarmingPatch():
+	def __init__(self, x, y, state, identity):
+		name = "FarmingPatch"
+		self.identity = identity
+		self.readable_name = "Farming Patch"
+		super().__init__(name, x, y, "F", color=147)
+		self.original_x = x
+		self.original_y = y
+		self.screen = state.stdscr
+		self.state = state
+
+	def turn_action(self):
+		pass
+
+	def action(self, screen, state):
+		pass
 
 
 
