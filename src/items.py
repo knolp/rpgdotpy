@@ -423,6 +423,16 @@ class ObsidianShard(Item):
         self.equippable = False
         self.description = "A shard of pure black obsidian from the eastern desert."
 
+
+#Seeds
+class BarburaSeed(Item):
+    def __init__(self):
+        super().__init__("BarburaSeed", False)
+        self.readable_name = "Barbura Seed"
+        self.type = "farming"
+        self.equippable = False
+        self.description = "A small green seed. "
+
 #Consumable
 class MinorHealthPotion(Item):
     def __init__(self):

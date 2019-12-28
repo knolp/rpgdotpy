@@ -283,6 +283,21 @@ def draw_juicer_alternate():
 
 	return return_list
 
+
+def draw_portrait_dwarf():
+	return_list = []
+
+	return_list.append("###########")
+	return_list.append("### #### ##")
+	return_list.append("###########")
+	return_list.append("###########")
+	return_list.append("# ####### #")
+	return_list.append("##   ##  ##")
+	return_list.append("#####  ####")
+	return_list.append("###########")
+
+	return return_list
+
 if __name__ == "__main__":
 
 	for item in draw_RatKing():

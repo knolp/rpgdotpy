@@ -10,6 +10,7 @@ import time
 import threading
 import locale
 
+import art
 import states
 import player
 import mapper
@@ -516,6 +517,9 @@ def draw_menu(stdscr):
 			stdscr.addch(48,1,curses.ACS_LLCORNER, curses.color_pair(136))
 			stdscr.addch(39,13,curses.ACS_URCORNER, curses.color_pair(136))
 			stdscr.addch(48,13,curses.ACS_LRCORNER, curses.color_pair(136))
+
+			for idx, item in enumerate(art.draw_portrait_dwarf()):
+				stdscr.addstr(40 + idx, 2, item)
 
 			stdscr.addstr(39,17,f"Name: {state_handler.player.name}")
 			stdscr.addstr(40,17,f"Type: {state_handler.player.race} {state_handler.player.vocation}")
