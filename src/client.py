@@ -371,6 +371,9 @@ def draw_menu(stdscr):
 	curses.init_pair(150,242,-1) #grey fg, black bg
 	curses.init_pair(151,curses.COLOR_WHITE,247)
 	curses.init_pair(152, curses.COLOR_WHITE, curses.COLOR_RED)
+	curses.init_pair(153,curses.COLOR_RED, 52) #Farming patch not planted
+	curses.init_pair(154,curses.COLOR_YELLOW,52) #Farming patch planted
+	curses.init_pair(155,curses.COLOR_GREEN,52) #Farming patch planted
 
 	counter = 0
 
@@ -679,8 +682,7 @@ def draw_menu(stdscr):
 			state_handler.player.hotkeys["2"].execute(state_handler.player)
 
 		if k == ord("3"):
-			for k,v in state_handler.timer.get_real_time().items():
-				print(f"{k}: {v}")
+			state_handler.player.flags.append("StarterTown_house_herb_patch")
 
 		if k == ord("4"):
 			state_handler.timer.terminate()

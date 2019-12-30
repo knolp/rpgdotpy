@@ -131,13 +131,14 @@ def farming(state, identity):
             if item[0] == identity:
                 planted = True
     
-    if planted:
-        button_text = "HARVEST"
-    else:
-        button_text = "Select seed to plant"
 
     while k != ord("q"):
         screen.clear()
+        if planted:
+            button_text = "Harvest"
+        else:
+            button_text = "Select seed to plant"
+
         if not planted:
             if no_seeds:
                 screen.addstr(offset_x, offset_y - int(len("You have no seeds.")/2), "You have no seeds.")
@@ -174,11 +175,15 @@ def farming(state, identity):
         if k == ord(" "):
             if planted:
                 if ready:
-                    helper.popup(screen, state, [
+                    text = [
                         "You harvest the plant and gain",
                         "",
-                        f"{result}"
-                    ])
+                        "",
+                    ]
+                    for item in result:
+                        player.inventory.append(helper.get_item(item)())
+                        text.append(item)
+                    helper.popup(screen, state, text)
                     for item in player.active_farms:
                         if item[0] == identity:
                             player.active_farms.pop(player.active_farms.index(item))

@@ -21,6 +21,8 @@ RPG.py takes place in a persistent world known as Beladir, it's a simple fantasy
       - [ ] Ruins of Brym
       
     - [ ] Flora (for Alchemy)
+    - [x] Alchemy
+    - [x] Farming
     - [ ] Wilderness
 
 ### Current Features

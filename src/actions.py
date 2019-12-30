@@ -479,12 +479,14 @@ class SpeakBeccaLithe(Action):
 		self.vocation = "Human Estate Agent"
 		self.house_price = 1300
 		self.alchemy_price = 500
+		self.herb_patch_price = 500
 	
 	@add_ungetch
 	def execute(self):
 		#0 = No house bought or not any yes/no so far
 		#1 = answer yes/no to buying house
 		#2 = answer yes/no to buying alchemy table
+		#3 = answer yes/no to buying herb patch
 		text_state = 0
 		if "BeccaLithe_met" not in self.state.player.flags:
 			text = [
@@ -564,6 +566,27 @@ class SpeakBeccaLithe(Action):
 					]
 				text_state = 0
 
+			elif answer.lower() in ["yes", "y"] and text_state == 3:
+				if self.state.player.gold >= self.herb_patch_price:
+					self.state.player.gold -= self.herb_patch_price
+					self.state.player.flags.append("StarterTown_house_herb_patch")
+					text = [
+						"Great!",
+						"",
+						"Our gardener will plow the patch right away, probably before you even get home.",
+						"",
+						"			[Herb Patch] added to house",
+						"",
+						"Let me know if you want to purchase any more [upgrades]."
+					]
+				else:
+					text = [
+						"Hmm, it seems you are unable to afford it.",
+						"",
+						"Let me know if you change your mind"
+					]
+				text_state = 0
+
 			elif answer.lower() in ["no", "n"] and text_state == 1:
 				text = [
 					"Maybe another time.",
@@ -599,7 +622,7 @@ class SpeakBeccaLithe(Action):
 						"",
 						"[Alchemy Table] for all your medical needs.",
 						"",
-						"[Herb Pots] for your beautiful garden.",
+						"[Herb Patch] for your beautiful garden.",
 						"",
 						"[Teleportation Station] to travel straight from home."
 						]
@@ -620,6 +643,19 @@ class SpeakBeccaLithe(Action):
 				else:
 					text = [
 						"You already own an [Alchemy table]."
+					]
+			elif answer.lower() in ["herb", "patch", "herb patch"]:
+				if "StarterTown_house_herb_patch" not in self.state.player.flags:
+					text = [
+						"Do you want to purchase a patch for to grow your own herbs",
+						"infused with wonderfully fertile soil for your house?",
+						"",
+						f"If so, it's gonna be [{self.herb_patch_price} gold coins]."
+					]
+					text_state = 3
+				else:
+					text = [
+						"You already own an [Herb Patch]."
 					]
 			else:
 				text = [

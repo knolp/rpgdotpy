@@ -428,11 +428,11 @@ class Juicer(Usable):
 #StarterTown_house_4 = ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 class FarmingPatch(Usable):
-	def __init__(self, x, y, state, identity):
+	def __init__(self, x, y, state, identity,color=153):
 		name = "FarmingPatch"
 		self.identity = identity
 		self.readable_name = "Farming Patch"
-		super().__init__(name, x, y, "F", color=147)
+		super().__init__(name, x, y, "F", color=color)
 		self.original_x = x
 		self.original_y = y
 		self.screen = state.stdscr

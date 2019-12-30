@@ -1097,10 +1097,27 @@ class StarterTownPlayerHouse(MapState):
         if state.first_time == True:
             state.change_map_screen()
             state.first_time = False
-        objects = [
-            npc.FarmingPatch(22,48,state,"FarmingPatch1"),
-            npc.FarmingPatch(22,49,state,"FarmingPatch2")
+        objects = []
+        patches = [
+            (3,45,"FarmingPatch1"),
+            (3,46,"FarmingPatch2"),
+            (3,47,"FarmingPatch3"),
+            (3,48,"FarmingPatch4"),
+            (3,49,"FarmingPatch5"),
+            (3,50,"FarmingPatch6"),
+            (3,51,"FarmingPatch7")
         ]
+        if "StarterTown_house_herb_patch" in state.player.flags:
+            ids = [x[0] for x in state.player.active_farms]
+            time = [x[2] + x[4] for x in state.player.active_farms]
+            for item in patches:
+                if item[2] in ids:
+                    if time[ids.index(item[2])] <= state.timer.tid:
+                        objects.append(npc.FarmingPatch(item[0], item[1], state, item[2], color=155))
+                    else:
+                        objects.append(npc.FarmingPatch(item[0], item[1], state, item[2], color=154))
+                else:
+                    objects.append(npc.FarmingPatch(item[0], item[1], state, item[2], color=153))
         if "StarterTown_house_alchemy_table" in state.player.flags:
             objects.append(npc.AlchemyTable(16, 75, state))
         if "StarterTown_house_alchemy_table" in state.player.flags:
@@ -1119,6 +1136,17 @@ class StarterTownPlayerHouse(MapState):
         pass
 
     def check_events(self):
+        for item in self.game_map.objects:
+            if item.name == "FarmingPatch":
+                if item.identity in [x[0] for x in self.state.player.active_farms]:
+                    for plant in self.state.player.active_farms:
+                        if item.identity == plant[0]:
+                            if plant[2] + plant[4] <= self.state.timer.tid:
+                                item.color = 155
+                            else:
+                                item.color = 154
+                else:
+                    item.color = 153
         if self.state.player.x == 18 and self.state.player.y == 75 and self.state.check_action:
             for item in self.game_map.objects:
                 if item.name == "AlchemyTable":
