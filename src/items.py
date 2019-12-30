@@ -74,7 +74,7 @@ class IronMace(Item):
                 return {
                     "combat_text" : [
                         "{}'s heavy weight knocks {} to the ground".format(self.readable_name, opponent.readable_name),
-                        "causing {} to be stunned".format(opponent.readable_name)] 
+                    ] 
                 }
             else:
                 return {
@@ -431,7 +431,10 @@ class BarburaSeed(Item):
         self.readable_name = "Barbura Seed"
         self.type = "farming"
         self.equippable = False
-        self.description = "A small green seed. "
+        self.description = "A small green seed."
+        self.result = ["BarburaLeaf"]
+        self.level = 1
+        self.harvest_time = 1209600 #2 weeks
 
 #Consumable
 class MinorHealthPotion(Item):

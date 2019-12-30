@@ -1098,6 +1098,8 @@ class StarterTownPlayerHouse(MapState):
             state.change_map_screen()
             state.first_time = False
         objects = [
+            npc.FarmingPatch(22,48,state,"FarmingPatch1"),
+            npc.FarmingPatch(22,49,state,"FarmingPatch2")
         ]
         if "StarterTown_house_alchemy_table" in state.player.flags:
             objects.append(npc.AlchemyTable(16, 75, state))
@@ -1117,7 +1119,17 @@ class StarterTownPlayerHouse(MapState):
         pass
 
     def check_events(self):
-        if self.state.player.x == 34 and self.state.player.y == 48:
+        if self.state.player.x == 18 and self.state.player.y == 75 and self.state.check_action:
+            for item in self.game_map.objects:
+                if item.name == "AlchemyTable":
+                    item.action(self.state.stdscr, self.state)
+
+        elif self.state.player.x == 18 and self.state.player.y == 74 and self.state.check_action:
+            for item in self.game_map.objects:
+                if item.name == "Juicer":
+                    item.action(self.state.stdscr, self.state)
+
+        elif self.state.player.x == 34 and self.state.player.y == 48:
             events.StarterTown_player_house_exit(self.state)
 
 

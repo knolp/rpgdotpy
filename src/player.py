@@ -40,7 +40,9 @@ class Player():
 		
 		self.time = 0
 		self.location = getattr(states, create_dict["location"])
-		self.inventory = []
+		self.inventory = [
+			#items.BarburaSeed()
+		]
 
 		self.temp_alchemy_inventory = []
 		self.recipes = []
@@ -60,7 +62,8 @@ class Player():
 			"Charisma" : 13,
 			"Agility" : 13,
 			"Attunement" : 13,
-			"Alchemy" : 13
+			"Alchemy" : 13,
+			"Farming" : 13
 		}
 
 		self.last_pos = (3,3)

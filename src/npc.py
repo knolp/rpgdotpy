@@ -6,6 +6,7 @@ import battle
 import actions
 import items
 import alchemy
+import farming
 
 
 class NPC():
@@ -426,7 +427,7 @@ class Juicer(Usable):
 #StarterTown_house_3 = ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 #StarterTown_house_4 = ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-class FarmingPatch():
+class FarmingPatch(Usable):
 	def __init__(self, x, y, state, identity):
 		name = "FarmingPatch"
 		self.identity = identity
@@ -441,7 +442,7 @@ class FarmingPatch():
 		pass
 
 	def action(self, screen, state):
-		pass
+		farming.farming(self.state, self.identity)
 
 
 

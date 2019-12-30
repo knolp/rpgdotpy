@@ -147,6 +147,11 @@ class StateHandler():
 		for item in load_dict["recipes"]:
 			#self.player.inventory.append(items.item_dict[item["name"]]())
 			self.player.recipes.append(helper.get_recipe(item["name"])())
+		
+		for item in load_dict["active_farms"]:
+			self.player.active_farms.append(item)
+
+		self.player.time = load_dict["time"]
 
 	def save_player(self):
 		params = {}
@@ -184,6 +189,12 @@ class StateHandler():
 			if k == "recipes":
 				for i in range(len(params[k])):
 					params[k][i] = params[k][i].__dict__
+
+			if k == "active_farms":
+				for i in range(len(params[k])):
+					params[k][i] = params[k][i]
+		
+		params["time"] = self.timer.tid
 
 
 		with open("save.json", "w") as f:
@@ -359,6 +370,7 @@ def draw_menu(stdscr):
 	curses.init_pair(149,94,-1) #brown fg, black bg
 	curses.init_pair(150,242,-1) #grey fg, black bg
 	curses.init_pair(151,curses.COLOR_WHITE,247)
+	curses.init_pair(152, curses.COLOR_WHITE, curses.COLOR_RED)
 
 	counter = 0
 
@@ -523,12 +535,13 @@ def draw_menu(stdscr):
 
 			stdscr.addstr(39,17,f"Name: {state_handler.player.name}")
 			stdscr.addstr(40,17,f"Type: {state_handler.player.race} {state_handler.player.vocation}")
-			stdscr.addstr(42,17,f"Stats:")
-			stdscr.addstr(44,17,f"Strength: {state_handler.player.stats['Strength']}")
-			stdscr.addstr(45,17,f"Agility: {state_handler.player.stats['Agility']}")
-			stdscr.addstr(46,17,f"Intelligence: {state_handler.player.stats['Intelligence']}")
-			stdscr.addstr(47,17,f"Charisma: {state_handler.player.stats['Charisma']}")
-			stdscr.addstr(48,17,f"Alchemy: {state_handler.player.stats['Alchemy']}")
+			stdscr.addstr(42,17,f"Stats:", curses.color_pair(136))
+			stdscr.addstr(43,17,f"Strength: {state_handler.player.stats['Strength']}")
+			stdscr.addstr(44,17,f"Agility: {state_handler.player.stats['Agility']}")
+			stdscr.addstr(45,17,f"Intelligence: {state_handler.player.stats['Intelligence']}")
+			stdscr.addstr(46,17,f"Charisma: {state_handler.player.stats['Charisma']}")
+			stdscr.addstr(47,17,f"Alchemy: {state_handler.player.stats['Alchemy']}")
+			stdscr.addstr(48,17,f"Farming: {state_handler.player.stats['Farming']}")
 
 
 
@@ -671,6 +684,12 @@ def draw_menu(stdscr):
 
 		if k == ord("4"):
 			state_handler.timer.terminate()
+
+		if k == ord("5"):
+			state_handler.player.active_farms = []
+		
+		if k == ord("6"):
+			state_handler.timer.tid += 1209600
 	
 	state_handler.timer.terminate()
 

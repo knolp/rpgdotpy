@@ -30,8 +30,6 @@ def make_juice(state):
 
     while k != ord("q"):
         screen.clear()
-        for k,v in state.timer.get_real_time().items():
-            screen.addstr(f"{k}: {v}")
         counter += 1
         title_text = "Select a berry or fruit to juice."
         screen.addstr(2, int((width - len(title_text)) / 2), title_text)
