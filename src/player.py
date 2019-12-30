@@ -41,7 +41,7 @@ class Player():
 		self.time = 0
 		self.location = getattr(states, create_dict["location"])
 		self.inventory = [
-			items.BarburaSeed()
+			items.AriamSeed()
 		]
 
 		self.temp_alchemy_inventory = []

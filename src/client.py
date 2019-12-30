@@ -374,6 +374,7 @@ def draw_menu(stdscr):
 	curses.init_pair(153,curses.COLOR_RED, 52) #Farming patch not planted
 	curses.init_pair(154,curses.COLOR_YELLOW,52) #Farming patch planted
 	curses.init_pair(155,curses.COLOR_GREEN,52) #Farming patch planted
+	curses.init_pair(156, curses.COLOR_YELLOW, 40) #Yellow fg on grass bg (initally for AriamBush)
 
 	counter = 0
 

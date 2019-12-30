@@ -7,6 +7,7 @@ import actions
 import items
 import alchemy
 import farming
+import helper
 
 
 class NPC():
@@ -443,6 +444,32 @@ class FarmingPatch(Usable):
 
 	def action(self, screen, state):
 		farming.farming(self.state, self.identity)
+
+
+
+# FLORA
+class AriamBush(Usable):
+	def __init__(self, x, y, state, color=156):
+		name="AriamBush"
+		self.readable_name = "Ariam Bush"
+		super().__init__(name,x,y,"%",color=color)
+		self.original_x = x
+		self.original_y = y
+		self.screen = state.stdscr
+		self.state = state
+	
+	def action(self, screen, state):
+		text = [
+			"Ariam Bush",
+			"",
+			"Do you pick some leaves of this bush?"
+		]
+		answer = helper.yes_no(state.stdscr, state, text)
+		if answer:
+			state.player.inventory.append(items.AriamLeaf())
+			return
+		else:
+			return
 
 
 

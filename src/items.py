@@ -375,13 +375,23 @@ class BarburaLeafDried(Item):
         self.equippable = False
         self.description = "A crunchy, sweet smelling leaf."
 
-class AriamSeed(Item):
+class AriamLeaf(Item):
     def __init__(self):
-        super().__init__("AriamSeed", False)
-        self.readable_name = "Ariam Seed"
+        super().__init__("AriamLeaf", False)
+        self.readable_name = "Ariam Leaf"
         self.type = "crafting"
         self.equippable = False
-        self.description = "A small seed from an Ariam plant."
+        self.description = "An orange leaf from an Ariam plant."
+        self.dryable = True
+        self.result = ["AriamLeafDried"]
+
+class AriamLeafDried(Item):
+    def __init__(self):
+        super().__init__("AriamLeafDried", False)
+        self.readable_name = "Ariam Leaf (Dried)"
+        self.type = "crafting"
+        self.equippable = False
+        self.description = "A crunchy, faded orange leaf."
 
 class ButterflyWing(Item):
     def __init__(self):
@@ -435,6 +445,17 @@ class BarburaSeed(Item):
         self.result = ["BarburaLeaf"]
         self.level = 1
         self.harvest_time = 1209600 #2 weeks
+
+class AriamSeed(Item):
+    def __init__(self):
+        super().__init__("AriamSeed", False)
+        self.readable_name = "Ariam Seed"
+        self.type = "farming"
+        self.equippable = False
+        self.description = "A brown seed from an Ariam Flower"
+        self.result = ["AriamLeaf"]
+        self.level = 2
+        self.harvest_time = 2629746 #1 month
 
 #Consumable
 class MinorHealthPotion(Item):

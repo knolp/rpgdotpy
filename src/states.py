@@ -927,8 +927,7 @@ class GreenForest(MapState):
         if state.first_time == True:
             state.change_map_screen()
             state.first_time = False
-        objects = [
-            
+        objects = [  
         ]
         self.first_time = True
         self.game_map = mapper.GameMap("GreenForest.txt", objects)
