@@ -151,6 +151,9 @@ class StateHandler():
 		for item in load_dict["active_farms"]:
 			self.player.active_farms.append(item)
 
+		for item in load_dict["flora"]:
+			self.player.flora.append(item)
+
 		self.player.time = load_dict["time"]
 
 	def save_player(self):
@@ -191,6 +194,10 @@ class StateHandler():
 					params[k][i] = params[k][i].__dict__
 
 			if k == "active_farms":
+				for i in range(len(params[k])):
+					params[k][i] = params[k][i]
+
+			if k == "flora":
 				for i in range(len(params[k])):
 					params[k][i] = params[k][i]
 		
@@ -560,6 +567,10 @@ def draw_menu(stdscr):
 				state_handler.player.mindvision -= 1
 				for item in state_handler.gamemap.game_map.objects:
 					item.draw(game_box)
+
+			for item in state_handler.player.flora:
+				if item[1] + item[2] <= state_handler.timer.tid:
+					state_handler.player.flora.pop(state_handler.player.flora.index(item))
 
 			if last_mouse_x != 0:
 				state_handler.game_box.addstr(last_mouse_y, last_mouse_x - 1, name)

@@ -39,6 +39,7 @@ class Player():
 			setattr(self, key, create_dict[key])
 		
 		self.time = 0
+		self.flora = [] #t.ex ["StarterTown_ariam_bush", 100 (#timestamp), 1000 (#time dead)]
 		self.location = getattr(states, create_dict["location"])
 		self.inventory = [
 			items.AriamSeed()

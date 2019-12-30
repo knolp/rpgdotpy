@@ -71,11 +71,21 @@ def popup(screen, state, text):
 	while k != ord(" ") and k != ord("q"):
 		start = 10
 		for item in text:
-			screen.addstr(start, 34, item)
+			if "[" in item:
+				before, keyword, after = item.split("[")[0], item.split("[")[1].split("]")[0], item.split("]")[1]
+				screen.addstr(start,34,before)
+				screen.attron(curses.color_pair(136))
+				screen.addstr(start,34 + len(before),keyword)
+				screen.attroff(curses.color_pair(136))
+				screen.addstr(start, 34 + len(before) + len(keyword), after)
+			else:
+				screen.addstr(start, 34, item)
+
+			screen.attron(curses.color_pair(5))
+			screen.addstr(18,34, "Ok")
+			screen.attroff(curses.color_pair(5))
+			
 			start += 1
-		screen.attron(curses.color_pair(5))
-		screen.addstr(18,34, "Ok")
-		screen.attroff(curses.color_pair(5))
 
 		k = screen.getch()
 	curses.ungetch(curses.KEY_F0)

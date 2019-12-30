@@ -325,14 +325,14 @@ class SpeakEvanKripter(Action):
 		if "EvanKripter_met" not in self.state.player.flags:
 			text = [
 				"Hello there!",
-				"My name is Evan Kripter, one of the famous 'Four Adventurers'",
+				"My name is Evan Kripter, one of the famous ['Four Adventurers']",
 				"",
 				"Don't let my appearance scare you, I am not like the other elves."
 			]
 			self.state.player.flags.append("EvanKripter_met")
 		else:
 			text = [
-				"What can I do for you, friend?"
+				"What can I, the leader of the [four adventurers] do for you, friend?"
 			]
 
 		while True:
@@ -344,6 +344,17 @@ class SpeakEvanKripter(Action):
 
 			if answer.lower() in ["e", "exit", "bye", "q", "quit"]:
 				return False
+
+			elif answer.lower() in ["four", "adventurers", "four adventurers"]:
+				text = [
+					"Yes, our party may be a weird one to an outsider.",
+					"We originally met in Blackcliff during a storm",
+					"which caused all ships to wait in harbor, so we had nowhere to go.",
+					"",
+					"After a few pints we decided we should form an alliance and head out - ",
+					"in the world and use our powers to rid the evil for the common man."
+				]
+				text_state = 0
 
 			elif answer.lower() in ["formula"]:
 				if self.state.player.stats["Alchemy"] > 4:
@@ -470,7 +481,35 @@ class SpeakLarsMagnus(Action):
 						"Huh?"
 					]
 
+class SpeakAbyrroQuatz(Action):
+	def __init__(self, screen, state):
+		super().__init__(screen, state, "Speak")
+		self.name = "Abyrro Quatz"
+		self.vocation = "Human Sorcerer"
+	
+	@add_ungetch
+	def execute(self):
+		text_state = 0
+		if "AbyrroQuatz_met" not in self.state.player.flags:
+			text = [
+				"You seem like quite the eager young man, can I trouble you for some help?"
+			]
+			text_state = 1
+		else:
+			text = [
+				"Hello again, friend."
+			]
 
+		while True:
+			answer = input_text(self.name, self.vocation, self.screen, text, self.state)
+
+			if answer.lower() in ["e", "exit", "bye", "q", "quit"]:
+				return False
+
+			else:
+					text = [
+						"Mr Developer, I need some lines here!"
+					]
 
 class SpeakBeccaLithe(Action):
 	def __init__(self, screen, state):

@@ -927,7 +927,8 @@ class GreenForest(MapState):
         if state.first_time == True:
             state.change_map_screen()
             state.first_time = False
-        objects = [  
+        objects = [
+            npc.AriamBush(32,65,state,"StarterTown_ariam_bush")
         ]
         self.first_time = True
         self.game_map = mapper.GameMap("GreenForest.txt", objects)
@@ -954,7 +955,7 @@ class GreenForest(MapState):
 
         if self.state.player.x == 10 and self.state.player.y == 22:
             helper.popup(self.state.stdscr, self.state, [
-                "BROWN BEAR INN",
+                "[Brown Bear Inn]",
                 "",
                 "Come inside and have a drink or rent a room for the night"
                 ])
@@ -967,7 +968,7 @@ class GreenForest(MapState):
         
         if self.state.player.x == 14 and self.state.player.y == 74:
             helper.popup(self.state.stdscr, self.state, [
-                "Hall of Justice",
+                "[Hall of Justice]",
                 "",
                 "For all your goverment needs."
                 ])
@@ -982,7 +983,7 @@ class GreenForest(MapState):
                 helper.popup(self.state.stdscr, self.state,[
                     "The door is locked.",
                     "",
-                    "You do not have the required key."
+                    "You do not have the required [key]."
                 ])
                 self.state.player.x, self.state.player.y = self.state.player.last_pos
 
@@ -991,16 +992,16 @@ class GreenForest(MapState):
                 text = [
                     "House for sale.",
                     "",
-                    "Speak to us at the Hall of Justice for purchase.",
+                    "Speak to us at the [Hall of Justice] for purchase.",
                     "",
                     "Regards,",
-                    "Becca Lithe"
+                    "[Becca Lithe]"
                 ]
             else:
                 text = [
                     "",
                     "",
-                    f"{self.state.player.name}'s House"
+                    f"  {self.state.player.name}'s House"
                 ]
             helper.popup(self.state.stdscr, self.state, text)
             self.state.player.x, self.state.player.y = self.state.player.last_pos
@@ -1025,7 +1026,8 @@ class BrownBearInn(MapState):
             npc.EvanKripter(19,31),
             npc.BaldirKragg(19,17),
             npc.BodvarKragg(23,17),
-            npc.LarsMagnus(23,35)
+            npc.LarsMagnus(23,35),
+            npc.AbyrroQuatz(30,13)
         ]
         self.first_time = True
         self.game_map = mapper.GameMap("BrownBearInn.txt", objects)

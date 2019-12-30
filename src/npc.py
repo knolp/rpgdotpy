@@ -128,7 +128,7 @@ class OskGhar(NPC):
 	def action(self, screen, state):
 		actions.SpeakOskGhar(screen, state).execute()
 
-
+# Brown Bear Inn
 # The 4 adventurers
 class BaldirKragg(NPC):
 	def __init__(self, x, y):
@@ -186,7 +186,19 @@ class LarsMagnus(NPC):
 	def action(self, screen, state):
 		actions.SpeakLarsMagnus(screen, state).execute()
 
+#<!-- The 4 adventurers -->
+class AbyrroQuatz(NPC):
+	def __init__(self, x, y):
+		name = "Abyrro Quatz"
+		super().__init__(name, x, y, "A")
+		self.original_x = x
+		self.original_y = y
+		
+	def turn_action(self):
+		pass
 
+	def action(self, screen, state):
+		actions.SpeakAbyrroQuatz(screen, state).execute()
 
 # HALL OF JUSTICE
 
@@ -449,7 +461,7 @@ class FarmingPatch(Usable):
 
 # FLORA
 class AriamBush(Usable):
-	def __init__(self, x, y, state, color=156):
+	def __init__(self, x, y, state, flag, color=156):
 		name="AriamBush"
 		self.readable_name = "Ariam Bush"
 		super().__init__(name,x,y,"%",color=color)
@@ -457,19 +469,31 @@ class AriamBush(Usable):
 		self.original_y = y
 		self.screen = state.stdscr
 		self.state = state
+		self.flag = flag
 	
 	def action(self, screen, state):
-		text = [
-			"Ariam Bush",
-			"",
-			"Do you pick some leaves of this bush?"
-		]
-		answer = helper.yes_no(state.stdscr, state, text)
-		if answer:
-			state.player.inventory.append(items.AriamLeaf())
-			return
+		if self.flag not in [x[0] for x in state.player.flora]:
+			text = [
+				"Ariam Bush",
+				"",
+				"Do you pick some leaves of this bush?"
+			]
+			answer = helper.yes_no(state.stdscr, state, text)
+			if answer:
+				state.player.flora.append([self.flag, state.timer.tid, 10000])
+				state.player.inventory.append(items.AriamLeaf())
+				return
+			else:
+				return
 		else:
+			text = [
+				"Ariam Bush",
+				"",
+				"This bush has been picked clean recently."
+			]
+			helper.popup(state.stdscr, state, text)
 			return
+		
 
 
 
