@@ -960,7 +960,8 @@ class GreenForest(MapState):
     def check_events(self):
         if self.state.player.x == 37:
             events.GreenForest_south(self.state)
-
+        if self.state.player.y == 1:
+            events.GreenForest_west(self.state)
         # BROWN BEAR INN
         
         if self.state.player.x == 10 and self.state.player.y == 21:
@@ -1181,4 +1182,39 @@ class StarterTownPlayerHouse(MapState):
             events.StarterTown_player_house_exit(self.state)
 
 
-            
+
+
+class TradeDistrict(MapState):
+    name = "Trade District"
+    raw_name = "TradeDistrict"
+    menu_commands = GameCommands
+    objects = []
+    game_map = mapper.GameMap("TradeDistrict.txt", objects)
+
+
+    def __init__(self, state):
+        super().__init__(state)
+        if state.first_time == True:
+            state.change_map_screen()
+            state.first_time = False
+        objects = [
+        ]
+        self.first_time = True
+        self.game_map = mapper.GameMap("TradeDistrict.txt", objects)
+        self.menu = GameMenu
+        self.menu_commands = GameCommands
+        self.ingame_menu = IngameMenu
+
+
+    def draw(self):
+        if self.state.player.phaseshift:
+            self.game_map.draw_map(self.state.game_box, inverted=True)    
+        else:
+            self.game_map.draw_map(self.state.game_box)
+
+    def execute(self):
+        pass
+
+    def check_events(self):
+        if self.state.player.y == 96:
+            events.TradeDistrict_east(self.state)

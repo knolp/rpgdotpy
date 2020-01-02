@@ -147,6 +147,12 @@ def GreenForest_south(state):
 
 	state.update_map()
 
+def GreenForest_west(state):
+	state.player.location = getattr(states, "TradeDistrict")
+	state.player.y = 95
+
+	state.update_map()
+
 def GreenForest_brown_bear_inn_entrance(state):
 	state.player.location = getattr(states, "BrownBearInn")
 	state.player.x = 33
@@ -190,5 +196,12 @@ def StarterTown_player_house_exit(state):
 	state.player.location = getattr(states, "GreenForest")
 	state.player.x = 25
 	state.player.y = 31
+
+	state.update_map()
+
+
+def TradeDistrict_east(state):
+	state.player.location = getattr(states, "GreenForest")
+	state.player.y = 2
 
 	state.update_map()
