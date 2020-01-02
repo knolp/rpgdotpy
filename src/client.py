@@ -536,6 +536,17 @@ def draw_menu(stdscr):
 			draw_commands(state_handler.ingame_menu, state_handler.command_box)
 			state_handler.player.draw(game_box)
 
+			for x in range(len(state_handler.gamemap.game_map.background2)):
+				for y in range(len(state_handler.gamemap.game_map.background2[x])):
+					if state_handler.gamemap.game_map.background2[x][y].over:
+						if (state_handler.gamemap.game_map.background2[x][y].x, state_handler.gamemap.game_map.background2[x][y].y) == (state_handler.player.x, state_handler.player.y):
+							char = "@"
+							if state_handler.player.phaseshift:
+								char = str(state_handler.player.phaseshift)
+							state_handler.gamemap.game_map.background2[x][y].draw(game_box, inverted=True, character=char)
+						else:
+							state_handler.gamemap.game_map.background2[x][y].draw(game_box)
+
 			#If adding pets or followers later, this is the "formula" for translating last pos to draw
 			#stdscr.addch(state_handler.player.last_pos[0], state_handler.player.last_pos[1] + 1, "h")
 

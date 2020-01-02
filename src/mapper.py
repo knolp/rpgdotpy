@@ -13,7 +13,7 @@ curses.use_default_colors()
 
 
 class MapObject():
-	def __init__(self, x, y, character, walkable=True, color=False, executable=False, colors=False, name=False, visible=True):
+	def __init__(self, x, y, character, walkable=True, color=False, executable=False, colors=False, name=False, visible=True, over=False):
 		self.x = x
 		self.y = y
 		self.character = character
@@ -23,6 +23,7 @@ class MapObject():
 		self.executable = executable
 		self.name = name
 		self.visible = visible
+		self.over = over
 
 	@classmethod
 	def tree(cls, x, y):
@@ -105,7 +106,7 @@ class MapObject():
 
 	@classmethod
 	def tree_top(cls, x, y):
-		return cls(x, y, curses.ACS_CKBOARD, walkable=False, color=143, name="Tree Top")
+		return cls(x, y, curses.ACS_CKBOARD, walkable=True, color=143, name="Tree Top", over=True)
 
 	@classmethod
 	def wooden_chair(cls, x, y):
@@ -136,9 +137,13 @@ class MapObject():
 		return cls(x,y, "#", walkable = True, color=96, name="Sign")
 
 
-	def draw(self, screen, seen=False, inverted=False):
+	def draw(self, screen, seen=False, inverted=False,character=False):
 		if type(self.color) == list:
 			self.color = random.choice(self.color)
+
+		char = self.character
+		if character:
+			char = character
 
 		if self.colors:
 			if self.color == False:
@@ -151,25 +156,25 @@ class MapObject():
 		if not inverted:
 			if self.color and seen == False:
 				screen.attron(curses.color_pair(self.color))
-				screen.addch(self.x, self.y, self.character)
+				screen.addch(self.x, self.y, char)
 				screen.attroff(curses.color_pair(self.color))
 			elif self.color and seen == True:
 				screen.attron(curses.color_pair(self.color))
-				screen.addch(self.x, self.y, self.character, curses.A_REVERSE)
+				screen.addch(self.x, self.y, char, curses.A_REVERSE)
 				screen.attroff(curses.color_pair(self.color))
 			else:
-				screen.addstr(self.x, self.y, self.character)
+				screen.addstr(self.x, self.y, char)
 		else:
 			if self.color and seen == False:
 				screen.attron(curses.color_pair(self.color))
-				screen.addch(self.x, self.y, self.character,curses.A_REVERSE)
+				screen.addch(self.x, self.y, char,curses.A_REVERSE)
 				screen.attroff(curses.color_pair(self.color))
 			elif self.color and seen == True:
 				screen.attron(curses.color_pair(self.color))
-				screen.addch(self.x, self.y, self.character, curses.A_REVERSE)
+				screen.addch(self.x, self.y, char, curses.A_REVERSE)
 				screen.attroff(curses.color_pair(self.color))
 			else:
-				screen.addstr(self.x, self.y, self.character,curses.A_REVERSE)
+				screen.addstr(self.x, self.y, char,curses.A_REVERSE)
 
 
 class GameMap():

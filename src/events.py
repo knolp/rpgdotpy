@@ -35,9 +35,9 @@ def StarterTown_house_basement_door_entrance(state):
 			"You try to open the door, but it is locked.",
 			"You notice a sign on the door that reads:",
 			"",
-			"'Door locked.",
+			"Door locked.",
 			"Ask me if you need access",
-			"- Osk'Ghar'"
+			"[- Osk'Ghar]"
 			])
 		state.player.x = 14
 		state.player.y = 32
