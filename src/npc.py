@@ -397,6 +397,35 @@ class DeverBerries(Usable):
 		actions.DeverBerryPick(self.screen, self.state).execute()
 
 
+class SingleBookCase(Usable):
+	def __init__(self, x, y, state, book):
+		name = "SingleBookCase"
+		self.readable_name = "Bookcase (single)"
+		self.book = book
+		super().__init__(name,x,y,curses.ACS_PI,color=147)
+		
+
+	def turn_action(self):
+		pass
+
+	def action(self, screen, state):
+		text = [
+			"In this bookcase you see a book with the name",
+			"",
+			f"[{self.book.readable_name}]",
+			f"by [{self.book.author}]",
+			"",
+			"Do you read it?"
+		]
+		answer = helper.yes_no(state.stdscr, state, text)
+
+		if answer:
+			self.book.read(state.stdscr)
+			return
+		else:
+			return
+
+
 
 
 # Player Housing Upgrades

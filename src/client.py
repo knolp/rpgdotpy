@@ -24,6 +24,7 @@ import monster
 import pathfinding
 import pathfinding2
 import abilities
+import books
 
 class Timer():
 	def __init__(self, tid):
@@ -726,7 +727,8 @@ def draw_menu(stdscr):
 			state_handler.timer.terminate()
 
 		if k == ord("5"):
-			state_handler.player.active_farms = []
+			book = books.BasicAlchemy()
+			book.read(state_handler.stdscr)
 		
 		if k == ord("6"):
 			state_handler.timer.tid += 1209600

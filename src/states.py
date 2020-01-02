@@ -11,6 +11,7 @@ import events
 import helper
 import time
 import curses
+import books
 
 # HELPERS #
 
@@ -1238,6 +1239,7 @@ class TradeDistrictAlchemist(MapState):
             state.change_map_screen()
             state.first_time = False
         objects = [
+            npc.SingleBookCase(18,45, state, books.BasicAlchemy())
         ]
         self.first_time = True
         self.game_map = mapper.GameMap("TradeDistrict_alchemist.txt", objects)
