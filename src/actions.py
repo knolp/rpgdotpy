@@ -487,6 +487,10 @@ class SpeakAbyrroQuatz(Action):
 		self.name = "Abyrro Quatz"
 		self.vocation = "Human Sorcerer"
 	
+	#Text_states
+	#1 = yes/no efter initial meet
+	#2 = yes/no efter frågat om quest
+	
 	@add_ungetch
 	def execute(self):
 		text_state = 0
@@ -495,6 +499,7 @@ class SpeakAbyrroQuatz(Action):
 				"You seem like quite the eager young man, can I trouble you for some help?"
 			]
 			text_state = 1
+			self.state.player.flags.append("AbyrroQuatz_met")
 		else:
 			text = [
 				"Hello again, friend."
@@ -505,11 +510,55 @@ class SpeakAbyrroQuatz(Action):
 
 			if answer.lower() in ["e", "exit", "bye", "q", "quit"]:
 				return False
+			
+			if answer.lower() in ["yes", "y"]:
+				print("?")
+				if text_state == 1:
+					text = [
+						"I am in quite a pickle, I am here from Berud to buy some hides.",
+						"But the tanner doesn't seems to still hold a grudge against me.",
+						"",
+						"Would you be able to buy 5 [Deer Hides] for me?"
+					]
+					text_state = 2
+				elif text_state == 2:
+					text = [
+						"Wonderful!",
+						"",
+						"Take this gold, it should be enough!",
+						"",
+						"		[25 gold added to coin pouch]",
+						"",
+						"Meet me back here once you are done."
+					]
+					self.state.player.flags.append("AbyrroQuatz_hides_started")
+					text_state = 0
+
+
+			elif answer.lower() in ["quest", "help"]:
+				if  "AbyrroQuatz_hides_started" not in self.state.player.flags:
+					text = [
+						"I am in quite a pickle, I am here from Berud to buy some hides.",
+						"But the tanner doesn't seems to still hold a grudge against me.",
+						"",
+						"Would you be able to buy 5 [Deer Hides] for me?"
+					]
+					text_state = 2
+				
+				elif "DeerHide" not in [x.name for x in self.state.player.inventory]:
+					text = [
+						"You need to get me those [Deer Hides], remember?",
+						"I gave you the money, I trust you will come back with them.",
+						"I must be back in Berud soon."
+					]
+					text_state = 0
+
 
 			else:
-					text = [
-						"Mr Developer, I need some lines here!"
-					]
+				text = [
+					"Mr Developer, I need some lines here!"
+				]
+				text_state = 0
 
 class SpeakBeccaLithe(Action):
 	def __init__(self, screen, state):

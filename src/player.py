@@ -47,7 +47,7 @@ class Player():
 
 		self.temp_alchemy_inventory = []
 		self.recipes = []
-		self.active_farms = []
+		self.active_farms = [] #0=id,1=Plant,2=time_planted,3=result,4=harvest_time
 		self.hotkeys = {
 			"1" : False,
 			"2" : abilities.MindVision(),

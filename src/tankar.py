@@ -46,6 +46,12 @@ class Flags():
 
         started = "WakeUpCall_started"
         deverberries = "WakeUpCall_deverberries_picked"
+    
+    def Hide(self, quest):
+        questgiver = "Abyrro Quatz"
+        location = "Brown Bear Inn"
+        
+        started = "AbyrroQuatz_hides_started"
 
 
 
