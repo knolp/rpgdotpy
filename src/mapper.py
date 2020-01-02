@@ -298,8 +298,8 @@ class GameMap():
 					self.background2[x][y].draw(screen)
 				else:
 					self.background2[x][y].draw(screen, inverted=True)
-		for item in self.objects:
-			item.draw(screen)
+		#for item in self.objects:
+		#	item.draw(screen)
 		
 		#self.update_objects()
 

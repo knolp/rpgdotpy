@@ -938,7 +938,9 @@ class GreenForest(MapState):
             state.change_map_screen()
             state.first_time = False
         objects = [
-            npc.AriamBush(32,65,state,"StarterTown_ariam_bush")
+            npc.AriamBush(32,65,state,"StarterTown_ariam_bush"),
+            npc.ErolKipman(30,36),
+            npc.ErolKipman(30,55)
         ]
         self.first_time = True
         self.game_map = mapper.GameMap("GreenForest.txt", objects)
@@ -1218,3 +1220,41 @@ class TradeDistrict(MapState):
     def check_events(self):
         if self.state.player.y == 96:
             events.TradeDistrict_east(self.state)
+        if self.state.player.x == 19 and self.state.player.y == 20:
+            events.TradeDistrict_alchemist_entrance(self.state)
+
+
+class TradeDistrictAlchemist(MapState):
+    name = "Trade District (Alchemist)"
+    raw_name = "TradeDistrictAlchemist"
+    menu_commands = GameCommands
+    objects = []
+    game_map = mapper.GameMap("TradeDistrict_alchemist.txt", objects)
+
+
+    def __init__(self, state):
+        super().__init__(state)
+        if state.first_time == True:
+            state.change_map_screen()
+            state.first_time = False
+        objects = [
+        ]
+        self.first_time = True
+        self.game_map = mapper.GameMap("TradeDistrict_alchemist.txt", objects)
+        self.menu = GameMenu
+        self.menu_commands = GameCommands
+        self.ingame_menu = IngameMenu
+
+
+    def draw(self):
+        if self.state.player.phaseshift:
+            self.game_map.draw_map(self.state.game_box, inverted=True)    
+        else:
+            self.game_map.draw_map(self.state.game_box)
+
+    def execute(self):
+        pass
+
+    def check_events(self):
+        if self.state.player.x == 24 and self.state.player.y == 47:
+            events.TradeDistrict_alchemist_exit(self.state)

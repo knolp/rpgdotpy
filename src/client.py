@@ -547,6 +547,10 @@ def draw_menu(stdscr):
 						else:
 							state_handler.gamemap.game_map.background2[x][y].draw(game_box)
 
+			for item in state_handler.gamemap.game_map.objects:
+				if (item.x, item.y) != (state_handler.player.x, state_handler.player.y):
+					item.draw(game_box)
+
 			#If adding pets or followers later, this is the "formula" for translating last pos to draw
 			#stdscr.addch(state_handler.player.last_pos[0], state_handler.player.last_pos[1] + 1, "h")
 

@@ -205,3 +205,15 @@ def TradeDistrict_east(state):
 	state.player.y = 2
 
 	state.update_map()
+
+def TradeDistrict_alchemist_entrance(state):
+	state.player.location = getattr(states, "TradeDistrictAlchemist")
+	state.player.x, state.player.y = 23,47
+
+	state.update_map()
+
+def TradeDistrict_alchemist_exit(state):
+	state.player.location = getattr(states, "TradeDistrict")
+	state.player.x, state.player.y = 20,20
+
+	state.update_map()
