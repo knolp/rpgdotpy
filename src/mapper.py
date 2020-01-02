@@ -136,7 +136,7 @@ class MapObject():
 		return cls(x,y, "#", walkable = True, color=96, name="Sign")
 
 
-	def draw(self, screen, seen=False):
+	def draw(self, screen, seen=False, inverted=False):
 		if type(self.color) == list:
 			self.color = random.choice(self.color)
 
@@ -147,16 +147,29 @@ class MapObject():
 				self.color, useless = self.colors
 			elif self.color == self.colors[0]:
 				useless, self.color = self.colors
-		if self.color and seen == False:
-			screen.attron(curses.color_pair(self.color))
-			screen.addch(self.x, self.y, self.character)
-			screen.attroff(curses.color_pair(self.color))
-		elif self.color and seen == True:
-			screen.attron(curses.color_pair(self.color))
-			screen.addch(self.x, self.y, self.character, curses.A_REVERSE)
-			screen.attroff(curses.color_pair(self.color))
+		
+		if not inverted:
+			if self.color and seen == False:
+				screen.attron(curses.color_pair(self.color))
+				screen.addch(self.x, self.y, self.character)
+				screen.attroff(curses.color_pair(self.color))
+			elif self.color and seen == True:
+				screen.attron(curses.color_pair(self.color))
+				screen.addch(self.x, self.y, self.character, curses.A_REVERSE)
+				screen.attroff(curses.color_pair(self.color))
+			else:
+				screen.addstr(self.x, self.y, self.character)
 		else:
-			screen.addstr(self.x, self.y, self.character)
+			if self.color and seen == False:
+				screen.attron(curses.color_pair(self.color))
+				screen.addch(self.x, self.y, self.character,curses.A_REVERSE)
+				screen.attroff(curses.color_pair(self.color))
+			elif self.color and seen == True:
+				screen.attron(curses.color_pair(self.color))
+				screen.addch(self.x, self.y, self.character, curses.A_REVERSE)
+				screen.attroff(curses.color_pair(self.color))
+			else:
+				screen.addstr(self.x, self.y, self.character,curses.A_REVERSE)
 
 
 class GameMap():
@@ -271,12 +284,15 @@ class GameMap():
 		for item in self.objects:
 			item.turn_action()
 
-	def draw_map(self, screen):
+	def draw_map(self, screen, inverted = False):
 		#for item in self.background:
 		#	item.draw(screen)
 		for x in range(len(self.background2)):
 			for y in range(len(self.background2[x])):
-				self.background2[x][y].draw(screen)
+				if not inverted:
+					self.background2[x][y].draw(screen)
+				else:
+					self.background2[x][y].draw(screen, inverted=True)
 		for item in self.objects:
 			item.draw(screen)
 		

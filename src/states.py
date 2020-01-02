@@ -606,6 +606,12 @@ class MapState():
         print("NOT IMPLETMENTED")
         print(self.state.game_map)
 
+    def draw(self):
+        if self.state.player.phaseshift:
+            self.game_map.draw_map(self.state.game_box, inverted=True)    
+        else:
+            self.game_map.draw_map(self.state.game_box)
+
 
 class StarterTown(MapState):
     name = "Starter Town"
@@ -679,8 +685,10 @@ class StarterTown_house(MapState):
 
 
     def draw(self):
-        self.game_map.draw_map(self.state.game_box)
-        #self.game_map.draw_vision(self.state, self.state.game_box)
+        if self.state.player.phaseshift:
+            self.game_map.draw_map(self.state.game_box, inverted=True)    
+        else:
+            self.game_map.draw_map(self.state.game_box)
 
     def execute(self):
         pass
@@ -729,9 +737,11 @@ class StarterTown_house_basement(MapState):
         self.menu_commands = GameCommands
         self.ingame_menu = IngameMenu
 
-
     def draw(self):
-        self.game_map.draw_vision(self.state, self.state.game_box)
+        if self.state.player.phaseshift:
+            self.game_map.draw_map(self.state.game_box, inverted=True)    
+        else:
+            self.game_map.draw_map(self.state.game_box)
 
     def execute(self):
         pass
@@ -938,7 +948,10 @@ class GreenForest(MapState):
 
 
     def draw(self):
-        self.game_map.draw_map(self.state.game_box)
+        if self.state.player.phaseshift:
+            self.game_map.draw_map(self.state.game_box, inverted=True)    
+        else:
+            self.game_map.draw_map(self.state.game_box)
         self.state.stdscr.addstr(11,72,"H.O.J", curses.color_pair(151))
 
     def execute(self):
@@ -1037,7 +1050,10 @@ class BrownBearInn(MapState):
 
 
     def draw(self):
-        self.game_map.draw_map(self.state.game_box)
+        if self.state.player.phaseshift:
+            self.game_map.draw_map(self.state.game_box, inverted=True)    
+        else:
+            self.game_map.draw_map(self.state.game_box)
 
     def execute(self):
         pass
@@ -1071,7 +1087,10 @@ class HallOfJustice(MapState):
 
 
     def draw(self):
-        self.game_map.draw_map(self.state.game_box)
+        if self.state.player.phaseshift:
+            self.game_map.draw_map(self.state.game_box, inverted=True)    
+        else:
+            self.game_map.draw_map(self.state.game_box)
 
     def execute(self):
         pass

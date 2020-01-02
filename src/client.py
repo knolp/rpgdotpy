@@ -102,6 +102,9 @@ class StateHandler():
 
 
 	def check_collision(self,next_tile):
+		if self.player:
+			if self.player.phaseshift:
+				return True
 		x,y = next_tile
 		return self.gamemap.game_map.background2[x - 1][y - 1].walkable
 
@@ -427,6 +430,9 @@ def draw_menu(stdscr):
 
 			if state_handler.able_to_move == True:
 				if k in [curses.KEY_DOWN, curses.KEY_UP, curses.KEY_LEFT, curses.KEY_RIGHT, ord("w"), ord("a"), ord("s"), ord("d")]:
+					if state_handler.player.phaseshift:
+						state_handler.player.phaseshift -= 1
+
 					state_handler.player.last_pos = state_handler.player.x, state_handler.player.y
 					#state_handler.check_tall_grass()
 					name = ""
@@ -560,7 +566,13 @@ def draw_menu(stdscr):
 			stdscr.addstr(45,int((150 - len(ppos)) / 2),ppos)
 
 			temp_invent = f"Temp_ALCH: {''.join(state_handler.player.temp_alchemy_inventory)}"
-			stdscr.addstr(46,int((150 - len(ppos)) / 2),temp_invent)
+			stdscr.addstr(46,int((150 - len(temp_invent)) / 2),temp_invent)
+
+			info = f"Phaseshift = {state_handler.player.phaseshift}"
+			stdscr.addstr(47,int((150 - len(info)) / 2),info)
+
+			info_2 = f"Mindvision = {state_handler.player.mindvision}"
+			stdscr.addstr(48,int((150 - len(info_2)) / 2),info_2)
 
 
 			if state_handler.player.mindvision:
@@ -619,7 +631,6 @@ def draw_menu(stdscr):
 								curses.ungetch(curses.KEY_F0)
 							else:
 								state_handler.game_state = next_game_state(state_handler)
-
 
 
 			state_handler.game_state.draw()

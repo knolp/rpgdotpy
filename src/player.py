@@ -50,7 +50,7 @@ class Player():
 		self.active_farms = [] #0=id,1=Plant,2=time_planted,3=result,4=harvest_time
 		self.hotkeys = {
 			"1" : False,
-			"2" : abilities.MindVision(),
+			"2" : abilities.PhaseShift(),
 			"3" : False,
 			"4" : False,
 			"5" : False,
@@ -89,9 +89,13 @@ class Player():
 
 		#Spellstuff
 		self.mindvision = 0
+		self.phaseshift = 0
 
 	def draw(self, screen):
-		screen.addstr(self.x, self.y, "@")
+		if self.phaseshift:
+			screen.addstr(self.x, self.y, str(self.phaseshift))
+		else:
+			screen.addstr(self.x, self.y, "@")
 
 
 if __name__ == '__main__':

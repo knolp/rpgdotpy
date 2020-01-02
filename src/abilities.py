@@ -245,6 +245,20 @@ class MindVision():
     def execute(self, player):
         player.mindvision = player.stats["Intelligence"] + player.stats["Attunement"]
 
+class PhaseShift():
+    def __init__(self):
+        self.name = "PhaseShift"
+        self.readable_name = "Phase Shift"
+        self.description = "Shift into the abstract realm, removing your physical body."
+    
+    def execute(self, player):
+        if player.phaseshift == 0:
+            player.phaseshift = player.stats["Intelligence"] + player.stats["Attunement"]
+            if player.phaseshift > 9:
+                player.phaseshift = 9
+        else:
+            player.phaseshift = 0
+
 
 class Teleport():
     def __init__(self):
