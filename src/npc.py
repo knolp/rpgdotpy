@@ -419,7 +419,7 @@ class SingleBookCase(Usable):
 		name = "SingleBookCase"
 		self.readable_name = "Bookcase (single)"
 		self.book = book
-		super().__init__(name,x,y,curses.ACS_PI,color=147)
+		super().__init__(name,x,y,"=",color=148)
 		
 
 	def turn_action(self):
@@ -441,6 +441,20 @@ class SingleBookCase(Usable):
 			return
 		else:
 			return
+
+class EmptyBookCase(Usable):
+	def __init__(self, x, y, state, text):
+		name = "EmptyBookCase"
+		self.readable_name = "Bookcase (Empty)"
+		self.text = text
+		super().__init__(name,x,y,"=",color=148)
+		
+
+	def turn_action(self):
+		pass
+
+	def action(self, screen, state):
+		helper.popup(state.stdscr, state, self.text)
 
 
 

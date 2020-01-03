@@ -630,7 +630,7 @@ class StarterTown(MapState):
             state.change_map_screen()
             state.first_time = False
         objects = [
-            npc.ErolKipman(13, 37),
+            npc.ErolKipman(15, 58),
         ]
         self.game_map = mapper.GameMap("map1.txt", objects)
         self.menu = GameMenu
@@ -1246,7 +1246,10 @@ class TradeDistrictAlchemist(MapState):
             state.first_time = False
         objects = [
             npc.EmpaLinka(19,35),
-            npc.SingleBookCase(18,45, state, books.BasicAlchemy())
+            npc.SingleBookCase(14,45, state, books.BasicAlchemy()),
+            npc.EmptyBookCase(15,46,state,[
+                "You do not see any interesting books here."
+            ])
         ]
         self.first_time = True
         self.game_map = mapper.GameMap("TradeDistrict_alchemist.txt", objects)
@@ -1267,3 +1270,7 @@ class TradeDistrictAlchemist(MapState):
     def check_events(self):
         if self.state.player.x == 24 and self.state.player.y == 47:
             events.TradeDistrict_alchemist_exit(self.state)
+        if self.state.player.x == 15 and self.state.check_action:
+            for item in self.game_map.objects:
+                if item.x == 14 and item.y == self.state.player.y:
+                    item.action(self.state.stdscr, self.state)

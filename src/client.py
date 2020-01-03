@@ -377,7 +377,7 @@ def draw_menu(stdscr):
 	curses.init_pair(145, 94, 52) #Wooden Chair
 	curses.init_pair(146, 237, 52) #floor fence
 	curses.init_pair(147, curses.COLOR_WHITE, -1)
-	curses.init_pair(148, curses.COLOR_YELLOW, 238)
+	curses.init_pair(148, curses.COLOR_YELLOW, 238) #Wall torch
 	curses.init_pair(149,94,-1) #brown fg, black bg
 	curses.init_pair(150,242,-1) #grey fg, black bg
 	curses.init_pair(151,curses.COLOR_WHITE,247)
@@ -386,6 +386,8 @@ def draw_menu(stdscr):
 	curses.init_pair(154,curses.COLOR_YELLOW,52) #Farming patch planted
 	curses.init_pair(155,curses.COLOR_GREEN,52) #Farming patch planted
 	curses.init_pair(156, curses.COLOR_YELLOW, 40) #Yellow fg on grass bg (initally for AriamBush)
+	curses.init_pair(157, curses.COLOR_YELLOW, 185)
+
 
 	counter = 0
 
