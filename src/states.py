@@ -1247,7 +1247,7 @@ class TradeDistrictAlchemist(MapState):
         objects = [
             npc.EmpaLinka(19,35),
             npc.SingleBookCase(14,45, state, books.BasicAlchemy()),
-            npc.EmptyBookCase(15,46,state,[
+            npc.EmptyBookCase(14,46,state,[
                 "You do not see any interesting books here."
             ])
         ]

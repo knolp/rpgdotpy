@@ -103,12 +103,37 @@ class BasicAlchemy(Book):
             "",
             "Start by preparing the [deverberry], by juicing it.",
             "",
-            "   (Be sure to save the [skin] as it)",
-            "   (can act as a great activator for a [Woodland Charm])",
+            "   (Be sure to save the [skin] as it - ",
+            "    can act as a great activator for a [Woodland Charm])",
             "",
-            "Then dry out the [leaves] and add it to a vial of water.",
-            "Stir until you can see no trace of leaves and it has",
-            "become a distinct [brown] color."
+            "Then dry out the [leaves] and crumble them into the",
+            "water and let it simmer at low heat until you can",
+            "no longer distuingish the brew from the [leaf fragments]." 
         ]
 
-        self.pages = [page_1, page_2, page_3, page_4]
+        page_5 = [
+            "Brawler's Elixir",
+            "",
+            "[1x Troll Hair]",
+            "[1x Desert Salt]",
+            "[1x Ariam Leaf]",
+            "",
+            "This brew originates from the [Orcish deserts] and has",
+            "the ability to grant the drinker great strength but ",
+            "only temporarily as it fades quickly.",
+            "",
+            "Start by grinding the [troll hair] together with the",
+            "[salt] until you get a course powder.",
+            "",
+            "Next up is to take a thread and an [Ariam Leaf] to form",
+            "a kind of tea-bag for the powder, be sure to wrap it up tight.",
+            "",
+            "Let the bag simmer in a boiling pot of water for a minute before",
+            "removing it, making sure to not leave any parts in the water.",
+            "",
+            "   (This bag can be [re-used] with lesser effects for later elixirs.)",
+            "",
+            "Once cooled down, the elixir is ready to be ingested."
+        ]
+
+        self.pages = [page_1, page_2, page_3, page_4, page_5]
