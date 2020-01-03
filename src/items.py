@@ -313,6 +313,8 @@ class StarterTownHouseKey(Item):
         self.type = "key"
         self.equippable = False
         self.description = "Unlocks the front door at the house in Starter Town"
+        self.art = art.draw_key()
+        self.rarity = "unique"
 
 
 

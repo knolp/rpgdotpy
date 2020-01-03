@@ -59,6 +59,51 @@ class Action():
 		pass
 
 
+class SpeakBluePrint(Action):
+	def __init__(self, screen, state):
+		super().__init__(screen, state, "Speak")
+		self.name = "Blue Print"
+		self.vocation = "Python Class"
+	
+	@add_ungetch
+	def execute(self):
+		text_state = 0 #Text_state for keeping track of states for specific dialogue-trees
+		if "BeccaLithe_met" not in self.state.player.flags: #Inital meet flag, on most NPCs
+			text = [
+				"Hello there, my name is Blue Print!",
+				"",
+				"Nice to meet you!"
+			] #Text is always a list of sentences, add empty string to <br>/linebreak
+			self.state.player.flags.append("BeccaLithe_met") #Append flag after
+		else: #Normal text after initial meet
+			text = [
+				"Hello again!",
+				"",
+				"Nice to meet again"
+			]
+		
+		while True:
+			answer = input_text(self.name, self.vocation, self.screen, text, self.state).lower() #Get input
+			
+			if answer in ["e", "exit", "bye", "q", "quit"]: #Always be here
+				return False #False return to exit
+			
+			elif answer in ["quest"]: #Quest should be a standard, as well as trade
+				text = [
+					"Maybe another time."
+				]
+				text_state = 0 #Set state to inital state after generic dialogues
+			elif answer in ["trade"]:
+				text = [
+					"I am not a salesman, sadly."
+				]
+			else: #Generic catch-all for non-keywords
+				text = [
+					"Huh?",
+					"",
+					"I do not know what that means."
+				]
+
 #STARTER TOWN
 class SpeakErolKipman(Action):
 	def __init__(self, screen, state):
@@ -749,6 +794,87 @@ class SpeakBeccaLithe(Action):
 				text = [
 					"I do not know what that means."
 				]
+
+class SpeakEmpaLinka(Action):
+	def __init__(self, screen, state):
+		super().__init__(screen, state, "Speak")
+		self.name = "Empa Linka"
+		self.vocation = "Human Alchemist"
+	
+	@add_ungetch
+	def execute(self):
+		text_state = 0 #Text_state for keeping track of states for specific dialogue-trees
+		if "EmpaLinka_met" not in self.state.player.flags: #Inital meet flag, on most NPCs
+			text = [
+				"Hello there, my name is Empa Linka!",
+				"",
+				"Always great to see a new face around here!"
+			] #Text is always a list of sentences, add empty string to <br>/linebreak
+			self.state.player.flags.append("EmpaLinka_met") #Append flag after
+		else: #Normal text after initial meet
+			text = [
+				"Hello again!",
+				"",
+				"Need some more reagents today?"
+			]
+		
+		while True:
+			answer = input_text(self.name, self.vocation, self.screen, text, self.state).lower() #Get input
+			
+			if answer in ["e", "exit", "bye", "q", "quit"]: #Always be here
+				return False #False return to exit
+			
+			elif answer in ["quest"]: #Quest should be a standard, as well as trade
+				text = [
+					"I am not one for adventures, sadly.."
+				]
+				text_state = 0 #Set state to inital state after generic dialogues
+			elif answer in ["trade"]:
+				text = [
+					"Is there anything else I can do for you?"
+				]
+				if inventory.trade(npc.EmpaLinka, self.screen, self.state):
+					return
+
+			else: #Generic catch-all for non-keywords
+				text = [
+					"Sorry, what did you say?",
+					"",
+					"I do not know what that means."
+				]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Objects
 

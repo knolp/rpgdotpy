@@ -298,6 +298,16 @@ def draw_portrait_dwarf():
 
 	return return_list
 
+
+def draw_key():
+	return_list = []
+
+	return_list.append("  8 8          ,o. ")
+	return_list.append(" d8o8azzzzzzzzd   b")
+	return_list.append("               `o'")
+
+	return return_list
+
 if __name__ == "__main__":
 
 	for item in draw_RatKing():

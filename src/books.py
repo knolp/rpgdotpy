@@ -34,7 +34,13 @@ class Book():
 
                 start += 1
 
+            if selected_page != 0:
+                screen.addch(47,32,curses.ACS_LARROW)
+
             screen.addstr(47,34, f"Page {selected_page + 1} of {max_page + 1}")
+
+            if selected_page < max_page:
+                screen.addch(47,36 + len(f"Page {selected_page + 1} of {max_page + 1}"),curses.ACS_RARROW)
 
             k = screen.getch()
 
@@ -84,7 +90,9 @@ class BasicAlchemy(Book):
             "",
             "But do not take it easy, for changing the mind can",
             "lead to disastrous results if done incorrectly.",
-            "I advise to follow the steps exactly."
+            "I advise to follow the steps exactly.",
+            "",
+            "Or else you might end up as [Melder, the Deranged King]"
         ]
 
         page_4 = [
@@ -94,6 +102,10 @@ class BasicAlchemy(Book):
             "[1x Barbura Leaf]",
             "",
             "Start by preparing the [deverberry], by juicing it.",
+            "",
+            "   (Be sure to save the [skin] as it)",
+            "   (can act as a great activator for a [Woodland Charm])",
+            "",
             "Then dry out the [leaves] and add it to a vial of water.",
             "Stir until you can see no trace of leaves and it has",
             "become a distinct [brown] color."

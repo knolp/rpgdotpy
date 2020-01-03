@@ -602,6 +602,7 @@ class Inventory():
 class MapState():
     def __init__(self, state):
         self.state = state
+        self.fov = False
 
     def check_events(self):
         print("NOT IMPLETMENTED")
@@ -738,11 +739,10 @@ class StarterTown_house_basement(MapState):
         self.menu_commands = GameCommands
         self.ingame_menu = IngameMenu
 
+        self.fov = True
+
     def draw(self):
-        if self.state.player.phaseshift:
-            self.game_map.draw_map(self.state.game_box, inverted=True)    
-        else:
-            self.game_map.draw_map(self.state.game_box)
+        self.game_map.draw_vision(self.state, self.state.game_box)
 
     def execute(self):
         pass
@@ -820,6 +820,8 @@ class StarterTown_house_basement_hallway(MapState):
         self.menu_commands = GameCommands
         self.ingame_menu = IngameMenu
 
+        self.fov = True
+
 
     def draw(self):
         self.game_map.draw_vision(self.state, self.state.game_box)
@@ -867,6 +869,8 @@ class StarterTown_haunted_house_1(MapState):
         self.menu_commands = GameCommands
         self.ingame_menu = IngameMenu
 
+        self.fov = True
+
 
     def draw(self):
         self.game_map.draw_vision(self.state, self.state.game_box)
@@ -907,6 +911,8 @@ class StarterTown_haunted_house_2(MapState):
         self.menu = GameMenu
         self.menu_commands = GameCommands
         self.ingame_menu = IngameMenu
+
+        self.fov = True
 
 
     def draw(self):
@@ -1239,6 +1245,7 @@ class TradeDistrictAlchemist(MapState):
             state.change_map_screen()
             state.first_time = False
         objects = [
+            npc.EmpaLinka(19,35),
             npc.SingleBookCase(18,45, state, books.BasicAlchemy())
         ]
         self.first_time = True

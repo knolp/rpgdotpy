@@ -216,8 +216,25 @@ class BeccaLithe(NPC):
 	def action(self, screen, state):
 		actions.SpeakBeccaLithe(screen, state).execute()
 
+#Trade District Alchemist
 
+class EmpaLinka(NPC):
+	inventory = [
+			items.ArcaneDust(),
+			items.TrollHair(),
+			items.DeverBerrySkinDried()
+		]
+	def __init__(self,x,y):
+		name = "Empa Linka"
+		super().__init__(name, x, y, "E")
+		self.original_x = x
+		self.original_y = y
+	
+	def turn_action(self):
+		pass
 
+	def action(self, screen, state):
+		actions.SpeakEmpaLinka(screen, state).execute()
 
 
 
