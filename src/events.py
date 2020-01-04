@@ -8,6 +8,12 @@ def StarterTown_north(state):
 
 	state.update_map()
 
+def StarterTown_west(state):
+	state.player.location = getattr(states, "HuntersCamp")
+	state.player.y = 95
+
+	state.update_map()
+
 def StarterTown_door(state):
 	state.player.location = getattr(states, "StarterTown_house")
 	state.player.x = 23
@@ -206,6 +212,12 @@ def TradeDistrict_east(state):
 
 	state.update_map()
 
+def TradeDistrict_south(state):
+	state.player.location = getattr(states, "HuntersCamp")
+	state.player.x = 2
+
+	state.update_map()
+
 def TradeDistrict_alchemist_entrance(state):
 	state.player.location = getattr(states, "TradeDistrictAlchemist")
 	state.player.x, state.player.y = 23,47
@@ -215,5 +227,17 @@ def TradeDistrict_alchemist_entrance(state):
 def TradeDistrict_alchemist_exit(state):
 	state.player.location = getattr(states, "TradeDistrict")
 	state.player.x, state.player.y = 20,20
+
+	state.update_map()
+
+def HuntersCamp_north(state):
+	state.player.location = getattr(states, "TradeDistrict")
+	state.player.x = 36
+
+	state.update_map()
+
+def HuntersCamp_east(state):
+	state.player.location = getattr(states, "StarterTown")
+	state.player.y = 2
 
 	state.update_map()

@@ -651,6 +651,8 @@ class StarterTown(MapState):
             events.StarterTown_door(self.state)
         elif self.state.player.x == 1:
             events.StarterTown_north(self.state)
+        elif self.state.player.y == 1:
+            events.StarterTown_west(self.state)
 
         if self.state.player.x == 8 and self.state.player.y == 73:
             events.StarterTown_haunted_house_entrance(self.state)
@@ -1227,6 +1229,8 @@ class TradeDistrict(MapState):
     def check_events(self):
         if self.state.player.y == 96:
             events.TradeDistrict_east(self.state)
+        elif self.state.player.x == 37:
+            events.TradeDistrict_south(self.state)
         if self.state.player.x == 19 and self.state.player.y == 20:
             events.TradeDistrict_alchemist_entrance(self.state)
 
@@ -1274,3 +1278,40 @@ class TradeDistrictAlchemist(MapState):
             for item in self.game_map.objects:
                 if item.x == 14 and item.y == self.state.player.y:
                     item.action(self.state.stdscr, self.state)
+
+class HuntersCamp(MapState):
+    name = "Forest (Hunters Camp)"
+    raw_name = "HuntersCamp"
+    menu_commands = GameCommands
+    objects = []
+    game_map = mapper.GameMap("HuntersCamp.txt", objects)
+
+
+    def __init__(self, state):
+        super().__init__(state)
+        if state.first_time == True:
+            state.change_map_screen()
+            state.first_time = False
+        objects = [
+        ]
+        self.first_time = True
+        self.game_map = mapper.GameMap("HuntersCamp.txt", objects)
+        self.menu = GameMenu
+        self.menu_commands = GameCommands
+        self.ingame_menu = IngameMenu
+
+
+    def draw(self):
+        if self.state.player.phaseshift:
+            self.game_map.draw_map(self.state.game_box, inverted=True)    
+        else:
+            self.game_map.draw_map(self.state.game_box)
+
+    def execute(self):
+        pass
+
+    def check_events(self):
+        if self.state.player.x == 1:
+            events.HuntersCamp_north(self.state)
+        elif self.state.player.y == 96:
+            events.HuntersCamp_east(self.state)
