@@ -140,6 +140,10 @@ class MapObject():
 	def wheat(cls,x,y):
 		return cls(x,y, curses.ACS_BOARD, walkable = True, color=157, name="Wheat")
 
+	@classmethod
+	def fire(cls,x,y):
+		return cls(x,y, " ", walkable = False, color=158, name="Fire")
+
 
 	def draw(self, screen, seen=False, inverted=False,character=False):
 		if type(self.color) == list:
@@ -285,6 +289,8 @@ class GameMap():
 					self.background2[x][y] = MapObject.sign(x + 1, y + 1)
 				elif self.raw_map[x][y] == "f":
 					self.background2[x][y] = MapObject.wheat(x + 1, y + 1)
+				elif self.raw_map[x][y] == "e":
+					self.background2[x][y] = MapObject.fire(x + 1, y + 1)
 				else:
 					print(self.raw_map[x][y])
 					print("Could not create map tile from Text")

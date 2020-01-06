@@ -328,12 +328,16 @@ def make_potion(state):
         else:
             screen.addstr(35, ingredient_y + 11, "BREW", curses.color_pair(6))
 
+
+        if no_ingredients:
+            screen.addstr(45, ingredient_y, "You have no ingredients.")
+
         if potion_done:
+            screen.addstr(45,ingredient_y,"                                    ")
             screen.addstr(45, ingredient_y, "You created ")
             screen.addstr(45, ingredient_y + len("You created "), f"{potion_done}", curses.color_pair(136))
         
-        if no_ingredients:
-            screen.addstr(45, ingredient_y, "You have no ingredients.")
+        
 
 
         k = screen.getch()
