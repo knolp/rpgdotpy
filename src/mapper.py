@@ -186,12 +186,15 @@ class MapObject():
 
 
 class GameMap():
-	def __init__(self, map_file, objects, events=False):
-		map_file = "{}\maps\{}".format(os.getcwd(),map_file)
-		with open(map_file, "r") as f:
-			self.raw_map = f.readlines()
-			for i in range(len(self.raw_map)):
-				self.raw_map[i] = self.raw_map[i].replace("\n", "")
+	def __init__(self, map_file, objects, events=False, file=True):
+		if file:
+			map_file = "{}\maps\{}".format(os.getcwd(),map_file)
+			with open(map_file, "r") as f:
+				self.raw_map = f.readlines()
+				for i in range(len(self.raw_map)):
+					self.raw_map[i] = self.raw_map[i].replace("\n", "")
+		else:
+			self.raw_map = map_file
 		self.background = []
 		self.background2 = [[0] * 96 for i in range(37)]
 		self.make_background()
@@ -328,14 +331,15 @@ class GameMap():
 					self.background2[x][y].draw(screen)
 				except IndexError:
 					pass
-	def draw_vision(self, state, screen):
+	def draw_vision(self, state, screen, draw_seen=True):
 		self.objects_to_draw = []
 		object_coords = {}
 		for item in self.objects:
 			object_coords[(item.x - 1, item.y - 1)] = item
 		state.game_box.clear()
 
-		self.draw_seen(screen)
+		if draw_seen:
+			self.draw_seen(screen)
 
 		for i in range(0,360, 2):
 			x = math.cos(i * 0.01745)

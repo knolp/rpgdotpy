@@ -1,5 +1,7 @@
 import states
 import helper
+import random
+from maps import cavegen
 
 
 def StarterTown_north(state):
@@ -239,5 +241,14 @@ def HuntersCamp_north(state):
 def HuntersCamp_east(state):
 	state.player.location = getattr(states, "StarterTown")
 	state.player.y = 2
+
+	state.update_map()
+
+
+def RandomCave(state):
+	cavegen.create_map()
+	state.player.location = getattr(states, "RandomCave")
+	state.player.y = random.randint(3,95)
+	state.player.x = random.randint(3,34)
 
 	state.update_map()

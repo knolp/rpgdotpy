@@ -12,6 +12,7 @@ import helper
 import time
 import curses
 import books
+from maps import cavegen
 
 # HELPERS #
 
@@ -1223,6 +1224,7 @@ class TradeDistrict(MapState):
         else:
             self.game_map.draw_map(self.state.game_box)
 
+
     def execute(self):
         pass
 
@@ -1306,6 +1308,47 @@ class HuntersCamp(MapState):
             self.game_map.draw_map(self.state.game_box, inverted=True)    
         else:
             self.game_map.draw_map(self.state.game_box)
+
+    def execute(self):
+        pass
+
+    def check_events(self):
+        if self.state.player.x == 1:
+            events.HuntersCamp_north(self.state)
+        elif self.state.player.y == 96:
+            events.HuntersCamp_east(self.state)
+        elif self.state.player.x == 11 and self.state.player.y in [43,44]:
+            events.RandomCave(self.state)
+
+class RandomCave(MapState):
+    name = "Randomly generated cave"
+    raw_name = "RandomCave"
+    menu_commands = GameCommands
+    objects = []
+    #game_map = mapper.GameMap("test.txt", objects)
+
+
+    def __init__(self, state):
+        super().__init__(state)
+        if state.first_time == True:
+            state.change_map_screen()
+            state.first_time = False
+        objects = [
+            npc.Rat(13,37,state,radar=True)
+        ]
+        self.first_time = True
+        self.game_map = mapper.GameMap(cavegen.create_map(), objects, file=False)
+        self.menu = GameMenu
+        self.menu_commands = GameCommands
+        self.ingame_menu = IngameMenu
+
+
+    def draw(self):
+        #if self.state.player.phaseshift:
+        #    self.game_map.draw_map(self.state.game_box, inverted=True)    
+        #else:
+        #    self.game_map.draw_map(self.state.game_box)
+        self.game_map.draw_vision(self.state, self.state.game_box, draw_seen=False)
 
     def execute(self):
         pass
