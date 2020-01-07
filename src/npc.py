@@ -279,7 +279,7 @@ class Rat(Monster):
 		super().__init__("Rat", x, y, "R", state, flag=flag, radar=radar)
 
 	def action(self):
-		result = battle.Battle(self.state, monster.Rat(), "3").play()
+		result = battle.Battle(self.state, monster.Rat(self.state), "3").play()
 		return result
 
 	def draw(self, screen):
@@ -294,7 +294,7 @@ class RatKing(Monster):
 		super().__init__("RatKing", x, y, "R", state, flag=flag, radar=radar)
 
 	def action(self, run=True):
-		result = battle.Battle(self.state, monster.RatKing(), "3", run=run).play()
+		result = battle.Battle(self.state, monster.RatKing(self.state), "3", run=run).play()
 		return result
 
 	def draw(self, screen):
@@ -311,7 +311,7 @@ class SkeletonGrunt(Monster):
 		super().__init__("SkeletonGrunt", x, y, "S", state, flag=flag, radar=radar)
 
 	def action(self, run=False):
-		result = battle.Battle(self.state, monster.SkeletonGrunt(), "3", run=run).play()
+		result = battle.Battle(self.state, monster.SkeletonGrunt(self.state), "3", run=run).play()
 		return result
 
 	def draw(self, screen):

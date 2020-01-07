@@ -42,6 +42,17 @@ class Item():
 
 #WEAPONS
 
+class TrainingSword(Item):
+    def __init__(self):
+        super().__init__("TrainingSword", False)
+        self.readable_name = "Training Sword"
+        self.type = "weapon"
+        self.equippable = "right_hand"
+        self.attack = 0
+        self.defence = 0
+        self.description = "A training sword made out of wood, a bit chipped and worn out."
+        self.damage_type = "Slash"
+
 class Longsword(Item):
     def __init__(self):
         super().__init__("Longsword", False)
@@ -67,13 +78,17 @@ class IronMace(Item):
         self.effect_description = "Has a chance to cause stun."
 
     def effect(self, player, opponent):
+        if opponent.player == True:
+            readable_name = opponent.name
+        else:
+            readable_name = opponent.readable_name
         if random.randint(1,100) > 50:
             list_of_effects = [effect.type for effect in opponent.status_effects]
             if "Stun" not in list_of_effects:
-                opponent.status_effects.append(abilities.Stun(2, opponent.readable_name))
+                opponent.status_effects.append(abilities.Stun(2, readable_name))
                 return {
                     "combat_text" : [
-                        "{}'s heavy weight knocks {} to the ground".format(self.readable_name, opponent.readable_name),
+                        "{}'s heavy weight knocks {} to the ground".format(self.readable_name, readable_name),
                     ] 
                 }
             else:
@@ -95,6 +110,10 @@ class Rapier(Item):
         self.art = art.draw_Rapier()
 
     def effect(self, player, opponent):
+        if opponent.player == True:
+            opponent_readable_name = opponent.name
+        else:
+            opponent_readable_name = opponent.readable_name
         if "Bleed" in opponent.immune:
             return {
                 "combat_text" : False
@@ -102,11 +121,11 @@ class Rapier(Item):
         if random.randint(1,100) > 70:
             list_of_effects = [effect.type for effect in opponent.status_effects]
             if "Bleed" not in list_of_effects:
-                opponent.status_effects.append(abilities.Bleed(5, 2, opponent.readable_name))
+                opponent.status_effects.append(abilities.Bleed(5, 2, opponent_readable_name))
                 return {
                     "combat_text" : [
                         "{}'s pointy tip makes a deep wound".format(self.readable_name),
-                        "and causes {} to bleed.".format(opponent.readable_name)] 
+                        "and causes {} to bleed.".format(opponent_readable_name)] 
                 }
         else:
             return {
@@ -163,19 +182,23 @@ class ChromaticBlade(Item):
         self.effect_description = "Can inflict multiple status effects."
 
     def effect(self, player, opponent):
+        if opponent.player == True:
+            opponent_readable_name = opponent.name
+        else:
+            opponent_readable_name = opponent.readable_name
         if random.randint(1,100) > 70:
             list_of_effects = [effect.type for effect in opponent.status_effects]
             if "Bleed" not in list_of_effects and "Bleed" not in opponent.immune:
-                opponent.status_effects.append(abilities.Bleed(int(random.randint(1,7)), 2, opponent.readable_name))
+                opponent.status_effects.append(abilities.Bleed(int(random.randint(1,7)), 2, opponent_readable_name))
             if "Chill" not in list_of_effects and "Chill" not in opponent.immune:
-                opponent.status_effects.append(abilities.Chill(int(random.randint(1,7)), 2, opponent.readable_name))
+                opponent.status_effects.append(abilities.Chill(int(random.randint(1,7)), 2, opponent_readable_name))
             if "Burn" not in list_of_effects and "Burn" not in opponent.immune:
-                opponent.status_effects.append(abilities.Burn(int(random.randint(1,7)), 2, opponent.readable_name))
+                opponent.status_effects.append(abilities.Burn(int(random.randint(1,7)), 2, opponent_readable_name))
             
             return {
                 "combat_text" : [
                     "{} flashes as it hits it target".format(self.readable_name),
-                    "and causes {} to experience a multiple of effects.".format(opponent.readable_name)] 
+                    "and causes {} to experience a multiple of effects.".format(opponent_readable_name)] 
             }
         else:
             return {

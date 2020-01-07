@@ -43,7 +43,8 @@ class Player():
 		self.flora = [] #t.ex ["StarterTown_ariam_bush", 100 (#timestamp), 1000 (#time dead)]
 		self.location = getattr(states, create_dict["location"])
 		self.inventory = [
-			items.AriamSeed()
+			items.AriamSeed(),
+			items.TrainingSword()
 		]
 
 		self.temp_alchemy_inventory = []
@@ -70,9 +71,14 @@ class Player():
 
 		self.last_pos = (3,3)
 
+		#Combat stuff
+
+		self.status_effects = []
+		self.immune = []
 		self.health = 1000
 		self.max_health = 1000
 		self.gold = 10000
+		self.player = True
 
 		self.equipment = {
 			"head" : items.ChainHelmet(),

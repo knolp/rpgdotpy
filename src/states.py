@@ -1334,13 +1334,15 @@ class RandomCave(MapState):
             state.change_map_screen()
             state.first_time = False
         objects = [
-            npc.Rat(13,37,state,radar=True)
+            npc.Rat(13,37,state,radar=True),
+            npc.Rat(18,37,state,radar=True)
         ]
         self.first_time = True
         self.game_map = mapper.GameMap(cavegen.create_map(state.player.seed), objects, file=False)
         self.menu = GameMenu
         self.menu_commands = GameCommands
         self.ingame_menu = IngameMenu
+        self.fov = True
 
 
     def draw(self):
@@ -1354,7 +1356,4 @@ class RandomCave(MapState):
         pass
 
     def check_events(self):
-        if self.state.player.x == 1:
-            events.HuntersCamp_north(self.state)
-        elif self.state.player.y == 96:
-            events.HuntersCamp_east(self.state)
+        pass

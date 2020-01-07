@@ -425,7 +425,8 @@ def draw_menu(stdscr):
 						curses.flash()
 						result = item.action()
 						if result:
-							state_handler.able_to_move = True
+							if len(["a" for monster in state_handler.gamemap.game_map.objects if monster.type == "monster" and len(monster.path_to_target) > 0]) < 1: #WTF
+								state_handler.able_to_move = True
 							if item.flag:
 								state_handler.player.flags.append(item.flag)
 							state_handler.gamemap.game_map.objects.remove(item)
@@ -497,16 +498,26 @@ def draw_menu(stdscr):
 						target_direction = False
 						breakable = False
 						_directions = {
-							"d" : (1,0),
-							"u" : (-1, 0),
-							"l" : (0,-1),
-							"r" : (0, 1)
+							"S" : (1,0),
+							"N" : (-1, 0),
+							"W" : (0,-1),
+							"E" : (0, 1),
+							"SW": (1,-1),
+							"NW": (-1,-1),
+							"SE": (1,1),
+							"NE": (-1,1)
+
 						}
 						original_position = (item.x, item.y)
-
 						for key,v in _directions.items():
 							check = [original_position[0], original_position[1]]
-							for i in range(5):
+							if key in ["S", "N", "W", "E"]:
+								target_range = 5
+							else:
+								target_range = 4
+							if state_handler.player.phaseshift > 0:
+								target_range = 1
+							for i in range(target_range):
 								check[0] += v[0]
 								check[1] += v[1]
 
@@ -703,7 +714,7 @@ def draw_menu(stdscr):
 			inventory.view_spellbook(state_handler.stdscr, state_handler)
 
 		if k == ord("c") and state_handler.player != False:
-			battlemode = battle.Battle(state_handler, monster.SkeletonGrunt(), "3")
+			battlemode = battle.Battle(state_handler, monster.SkeletonGrunt(state_handler), "3")
 			battlemode.play()
 
 		if k == ord("k") and state_handler.player != False:

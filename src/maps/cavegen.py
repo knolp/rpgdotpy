@@ -39,7 +39,7 @@ def count_alive_neighbors(grid, x, y):
             neighbor_y = y + j
             if i == 0 and j == 0:
                 continue
-            elif neighbor_x < 0 or neighbor_y < 0 or neighbor_y >= height or neighbor_x >= width:
+            elif neighbor_x <= 0 or neighbor_y <= 0 or neighbor_y >= height - 1 or neighbor_x >= width - 1:
                 # Edges are considered alive. Makes map more likely to appear naturally closed.
                 alive_count += 1
             elif grid[neighbor_y][neighbor_x] == 1:
@@ -88,6 +88,6 @@ def create_map(seed):
 
 
 if __name__ == "__main__":
-    mapp = create_map(3552)
+    mapp = create_map(random.randint(3554,12312312))
     for item in mapp:
         print(item)

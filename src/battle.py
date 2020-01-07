@@ -26,13 +26,19 @@ class Battle():
             "player" : 134,
             "buff" : 4,
             "neutral" : 0,
-            "effect" : 135,
+            "opponent_effect" : 135,
+            "player_effect" : 136,
             "loot" : 136
         }
 
         self.opponent_effects = {
             "stunned" : False,
             "blinded" : False,
+        }
+
+        self.player_effects = {
+            "stunned" : False,
+            "blinded" : False
         }
 
         self.commands = [
@@ -73,13 +79,29 @@ class Battle():
                 self.opponent_effects["stunned"] = True
             result = item.execute()
             if result["combat_text"] != False:
-                self.update_log(["effect", result["combat_text"]])
+                self.update_log(["opponent_effect", result["combat_text"]])
             if result["done"] == True:
                 if item.type == "Stun":
                     self.opponent_effects["stunned"] = False
                 self.opponent.status_effects.remove(item)
             if result["damage"] != False:
                 self.opponent.health -= result["damage"]
+
+    def check_player_effects(self):
+        if len(self.player.status_effects) == 0:
+            return
+        for item in self.player.status_effects:
+            if item.type == "Stun":
+                self.player_effects["stunned"] = True
+            result = item.execute()
+            if result["combat_text"] != False:
+                self.update_log(["player_effect", result["combat_text"]])
+            if result["done"] == True:
+                if item.type == "Stun":
+                    self.player_effects["stunned"] = False
+                self.player.status_effects.remove(item)
+            if result["damage"] != False:
+                self.player.health -= result["damage"]
         
     def limb_damage_modifier(self):
         limb, modifier = self.opponent.return_limb()
@@ -100,6 +122,8 @@ class Battle():
         self.player.health -= recoil
 
     def player_attack(self):
+        if self.player_effects["stunned"]:
+            return
         weapon = self.player.equipment["right_hand"]
         if weapon == False:
             self.unarmed_attack()
@@ -119,6 +143,12 @@ class Battle():
             limb, modifier = self.limb_damage_modifier()
             damage = int(damage * modifier)
             self.update_log(["player", "It hits {} in the {}, dealing {} ({}) damage.".format(self.opponent.readable_name, limb, damage, weapon.damage_type)])
+            for opp_limb in self.opponent.limbs:
+                if opp_limb.name == limb:
+                    opp_limb.health -= damage
+                    limb_result = opp_limb.check_limb(weapon)
+                    for item in limb_result["combat_text"]:
+                        self.update_log(["opponent_effect", item])
         else:
             self.update_log(["player", "it hits {} for {} ({}) damage.".format(self.opponent.readable_name, damage, weapon.damage_type )])
         self.opponent.health -= damage
@@ -246,7 +276,7 @@ class Battle():
                     self.update_log(["loot", "{} dropped no loot.".format(self.opponent.readable_name)])
                 
                 self.commands = [
-                    "Loot",
+                    "Loot and Exit",
                     "Exit"
                 ]
                 selected_command = 0
@@ -335,9 +365,9 @@ class Battle():
                         self.player_spell(spell)
                     else:
                         continue
-                if self.commands[selected_command] == "Loot":
+                if self.commands[selected_command] == "Loot and Exit":
                     self.loot(random_loot)
-                    #return True
+                    return True
                 
                 if self.commands[selected_command] == "Exit":
                     curses.ungetch(curses.KEY_F0)
@@ -345,6 +375,7 @@ class Battle():
                     
                 if self.opponent_killed == False:
                     self.check_effects()
+                    self.check_player_effects()
                     self.check_opponent()
                     self.update_log(["neutral",""])
                 curses.ungetch(curses.KEY_F0)
