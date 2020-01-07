@@ -246,7 +246,7 @@ def HuntersCamp_east(state):
 
 
 def RandomCave(state):
-	cavegen.create_map()
+	state.player.seed = random.randint(3554,19929292)
 	state.player.location = getattr(states, "RandomCave")
 	state.player.y = random.randint(3,95)
 	state.player.x = random.randint(3,34)

@@ -159,6 +159,7 @@ class StateHandler():
 			self.player.flora.append(item)
 
 		self.player.time = load_dict["time"]
+		self.player.seed = load_dict["seed"]
 
 	def save_player(self):
 		params = {}

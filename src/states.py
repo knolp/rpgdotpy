@@ -1337,7 +1337,7 @@ class RandomCave(MapState):
             npc.Rat(13,37,state,radar=True)
         ]
         self.first_time = True
-        self.game_map = mapper.GameMap(cavegen.create_map(), objects, file=False)
+        self.game_map = mapper.GameMap(cavegen.create_map(state.player.seed), objects, file=False)
         self.menu = GameMenu
         self.menu_commands = GameCommands
         self.ingame_menu = IngameMenu
