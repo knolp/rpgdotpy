@@ -34,14 +34,14 @@ class Limb():
 
         if not self.alive:
             combat_text.append(f"{self.owner.readable_name}'s {self.name} is badly damaged already, causing more damage.")
-        elif self.health < self.max_health and self.alive:
+        if self.health <= 0 and self.alive:
             self.alive = False
             combat_text.append(f"{self.owner.readable_name}'s {self.name} has taken too much damage and lost function.")
             if self.vital:
                 combat_text.append(f"Killing the {self.owner.readable_name} instantly.")
                 self.owner.health = -1
 
-        if not self.alive and self.held_item:
+        if not self.alive and self.held_item and self.grabbable:
             dropped_item = self.held_item
             self.held_item = False
 
@@ -298,7 +298,7 @@ class SkeletonGrunt(Monster):
         }
         self.limbs = [
             Limb(self,"skull",False,False,10,2),
-            Limb(self,"torso",False,False,10,1),
+            Limb(self,"torso",True,False,10,1),
             Limb(self,"right arm",False,True,5,1, held_item=items.ChromaticBlade()),
             Limb(self,"left arm",False,True,5,1),
             Limb(self,"right leg",False,False,5,1),

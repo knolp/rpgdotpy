@@ -61,7 +61,7 @@ class Player():
 
 		self.stats = {
 			"Intelligence" : 13,
-			"Strength" : 13,
+			"Strength" : 2,
 			"Charisma" : 13,
 			"Agility" : 13,
 			"Attunement" : 13,

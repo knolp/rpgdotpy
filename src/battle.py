@@ -56,7 +56,7 @@ class Battle():
     def update_log(self, text):
         text.append(self.turn)
         self.combat_log.append(text)
-        if len(self.combat_log) > 28:
+        if len(self.combat_log) > 36:
             self.combat_log.pop(0)
 
     def check_opponent(self):
@@ -245,9 +245,10 @@ class Battle():
         self.update_log(["neutral", ""])
         k = -1
         selected_command = 0
-        offset = 30
+        offset = 40
 
         opponent_offset = 15
+        opponent_offset_y = 100
         opponent_art_offset = 2
 
         while k != ord("q"):
@@ -318,18 +319,36 @@ class Battle():
 
             self.screen.attron(curses.color_pair(133))
             for idx, text in enumerate(self.opponent.art):
-                self.screen.addstr(opponent_art_offset + idx, 100, text)
+                self.screen.addstr(opponent_art_offset + idx, opponent_offset_y, text)
             self.screen.attroff(curses.color_pair(133))
                 
-            self.screen.addstr(opponent_offset, 100, "Opponent: {}".format(self.opponent.readable_name))
+            self.screen.addstr(opponent_offset, opponent_offset_y, "Opponent: {}".format(self.opponent.readable_name))
             for i,v in enumerate(self.opponent.description):
-                self.screen.addstr(opponent_offset + i + 1, 100, v)
-            self.screen.addstr(opponent_offset + 5, 100, "HP: {} / {}".format(self.opponent.health, self.opponent.max_health))
-            self.screen.addstr(opponent_offset + 7, 100, "Debuffs:")
+                self.screen.addstr(opponent_offset + i + 1, opponent_offset_y, v)
+            self.screen.addstr(opponent_offset + 5, opponent_offset_y, "HP: {} / {}".format(self.opponent.health, self.opponent.max_health))
+            self.screen.addstr(opponent_offset + 7, opponent_offset_y, "Debuffs:")
+            #allocate 6 for status effects
             for i, status in enumerate(self.opponent.status_effects):
                 self.screen.attron(curses.color_pair(status.color))
                 self.screen.addstr(opponent_offset + 8 + i, 120, "{} ({})".format(status.type, status.turns_left))
                 self.screen.attroff(curses.color_pair(status.color))
+
+            for i, limb in enumerate(self.opponent.limbs):
+
+                limb_name = limb.name.capitalize()
+                if limb.vital:
+                    limb_name = f"*{limb_name}"
+                else:
+                    limb_name = f" {limb_name}"
+
+                limb_info = f"{limb_name}: {limb.health}/{limb.max_health}"
+                if limb.held_item:
+                    limb_info = f"{limb_info} : {limb.held_item.readable_name}"
+
+                if limb.alive:
+                    self.screen.addstr(opponent_offset + 14 + i, opponent_offset_y, limb_info)
+                else:
+                    self.screen.addstr(opponent_offset + 14 + i, opponent_offset_y, limb_info, curses.color_pair(133))
             
 
             k = self.screen.getch()
