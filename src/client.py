@@ -439,6 +439,7 @@ def draw_menu(stdscr):
 
 
 			if state_handler.able_to_move == True:
+				state_handler.timer.terminate()
 				if k in [curses.KEY_DOWN, curses.KEY_UP, curses.KEY_LEFT, curses.KEY_RIGHT, ord("w"), ord("a"), ord("s"), ord("d")]:
 					if state_handler.player.phaseshift:
 						state_handler.player.phaseshift -= 1
@@ -746,7 +747,7 @@ def draw_menu(stdscr):
 			print(state_handler.player.seed)
 
 		if k == ord("4"):
-			state_handler.timer.terminate()
+			helper.popup(state_handler.stdscr,state_handler,art.draw_necro_book())
 
 		if k == ord("5"):
 			book = books.BasicAlchemy()

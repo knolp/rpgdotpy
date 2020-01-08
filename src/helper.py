@@ -79,6 +79,7 @@ def yes_no(screen, state, text):
 
 def popup(screen, state, text):
 	screen.clear()
+	height, width = screen.getmaxyx()
 	k = -1
 	
 	while k != ord(" ") and k != ord("q"):
@@ -95,7 +96,7 @@ def popup(screen, state, text):
 				screen.addstr(start, 34, item)
 
 			screen.attron(curses.color_pair(5))
-			screen.addstr(18,34, "Ok")
+			screen.addstr(30,int(width/ 2) - 2, "Ok")
 			screen.attroff(curses.color_pair(5))
 			
 			start += 1

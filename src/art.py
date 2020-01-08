@@ -1,3 +1,5 @@
+import random
+
 def draw_shield(game_box, row, col):
 	game_box.addstr(row, col, "   |\\                     /)")
 	game_box.addstr(row + 1 , col, " /\\_\\\\__               (_//")
@@ -308,7 +310,36 @@ def draw_key():
 
 	return return_list
 
+
+
+
+def draw_necro_book():
+	return_list_1 = []
+	return_list_2 = []
+	return_list_3 = []
+	return_list_4 = []
+
+	return_list_1.append(" .▄▄ ·  ▄▄▄· ▌ ▐·▄▄▄ .    • ▌ ▄ ·. ▄▄▄ .")
+	return_list_1.append("▐█ ▀. ▐█ ▀█▪█·█▌▀▄.▀·    ·██ ▐███▪▀▄.▀·")
+	return_list_1.append("▄▀▀▀█▄▄█▀▀█▐█▐█•▐▀▀▪▄    ▐█ ▌▐▌▐█·▐▀▀▪▄")
+	return_list_1.append("▐█▄▪▐█▐█ ▪▐▌███ ▐█▄▄▌    ██ ██▌▐█▌▐█▄▄▌")
+	return_list_1.append(" ▀▀▀▀  ▀  ▀. ▀   ▀▀▀     ▀▀  █▪▀▀▀ ▀▀▀ ")
+
+	return_list_2.append("  ▄ .▄▄▄▄ .▄▄▌   ▄▄▄·    • ▌ ▄ ·. ▄▄▄ .")
+	return_list_2.append("██▪▐█▀▄.▀·██•  ▐█ ▄█    ·██ ▐███▪▀▄.▀·")
+	return_list_2.append("██▀▐█▐▀▀▪▄██▪   ██▀·    ▐█ ▌▐▌▐█·▐▀▀▪▄")
+	return_list_2.append("██▌▐▀▐█▄▄▌▐█▌▐▌▐█▪·•    ██ ██▌▐█▌▐█▄▄▌")
+	return_list_2.append("▀▀▀ · ▀▀▀ .▀▀▀ .▀       ▀▀  █▪▀▀▀ ▀▀▀ ")
+
+	return_list_3.append("▪      ·▄▄▄▄            ▐ ▄      ▄▄▄▄▄    ·▄▄▄▄  ▄▄▄ ..▄▄ · ▄▄▄ .▄▄▄   ▌ ▐·▄▄▄ .    ▄▄▄▄▄ ▄ .▄▪  .▄▄ · ")
+	return_list_3.append("██     ██▪ ██▪         •█▌▐█▪    •██      ██▪ ██ ▀▄.▀·▐█ ▀. ▀▄.▀·▀▄ █·▪█·█▌▀▄.▀·    •██  ██▪▐███ ▐█ ▀. ")
+	return_list_3.append("▐█·    ▐█· ▐█▌▄█▀▄     ▐█▐▐▌ ▄█▀▄ ▐█.▪    ▐█· ▐█▌▐▀▀▪▄▄▀▀▀█▄▐▀▀▪▄▐▀▀▄ ▐█▐█•▐▀▀▪▄     ▐█.▪██▀▐█▐█·▄▀▀▀█▄")
+	return_list_3.append("▐█▌    ██. ██▐█▌.▐▌    ██▐█▌▐█▌.▐▌▐█▌·    ██. ██ ▐█▄▄▌▐█▄▪▐█▐█▄▄▌▐█•█▌ ███ ▐█▄▄▌     ▐█▌·██▌▐▀▐█▌▐█▄▪▐█")
+	return_list_3.append("▀▀▀    ▀▀▀▀▀• ▀█▄▀▪    ▀▀ █▪ ▀█▄▀▪▀▀▀     ▀▀▀▀▀•  ▀▀▀  ▀▀▀▀  ▀▀▀ .▀  ▀. ▀   ▀▀▀      ▀▀▀ ▀▀▀ ·▀▀▀ ▀▀▀▀ ")
+
+	return random.choice([return_list_1, return_list_2, return_list_3])
+
 if __name__ == "__main__":
 
-	for item in draw_RatKing():
+	for item in draw_necro_book():
 		print(item)
