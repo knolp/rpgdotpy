@@ -736,7 +736,7 @@ def draw_menu(stdscr):
 			state_handler.player.hotkeys["2"].execute(state_handler.player)
 
 		if k == ord("3"):
-			state_handler.player.flags.append("StarterTown_house_herb_patch")
+			print(state_handler.player.seed)
 
 		if k == ord("4"):
 			state_handler.timer.terminate()

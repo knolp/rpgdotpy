@@ -912,32 +912,31 @@ class Rock(Action):
 			"connected to some kind of contraption."
 		])
 
-class BasementChestOpen(Action):
-	def __init__(self, screen, state):
+class WoodenChestOpen(Action):
+	def __init__(self, screen, state, owner):
 		super().__init__(screen, state, "Open")
 		self.name = "BasementChestOpen"
 		self.readable_name = "Wooden Chest"
+		self.flag = owner.flag
+		self.item_list = owner.item_list
 
 	def execute(self):
 		answer = helper.yes_no(self.screen, self.state, [
-			"A wooden chest",
+			f"A {self.readable_name}",
 			"",
 			"It seems to not be locked",
 			"Do you open it?"
-
 		])
+		
 		loot = []
-		if "BasementChest_item_taken_Rapier" not in self.state.player.flags:
-			loot.append("Rapier")
-		if "BasementChest_item_taken_MoonlightSword" not in self.state.player.flags:
-			loot.append("MoonlightSword")
-		if "BasementChest_item_taken_ChromaticBlade" not in self.state.player.flags:
-			loot.append("ChromaticBlade")
+		for item in self.item_list:
+			if f"{self.flag}_item_taken_{item.name}" not in self.state.player.flags:
+				loot.append(item.name)
 		if answer == True:
 			taken = inventory.open_chest(self.screen, self.state, self.readable_name, loot)
 			for item in taken:
-				if "BasementChest_item_taken_{}".format(item.name) not in self.state.player.flags:
-					self.state.player.flags.append("BasementChest_item_taken_{}".format(item.name))
+				if f"{self.flag}_item_taken_{item.name}" not in self.state.player.flags:
+					self.state.player.flags.append(f"{self.flag}_item_taken_{item.name}")
 			
 		else:
 			return

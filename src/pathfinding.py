@@ -23,7 +23,7 @@ class Node():
 	def __eq__(self, other):
 		return self.position == other.position
 
-def astar(gamemap, start, end, state=False):
+def astar(gamemap, start, end, state=False, cavegen=True):
 	counter = 0
 	weight = 1
 	if state:
@@ -47,6 +47,7 @@ def astar(gamemap, start, end, state=False):
 
 	while len(open_list) > 0: #Medan det finns noder att kolla
 		if counter > 2000:
+			print("max")
 			#for item in open_list:
 				#print("Open List: f", item.f, "position: ", item.position)
 			return []
@@ -109,9 +110,9 @@ def astar(gamemap, start, end, state=False):
 					#print("Not walkable")
 					continue
 
-				if gamemap[node_position[0]][node_position[1]].executable == True:
+				#if gamemap[node_position[0]][node_position[1]].executable == True:
 					#print("Not walkable")
-					continue
+				#	continue
 
 			except IndexError:
 				#print(node_position)
@@ -236,6 +237,6 @@ if __name__ == '__main__':
 	for item in path:
 		maze[item[0]][item[1]] = 3
 
-	#for item in maze:
-		#print(item)
+	for item in maze:
+		print(item)
 

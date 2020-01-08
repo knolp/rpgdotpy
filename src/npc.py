@@ -383,19 +383,22 @@ class Rock(Usable):
 	def action(self, screen, state):
 		actions.Rock(screen, state).execute()
 
-class BasementChest(Usable):
-	def __init__(self, x, y):
-		name = "BasementChest"
+class WoodenChest(Usable):
+	def __init__(self, x, y, flag, item_list):
+		name = "WoodenChest"
 		self.readable_name = "Wooden Chest"
 		super().__init__(name,x,y,"X")
 		self.original_x = x
 		self.original_y = y
+		self.flag = flag
+		self.item_list = item_list
+
 
 	def turn_action(self):
 		pass
 
 	def action(self, screen, state):
-		actions.BasementChestOpen(screen, state).execute()
+		actions.WoodenChestOpen(screen, state, self).execute()
 
 class DeverBerries(Usable):
 	def __init__(self, x, y, state):

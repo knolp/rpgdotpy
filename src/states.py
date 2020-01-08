@@ -3,6 +3,7 @@ import art
 import mapper
 import npc
 import random
+import items
 import abilities
 import pathfinding
 import monster
@@ -12,7 +13,7 @@ import helper
 import time
 import curses
 import books
-from maps import cavegen
+import cavegen
 
 # HELPERS #
 
@@ -802,7 +803,6 @@ class StarterTown_house_basement_hallway(MapState):
     raw_name = "StarterTown_house_basement_hallway"
     menu_commands = GameCommands
     objects = [
-            npc.BasementChest(7,10),
         ]
     game_map = mapper.GameMap("StarterTown_house_basement_hallway.txt", objects)
 
@@ -812,7 +812,7 @@ class StarterTown_house_basement_hallway(MapState):
             state.change_map_screen()
             state.first_time = False
         objects = [
-            npc.BasementChest(7,10)
+            npc.WoodenChest(7,10,"BasementChest", [items.Rapier(), items.MoonlightSword()])
         ]
         if "RatMenace_rat_king_killed" not in state.player.flags:
             objects.append(npc.RatKing(30, 45, state))
@@ -1338,7 +1338,9 @@ class RandomCave(MapState):
             npc.Rat(18,37,state,radar=True)
         ]
         self.first_time = True
-        self.game_map = mapper.GameMap(cavegen.create_map(state.player.seed), objects, file=False)
+        self.cave_dict = cavegen.create_map(state.player.seed)
+        self.state.player.x, self.state.player.y = self.cave_dict["player_pos"][0] + 1, self.cave_dict["player_pos"][1] + 1
+        self.game_map = mapper.GameMap(self.cave_dict["map"], objects, file=False)
         self.menu = GameMenu
         self.menu_commands = GameCommands
         self.ingame_menu = IngameMenu
@@ -1346,11 +1348,11 @@ class RandomCave(MapState):
 
 
     def draw(self):
-        #if self.state.player.phaseshift:
-        #    self.game_map.draw_map(self.state.game_box, inverted=True)    
-        #else:
-        #    self.game_map.draw_map(self.state.game_box)
-        self.game_map.draw_vision(self.state, self.state.game_box, draw_seen=False)
+        if self.state.player.phaseshift:
+            self.game_map.draw_map(self.state.game_box, inverted=True)    
+        else:
+            self.game_map.draw_map(self.state.game_box)
+        #self.game_map.draw_vision(self.state, self.state.game_box, draw_seen=False)
 
     def execute(self):
         pass

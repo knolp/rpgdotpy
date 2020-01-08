@@ -127,8 +127,6 @@ class Rat(Monster):
         self.before_name = "a"
         self.readable_name = "Rat"
         self.art = art.draw_Rat()
-        self.max_health = 10
-        self.health = self.max_health
         self.damage = 1
         self.attack_styles = ["attacks", "gnaws", "lunges at", "bites"]
         self.buffed_turn = 0
@@ -145,6 +143,8 @@ class Rat(Monster):
             Limb(self,"left back paw",False,False,5,1),
             Limb(self,"right back paw",False,False,5,1)
         ]
+        self.max_health = sum([x.max_health for x in self.limbs])
+        self.health = self.max_health
         for item in self.limbs:
             item.fur = True
 
@@ -202,8 +202,6 @@ class RatKing(Monster):
         self.before_name = "The"
         self.readable_name = "Rat King"
         self.art = art.draw_RatKing()
-        self.max_health = 600
-        self.health = self.max_health
         self.damage = 7
         self.attack_styles = ["attacks", "gnaws", "bashes", "slams his staff at", "smashes his staff"]
         self.buffed_turn = 0
@@ -221,6 +219,8 @@ class RatKing(Monster):
             Limb(self,"left back paw",False,False,5,1),
             Limb(self,"right back paw",False,False,5,1)
         ]
+        self.max_health = sum([x.max_health for x in self.limbs])
+        self.health = self.max_health
         for item in self.limbs:
             item.fur = True
 
@@ -286,8 +286,6 @@ class SkeletonGrunt(Monster):
         self.before_name = "a"
         self.readable_name = "Skeleton Grunt"
         self.art = art.draw_SkeletonGrunt()
-        self.max_health = 100
-        self.health = self.max_health
         self.damage = 2
         self.immune = ["Bleed"]
         self.attack_styles = ["bashes at", "swings"]
@@ -304,6 +302,9 @@ class SkeletonGrunt(Monster):
             Limb(self,"right leg",False,False,5,1),
             Limb(self,"left leg",False,False,5,1),
         ]
+
+        self.max_health = sum([x.max_health for x in self.limbs])
+        self.health = self.max_health
     def __str__(self):
         return self.name
 
