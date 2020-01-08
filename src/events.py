@@ -244,10 +244,11 @@ def HuntersCamp_east(state):
 	state.update_map()
 
 
-def RandomCave(state):
+def RandomCave(state, target):
 	state.player.seed = random.randint(3554,19929292)
 	state.player.location = getattr(states, "RandomCave")
+	state.player.last_target = target
 	#state.player.y = random.randint(3,95)
 	#state.player.x = random.randint(3,34)
 
-	state.update_map()
+	state.update_map(target=target)

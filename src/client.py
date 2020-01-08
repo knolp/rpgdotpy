@@ -122,18 +122,18 @@ class StateHandler():
 		self.player = player.Player(load_dict)
 		for item in load_dict["inventory"]:
 			#self.player.inventory.append(items.item_dict[item["name"]]())
-			self.player.inventory.append(helper.get_item(item["name"])())
+			self.player.inventory.append(helper.get_item(item)())
 
 		for k,v in load_dict["equipment"].items():
 			if v != False:
 				#self.player.equipment[k] = items.item_dict[v["name"]]()
-				self.player.equipment[k] = helper.get_item(v["name"])()
+				self.player.equipment[k] = helper.get_item(v)()
 
 		temp_spell_list = []
 		for index, item in enumerate(load_dict["spells"]):
 			#print("Index: {}         Item: {}".format(index, item))
 			if item != False:
-				temp_spell_list.append(helper.get_spell(item["name"])())
+				temp_spell_list.append(helper.get_spell(item)())
 			else:
 				temp_spell_list.append(False)
 		self.player.spells = temp_spell_list
@@ -141,16 +141,16 @@ class StateHandler():
 		temp_spellbook_list = []
 		for item in load_dict["spellbook"]:
 			#print("                               " + item["name"])
-			temp_spellbook_list.append(helper.get_spell(item["name"])())
+			temp_spellbook_list.append(helper.get_spell(item)())
 		self.player.spellbook = temp_spellbook_list
 
 		for k,v in load_dict["hotkeys"].items():
 			if v != False:
-				self.player.hotkeys[k] = helper.get_spell(v["name"])()
+				self.player.hotkeys[k] = helper.get_spell(v)()
 
 		for item in load_dict["recipes"]:
 			#self.player.inventory.append(items.item_dict[item["name"]]())
-			self.player.recipes.append(helper.get_recipe(item["name"])())
+			self.player.recipes.append(helper.get_recipe(item)())
 		
 		for item in load_dict["active_farms"]:
 			self.player.active_farms.append(item)
@@ -160,6 +160,7 @@ class StateHandler():
 
 		self.player.time = load_dict["time"]
 		self.player.seed = load_dict["seed"]
+		self.player.last_target = load_dict["last_target"]
 
 	def save_player(self):
 		params = {}
@@ -170,33 +171,33 @@ class StateHandler():
 				params[k] = v.raw_name
 			if k == "inventory":
 				for i in range(len(params[k])):
-					params[k][i] = params[k][i].__dict__
+					params[k][i] = params[k][i].__dict__["name"]
 			
 			if k == "equipment":
 				for key,value in params[k].items():
 					#params[k][i] = params[k][i].__dict__
 					if params[k][key] != False:
-						params[k][key] = value.__dict__
+						params[k][key] = value.__dict__["name"]
 
 			if k == "spells":
 				for i in range(len(params[k])):
 					if params[k][i] != False:
-						params[k][i] = params[k][i].__dict__
+						params[k][i] = params[k][i].__dict__["name"]
 					else:
 						params[k][i] = False
 
 			if k == "spellbook":
 				for i in range(len(params[k])):
-					params[k][i] = params[k][i].__dict__
+					params[k][i] = params[k][i].__dict__["name"]
 			
 			if k == "hotkeys":
 				for key, value in params[k].items():
 					if params[k][key] != False:
-						params[k][key] = value.__dict__
+						params[k][key] = value.__dict__["name"]
 
 			if k == "recipes":
 				for i in range(len(params[k])):
-					params[k][i] = params[k][i].__dict__
+					params[k][i] = params[k][i].__dict__["name"]
 
 			if k == "active_farms":
 				for i in range(len(params[k])):
@@ -220,8 +221,11 @@ class StateHandler():
 
 		self.player = player.Player(self.create_player)
 
-	def update_map(self):
-		self.gamemap = self.player.location(self)
+	def update_map(self, target=False):
+		if not target:
+			self.gamemap = self.player.location(self)
+		else:
+			self.gamemap = self.player.location(self, target)
 
 	def change_map_screen(self):
 		self.map_screen = not self.map_screen
@@ -656,7 +660,10 @@ def draw_menu(stdscr):
 							state_handler.ingame_menu = state_handler.gamemap.ingame_menu(state_handler)
 						else:
 							if state_handler.player != False:
-								state_handler.gamemap = state_handler.player.location(state_handler)
+								try:
+									state_handler.gamemap = state_handler.player.location(state_handler)
+								except:
+									state_handler.gamemap = state_handler.player.location(state_handler, state_handler.player.last_target)
 								state_handler.ingame_menu = state_handler.gamemap.ingame_menu(state_handler)
 								state_handler.game_state = state_handler.gamemap.menu(state_handler)
 								curses.ungetch(curses.KEY_F0)

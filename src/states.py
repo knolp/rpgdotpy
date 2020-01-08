@@ -1318,7 +1318,7 @@ class HuntersCamp(MapState):
         elif self.state.player.y == 96:
             events.HuntersCamp_east(self.state)
         elif self.state.player.x == 11 and self.state.player.y in [43,44]:
-            events.RandomCave(self.state)
+            events.RandomCave(self.state, target = ["TradeDistrictAlchemist", 23, 47])
 
 class RandomCave(MapState):
     name = "Randomly generated cave"
@@ -1328,23 +1328,25 @@ class RandomCave(MapState):
     #game_map = mapper.GameMap("test.txt", objects)
 
 
-    def __init__(self, state):
+    def __init__(self, state, target):
         super().__init__(state)
         if state.first_time == True:
             state.change_map_screen()
             state.first_time = False
         objects = [
-            npc.Rat(13,37,state,radar=True),
-            npc.Rat(18,37,state,radar=True)
+            #npc.Rat(13,37,state,radar=True),
+            #npc.Rat(18,37,state,radar=True)
         ]
         self.first_time = True
         self.cave_dict = cavegen.create_map(state.player.seed)
         self.state.player.x, self.state.player.y = self.cave_dict["player_pos"][0] + 1, self.cave_dict["player_pos"][1] + 1
         self.game_map = mapper.GameMap(self.cave_dict["map"], objects, file=False)
+        self.door_pos = self.cave_dict["door_pos"][0] + 1, self.cave_dict["door_pos"][1] + 1
         self.menu = GameMenu
         self.menu_commands = GameCommands
         self.ingame_menu = IngameMenu
         self.fov = True
+        self.target = target
 
 
     def draw(self):
@@ -1358,4 +1360,8 @@ class RandomCave(MapState):
         pass
 
     def check_events(self):
-        pass
+        if (self.state.player.x, self.state.player.y) == self.door_pos:
+            current_module = __import__(__name__)
+            self.state.player.location = getattr(current_module, self.target[0])
+            self.state.player.x, self.state.player.y = self.target[1],self.target[2]
+            self.state.update_map()
