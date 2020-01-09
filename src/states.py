@@ -1318,7 +1318,9 @@ class HuntersCamp(MapState):
         elif self.state.player.y == 96:
             events.HuntersCamp_east(self.state)
         elif self.state.player.x == 11 and self.state.player.y in [43,44]:
-            events.RandomCave(self.state, target = ["TradeDistrictAlchemist", 23, 47])
+            events.RandomCave(self.state, target = [events.RandomCave, [events.RandomCave, events.StarterTown_door]])
+        elif self.state.player.y == 1:
+            events.go_west(self.state,"StarterTownDocks")
 
 class RandomCave(MapState):
     name = "Randomly generated cave"
@@ -1350,18 +1352,57 @@ class RandomCave(MapState):
 
 
     def draw(self):
-        if self.state.player.phaseshift:
-            self.game_map.draw_map(self.state.game_box, inverted=True)    
-        else:
-            self.game_map.draw_map(self.state.game_box)
-        #self.game_map.draw_vision(self.state, self.state.game_box, draw_seen=False)
+        #if self.state.player.phaseshift:
+        #    self.game_map.draw_map(self.state.game_box, inverted=True)    
+        #else:
+        #    self.game_map.draw_map(self.state.game_box)
+        self.game_map.draw_vision(self.state, self.state.game_box, draw_seen=False)
 
     def execute(self):
         pass
 
     def check_events(self):
         if (self.state.player.x, self.state.player.y) == self.door_pos:
-            current_module = __import__(__name__)
-            self.state.player.location = getattr(current_module, self.target[0])
-            self.state.player.x, self.state.player.y = self.target[1],self.target[2]
-            self.state.update_map()
+            if not type(self.target) == type([]):
+                self.target(self.state)
+            else:
+                self.target[0](self.state, self.target[1])
+            #current_module = __import__(__name__)
+            #self.state.player.location = getattr(current_module, self.target[0])
+            #self.state.player.x, self.state.player.y = self.target[1],self.target[2]
+            #self.state.update_map()
+
+class StarterTownDocks(MapState):
+    name = "Docks"
+    raw_name = "StarterTownDocks"
+    menu_commands = GameCommands
+    objects = []
+    game_map = mapper.GameMap("StarterTownDocks.txt", objects)
+
+
+    def __init__(self, state):
+        super().__init__(state)
+        if state.first_time == True:
+            state.change_map_screen()
+            state.first_time = False
+        objects = [
+        ]
+        self.first_time = True
+        self.game_map = mapper.GameMap("StarterTownDocks.txt", objects)
+        self.menu = GameMenu
+        self.menu_commands = GameCommands
+        self.ingame_menu = IngameMenu
+
+
+    def draw(self):
+        if self.state.player.phaseshift:
+            self.game_map.draw_map(self.state.game_box, inverted=True)    
+        else:
+            self.game_map.draw_map(self.state.game_box)
+
+    def execute(self):
+        pass
+
+    def check_events(self):
+        if self.state.player.y == 96:
+            events.go_east(self.state,"HuntersCamp")

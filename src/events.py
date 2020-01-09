@@ -2,7 +2,30 @@ import states
 import helper
 import random
 
+def go_west(state,location):
+	state.player.location = getattr(states, location)
+	state.player.y = 95
 
+	state.update_map()
+
+def go_east(state,location):
+	state.player.location = getattr(states, location)
+	state.player.y = 2
+
+	state.update_map()
+
+def go_north(state,location):
+	state.player.location = getattr(states, location)
+	state.player.x = 36
+
+	state.update_map()
+
+def go_south(state,location):
+	state.player.location = getattr(states, location)
+	state.player.x = 2
+
+	state.update_map()
+	
 def StarterTown_north(state):
 	state.player.location = getattr(states, "GreenForest")
 	state.player.x = 36

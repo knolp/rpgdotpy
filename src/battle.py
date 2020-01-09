@@ -1,10 +1,12 @@
+import curses
 import random
 import time
+from curses.textpad import Textbox, rectangle
+
+import art
 import helper
 import states
-import art
-import curses
-from curses.textpad import Textbox, rectangle
+
 
 class Battle():
     def __init__(self, state, opponent, battlefield, run=True):
@@ -22,23 +24,23 @@ class Battle():
         self.loot_list = []
         self.selected_spell = 0
         self.combat_log_color = {
-            "opponent" : 133,
-            "player" : 134,
-            "buff" : 4,
-            "neutral" : 0,
-            "opponent_effect" : 135,
-            "player_effect" : 136,
-            "loot" : 136
+            "opponent": 133,
+            "player": 134,
+            "buff": 4,
+            "neutral": 0,
+            "opponent_effect": 135,
+            "player_effect": 136,
+            "loot": 136
         }
 
         self.opponent_effects = {
-            "stunned" : False,
-            "blinded" : False,
+            "stunned": False,
+            "blinded": False,
         }
 
         self.player_effects = {
-            "stunned" : False,
-            "blinded" : False
+            "stunned": False,
+            "blinded": False
         }
 
         self.commands = [
@@ -51,7 +53,7 @@ class Battle():
             self.commands.append("Run")
 
     def dice(self, sides):
-        return random.randint(1,sides)
+        return random.randint(1, sides)
 
     def update_log(self, text):
         text.append(self.turn)
@@ -62,7 +64,7 @@ class Battle():
     def check_opponent(self):
         self.update_log(["neutral", " "])
         if self.opponent_effects["stunned"]:
-            #self.update_log(["effect", "{} is stunned and unable to respond."])
+            # self.update_log(["effect", "{} is stunned and unable to respond."])
             return
         if self.opponent.health <= 0:
             return
@@ -78,13 +80,13 @@ class Battle():
             if item.type == "Stun":
                 self.opponent_effects["stunned"] = True
             result = item.execute()
-            if result["combat_text"] != False:
+            if result["combat_text"] is not False:
                 self.update_log(["opponent_effect", result["combat_text"]])
-            if result["done"] == True:
+            if result["done"] is True:
                 if item.type == "Stun":
                     self.opponent_effects["stunned"] = False
                 self.opponent.status_effects.remove(item)
-            if result["damage"] != False:
+            if result["damage"] is not False:
                 self.opponent.health -= result["damage"]
 
     def check_player_effects(self):
@@ -94,15 +96,15 @@ class Battle():
             if item.type == "Stun":
                 self.player_effects["stunned"] = True
             result = item.execute()
-            if result["combat_text"] != False:
+            if result["combat_text"] is not False:
                 self.update_log(["player_effect", result["combat_text"]])
-            if result["done"] == True:
+            if result["done"] is True:
                 if item.type == "Stun":
                     self.player_effects["stunned"] = False
                 self.player.status_effects.remove(item)
-            if result["damage"] != False:
+            if result["damage"] is not False:
                 self.player.health -= result["damage"]
-        
+
     def limb_damage_modifier(self):
         limb, modifier = self.opponent.return_limb()
         return limb, modifier
@@ -117,7 +119,7 @@ class Battle():
         else:
             self.update_log(["player", "It hits {} for {} damage.".format(self.opponent.readable_name, limb, damage)])
         self.opponent.health -= damage
-        recoil = random.randint(0,self.player.stats["Strength"])
+        recoil = random.randint(0, self.player.stats["Strength"])
         self.update_log(["player", "The attack bruises {}'s knuckles, dealing {} damage in recoil.".format(self.player.name, recoil)])
         self.player.health -= recoil
 
@@ -125,10 +127,10 @@ class Battle():
         if self.player_effects["stunned"]:
             return
         weapon = self.player.equipment["right_hand"]
-        if weapon == False:
+        if weapon is False:
             self.unarmed_attack()
             return
-        weapon_damage = random.randint(0,weapon.attack)
+        weapon_damage = random.randint(0, weapon.attack)
         strength_modifier = random.randint(int(0.75 * self.player.stats["Strength"]), self.player.stats["Strength"])
         self.update_log(["player", "{} attacks with {}".format(self.player.name, weapon.readable_name)])
 
@@ -150,16 +152,15 @@ class Battle():
                     for item in limb_result["combat_text"]:
                         self.update_log(["opponent_effect", item])
         else:
-            self.update_log(["player", "it hits {} for {} ({}) damage.".format(self.opponent.readable_name, damage, weapon.damage_type )])
+            self.update_log(["player", "it hits {} for {} ({}) damage.".format(self.opponent.readable_name, damage, weapon.damage_type)])
         self.opponent.health -= damage
 
-        #EFFECTS
+        # EFFECTS
         effect = weapon.effect(self.player, self.opponent)
         if effect:
-            if effect["combat_text"] != False:
+            if effect["combat_text"] is not False:
                 for item in effect["combat_text"]:
                     self.update_log(["player", item])
-
 
     def select_spell(self):
         k = -1
@@ -170,7 +171,7 @@ class Battle():
         height, width = self.screen.getmaxyx()
 
         if self.player.spells:
-            spell_list = [spell for spell in self.player.spells if spell != False]
+            spell_list = [spell for spell in self.player.spells if spell is not False]
         else:
             spell_list = []
 
@@ -216,17 +217,16 @@ class Battle():
             k = self.screen.getch()
         return "False"
 
-
     def player_run(self):
         chance = self.dice(100)
         if chance > 70:
             self.update_log(["neutral", "You ran away."])
             return True
         else:
-            self.update_log(["neutral","You failed to run away."])
+            self.update_log(["neutral", "You failed to run away."])
             return False
 
-    def player_spell(self,spell_index):
+    def player_spell(self, spell_index):
         attack = self.player.spells[spell_index].execute(self.player, self.opponent)
         damage = attack["damage"]
         for item in attack["combat_text"]:
@@ -241,7 +241,7 @@ class Battle():
         pass
 
     def play(self):
-        self.update_log(["opponent","{} encounters {} {}".format(self.player.name, self.opponent.before_name ,self.opponent.readable_name)])
+        self.update_log(["opponent", "{} encounters {} {}".format(self.player.name, self.opponent.before_name, self.opponent.readable_name)])
         self.update_log(["neutral", ""])
         k = -1
         selected_command = 0
@@ -261,7 +261,7 @@ class Battle():
                 self.state.player = False
                 self.state.first_time = True
                 break
-            if self.opponent.health <= 0 and self.opponent_killed == False:
+            if self.opponent.health <= 0 and not self.opponent_killed:
                 self.update_log(["opponent", "{} was killed.".format(self.opponent.readable_name)])
                 self.update_log(["neutral", ""])
                 random_loot = self.opponent.generate_loot()
@@ -275,16 +275,15 @@ class Battle():
                         self.update_log(["loot", "{} dropped item: {}".format(self.opponent.readable_name, item.readable_name)])
                 else:
                     self.update_log(["loot", "{} dropped no loot.".format(self.opponent.readable_name)])
-                
+
                 self.commands = [
                     "Loot and Exit",
                     "Exit"
                 ]
                 selected_command = 0
                 self.opponent_killed = True
-                #return True
+                # return True
             self.screen.clear()
-
 
             combat_log_start = 0
             self.used_turns = []
@@ -303,11 +302,11 @@ class Battle():
 
             percent_health = round(self.player.health / self.player.max_health, 2)
             percent_lost = 1 - percent_health
-            self.screen.addstr(37,0, "HP:")
+            self.screen.addstr(37, 0, "HP:")
             self.screen.attron(curses.color_pair(5))
-            self.screen.addstr(37,5,"{}".format("-" * int(100 * percent_health)))
+            self.screen.addstr(37, 5, "{}".format("-" * int(100 * percent_health)))
             self.screen.attroff(curses.color_pair(5))
-            self.screen.addstr(37,int(105 * percent_health),"{}".format("-" * int(100 * percent_lost)))
+            self.screen.addstr(37, int(105 * percent_health), "{}".format("-" * int(100 * percent_lost)))
 
             for i in range(len(self.commands)):
                 if i == selected_command:
@@ -321,13 +320,13 @@ class Battle():
             for idx, text in enumerate(self.opponent.art):
                 self.screen.addstr(opponent_art_offset + idx, opponent_offset_y, text)
             self.screen.attroff(curses.color_pair(133))
-                
+
             self.screen.addstr(opponent_offset, opponent_offset_y, "Opponent: {}".format(self.opponent.readable_name))
-            for i,v in enumerate(self.opponent.description):
+            for i, v in enumerate(self.opponent.description):
                 self.screen.addstr(opponent_offset + i + 1, opponent_offset_y, v)
             self.screen.addstr(opponent_offset + 5, opponent_offset_y, "HP: {} / {}".format(self.opponent.health, self.opponent.max_health))
             self.screen.addstr(opponent_offset + 7, opponent_offset_y, "Debuffs:")
-            #allocate 6 for status effects
+            # allocate 6 for status effects
             for i, status in enumerate(self.opponent.status_effects):
                 self.screen.attron(curses.color_pair(status.color))
                 self.screen.addstr(opponent_offset + 8 + i, 120, "{} ({})".format(status.type, status.turns_left))
@@ -349,7 +348,6 @@ class Battle():
                     self.screen.addstr(opponent_offset + 14 + i, opponent_offset_y, limb_info)
                 else:
                     self.screen.addstr(opponent_offset + 14 + i, opponent_offset_y, limb_info, curses.color_pair(133))
-            
 
             k = self.screen.getch()
 
@@ -362,7 +360,6 @@ class Battle():
                 if selected_command != len(self.commands) - 1:
                     selected_command += 1
                 curses.ungetch(curses.KEY_F0)
-                
 
             elif k == ord(" "):
                 self.turn += 1
@@ -387,30 +384,29 @@ class Battle():
                 if self.commands[selected_command] == "Loot and Exit":
                     self.loot(random_loot)
                     return True
-                
+
                 if self.commands[selected_command] == "Exit":
                     curses.ungetch(curses.KEY_F0)
                     return True
-                    
-                if self.opponent_killed == False:
+
+                if not self.opponent_killed:
                     self.check_effects()
                     self.check_player_effects()
                     self.check_opponent()
-                    self.update_log(["neutral",""])
+                    self.update_log(["neutral", ""])
                 curses.ungetch(curses.KEY_F0)
-            
+
     def loot(self, random_loot):
         k = -1
         start = 10
         offset = 15
-        #random_loot = self.opponent.generate_loot()
-        #if random_loot:
-        #    loot_list = [helper.get_item(item)() for item in random_loot]
-        #else:
-        #    loot_list = []
+        # random_loot = self.opponent.generate_loot()
+        # if random_loot:
+        #     loot_list = [helper.get_item(item)() for item in random_loot]
+        # else:
+        #     loot_list = []
         selected_item = 0
         height, width = self.screen.getmaxyx()
-
 
         while k != ord("q"):
             self.screen.clear()
@@ -443,7 +439,7 @@ class Battle():
                         selected_item = 0
 
             if k == ord(" "):
-                if len(self.loot_list) != 0: 
+                if len(self.loot_list) != 0:
                     self.player.inventory.append(self.loot_list.pop(selected_item))
                 selected_item = 0
                 curses.ungetch(curses.KEY_F0)
@@ -452,37 +448,32 @@ class Battle():
 
 
 def yes_no(screen, state, text):
-	screen.clear()
-	k = -1
-	yes_selected = True
-	
-	while k != ord(" "):
-		start = 10
-		for item in text:
-			screen.addstr(start, 34, item)
-			start += 1
-		if yes_selected:
-			screen.attron(curses.color_pair(5))
-			screen.addstr(18,34, "Yes")
-			screen.attroff(curses.color_pair(5))
-			screen.addstr(18, 40, "No")
-		else:
-			screen.addstr(18,34, "Yes")
-			screen.attron(curses.color_pair(5))
-			screen.addstr(18, 40, "No")
-			screen.attroff(curses.color_pair(5))
+    screen.clear()
+    k = -1
+    yes_selected = True
 
-		k = screen.getch()
+    while k != ord(" "):
+        start = 10
+        for item in text:
+            screen.addstr(start, 34, item)
+            start += 1
+        if yes_selected:
+            screen.attron(curses.color_pair(5))
+            screen.addstr(18, 34, "Yes")
+            screen.attroff(curses.color_pair(5))
+            screen.addstr(18, 40, "No")
+        else:
+            screen.addstr(18, 34, "Yes")
+            screen.attron(curses.color_pair(5))
+            screen.addstr(18, 40, "No")
+            screen.attroff(curses.color_pair(5))
+        k = screen.getch()
+        if k == curses.KEY_LEFT:
+            yes_selected = True
+        elif k == curses.KEY_RIGHT:
+            yes_selected = False
 
-		if k == curses.KEY_LEFT:
-			yes_selected = True
-		elif k == curses.KEY_RIGHT:
-			yes_selected = False
-	
-	return yes_selected
-
-
-
+    return yes_selected
 
 
 if __name__ == "__main__":

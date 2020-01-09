@@ -115,18 +115,54 @@ def find_player_pos(grid, door):
         
         score_list.pop(score_list.index(max(score_list)))
 
-    return (best_player_pos[1], best_player_pos[0]), path
+    return (best_player_pos[1], best_player_pos[0])
+
+def find_house(grid):
+    height = len(grid)
+    width = len(grid[0])
+    possible_house_pos = []
+    for i in range(4, width - 4):
+        for j in range(4, height - 4):
+            if count_alive_neighbors(grid, i, j) <= 3:
+                continue
+            #check north, northwest, northeast
+            if grid[j - 1][i] == 1 and grid[j - 1][i - 1] == 1 and grid[j - 1][i + 1] == 1 and grid[j - 1][i + 2] == 1 and grid[j - 1][i - 2] == 1 and grid[j][i] == 0:
+                #check one upper row more
+                if grid[j - 2][i] == 1 and grid[j - 2][i - 1] == 1 and grid[j - 2][i + 1] == 1 and grid[j - 2][i + 2] == 1 and grid[j - 2][i + 2] == 1 :
+                    possible_house_pos.append((i,j))
+    return random.choice(possible_house_pos)
 
 def create_map(seed):
     grid = create_grid(96,37)
     init_grid(grid, seed)
-    for i in range(NUMBER_OF_STEPS):
+    for _i in range(NUMBER_OF_STEPS):
         grid = step(grid)
 
-    x,y = create_door(grid, seed)
+    
     _ret_list = []
-
-    player_pos, path = find_player_pos(grid, (x,y))
+    x,y = create_door(grid, seed)
+    player_pos = find_player_pos(grid, (x,y))
+    house = find_house(grid)
+    if house:
+        print(house)
+        #grid[house[1]][house[0]] = 2
+        grid[house[1] - 1][house[0]] = 0  #
+        grid[house[1]][house[0] - 1] = 3
+        grid[house[1] - 1][house[0] - 1] = 0
+        grid[house[1] - 1][house[0] + 1] = 0
+        grid[house[1]][house[0] + 1] = 3
+        grid[house[1] - 2][house[0] + 1] = 3
+        grid[house[1] - 2][house[0] + 2] = 3
+        grid[house[1] - 1][house[0] + 2] = 3
+        grid[house[1]][house[0] + 2] = 3
+        grid[house[1] - 2][house[0] - 1] = 3
+        grid[house[1] - 2][house[0] - 2] = 3
+        grid[house[1] - 2][house[0]] = 3
+        grid[house[1] - 1][house[0] - 2] = 3
+        grid[house[1]][house[0] - 2] = 3
+    else:
+        print("House not found")
+    
     #if path:
     #    for item in path:
     #        grid[item[0]][item[1]] = 2
@@ -135,7 +171,7 @@ def create_map(seed):
     grid[x][y] = 2
 
     for item in grid:
-        _ret_list.append("".join([str(x) for x in item]).replace("0","F").replace("1","W").replace("2","D"))
+        _ret_list.append("".join([str(x) for x in item]).replace("0","F").replace("1","W").replace("2","D").replace("3", "c"))
     
     return {
         "player_pos" : player_pos,
