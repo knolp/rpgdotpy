@@ -1336,19 +1336,25 @@ class RandomCave(MapState):
             state.change_map_screen()
             state.first_time = False
         objects = [
-            #npc.Rat(13,37,state,radar=True),
-            #npc.Rat(18,37,state,radar=True)
         ]
         self.first_time = True
         self.cave_dict = cavegen.create_map(state.player.seed)
         self.state.player.x, self.state.player.y = self.cave_dict["player_pos"][0] + 1, self.cave_dict["player_pos"][1] + 1
-        self.game_map = mapper.GameMap(self.cave_dict["map"], objects, file=False)
         self.door_pos = self.cave_dict["door_pos"][0] + 1, self.cave_dict["door_pos"][1] + 1
+        self.game_map = mapper.GameMap(self.cave_dict["map"], objects, file=False)
         self.menu = GameMenu
         self.menu_commands = GameCommands
         self.ingame_menu = IngameMenu
         self.fov = True
         self.target = target
+        self.free_squares = []
+        for x in range(len(self.cave_dict["raw_map"])):
+            for y in range(len(self.cave_dict["raw_map"][0])):
+                if self.cave_dict["raw_map"][x][y] == 0:
+                    self.free_squares.append((y,x))
+        for i in range(5):
+            pos = random.choice(self.free_squares)
+            objects.append(npc.Rat(pos[1] + 1, pos[0] + 1, self.state, radar=True))
 
 
     def draw(self):
@@ -1362,6 +1368,27 @@ class RandomCave(MapState):
         pass
 
     def check_events(self):
+        monsters = [x for x in self.game_map.objects if x.type == "monster"]
+        print("")
+        print("##")
+        for monster in monsters:
+            print(f"{monster.name} {monster.visible}")
+            if monster.visible:
+                monster.path = []
+                path = cavegen.pathfind(self.cave_dict["raw_map"], (monster.x - 1, monster.y - 1), (self.state.player.y - 1, self.state.player.x - 1))
+                monster.path_to_target = path[1:]
+            else:
+                monster.path_to_target = []
+            if not monster.path:
+                path = cavegen.pathfind(self.cave_dict["raw_map"], (monster.x - 1, monster.y - 1), (random.choice(self.free_squares)))
+                monster.path = path.copy()
+            if monster.path and not monster.path_to_target:
+                monster.x, monster.y = monster.path[0][0] + 1, monster.path[0][1] + 1
+                monster.path.pop(0)
+            if monster.path_to_target:
+                monster.x, monster.y = monster.path_to_target[0][0] + 1, monster.path_to_target[0][1] + 1
+                monster.path_to_target.pop(0)
+
         if (self.state.player.x, self.state.player.y) == self.door_pos:
             if not type(self.target) == type([]):
                 self.target(self.state)

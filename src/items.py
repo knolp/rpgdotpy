@@ -1,8 +1,12 @@
 import abilities
 import art
-
 import random
 
+# Materials
+
+
+
+#items
 class Item():
     def __init__(self,name, usable):
         self.name = name
@@ -15,6 +19,7 @@ class Item():
         self.sell_price = 10
         self.buy_price = int(self.sell_price * 1.5)
         self.effect_description = False
+        self.material = False
 
         #Alchemy stuff
         self.dryable = False
@@ -243,6 +248,7 @@ class ChainHelmet(Item):
         self.description = "A hood made out of chainmail, quite heavy to wear."
         self.art = art.draw_ChainHelmet()
         self.rarity = "common"
+        self.material = ""
 
 
 #CHEST
@@ -271,6 +277,7 @@ class StuddedLegs(Item):
         self.defence = 2
         self.description = "Leather legs reinforced with iron studs."
         self.rarity = "epic"
+        self.material = "leather"
 
 #BOOTS
 

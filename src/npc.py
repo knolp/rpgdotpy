@@ -17,6 +17,7 @@ class NPC():
 		self.y = y
 		self.character = character
 		self.type = "npc"
+		self.visible = False
 
 	def draw(self, screen):
 		screen.attron(curses.color_pair(197))
@@ -38,6 +39,7 @@ class Usable():
 		self.character = character
 		self.type = "usable"
 		self.color = color
+		self.visible = False
 
 	def draw(self, screen):
 		screen.attron(curses.color_pair(self.color))
@@ -259,6 +261,8 @@ class Monster():
 		self.radar = radar
 		self.color = 240
 		self.path_to_target = []
+		self.path = []
+		self.visible = False
 
 	def draw(self, screen):
 		screen.addstr(self.x -1, self.y - 1, "N/A")

@@ -346,6 +346,9 @@ class GameMap():
 			y = math.sin(i * 0.01745)
 			self.do_fov(x, y, state, screen, object_coords, i)
 
+		for item in self.objects:
+			if item not in self.objects_to_draw:
+				item.visible = False
 		for item in self.objects_to_draw:
 			item.draw(screen)
 		#self.update_objects()
@@ -367,7 +370,9 @@ class GameMap():
 			except IndexError:
 				pass
 			try:
-				self.objects_to_draw.append(objects[(int(ox), int(oy))])
+				obj = objects[(int(ox), int(oy))]
+				obj.visible = True
+				self.objects_to_draw.append(obj)
 			except KeyError:
 				pass
 			

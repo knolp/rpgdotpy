@@ -130,7 +130,10 @@ def find_house(grid):
                 #check one upper row more
                 if grid[j - 2][i] == 1 and grid[j - 2][i - 1] == 1 and grid[j - 2][i + 1] == 1 and grid[j - 2][i + 2] == 1 and grid[j - 2][i + 2] == 1 :
                     possible_house_pos.append((i,j))
-    return random.choice(possible_house_pos)
+    if possible_house_pos:
+        return random.choice(possible_house_pos)
+    else:
+        return False
 
 def create_map(seed):
     grid = create_grid(96,37)
@@ -170,13 +173,15 @@ def create_map(seed):
     #    print("Path not found")
     grid[x][y] = 2
 
+    raw_map = grid.copy()
     for item in grid:
         _ret_list.append("".join([str(x) for x in item]).replace("0","F").replace("1","W").replace("2","D").replace("3", "c"))
     
     return {
         "player_pos" : player_pos,
         "map" : _ret_list,
-        "door_pos" : (x,y)
+        "door_pos" : (x,y),
+        "raw_map" : raw_map
         }
 
 

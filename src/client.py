@@ -102,10 +102,11 @@ class StateHandler():
             self.command_state.commands[0].active = True
 
 
-    def check_collision(self, next_tile):
-        if self.player:
-            if self.player.phaseshift:
-                return True
+    def check_collision(self, next_tile, player_control = True):
+        if player_control:
+            if self.player:
+                if self.player.phaseshift:
+                    return True
         x,y = next_tile
         return self.gamemap.game_map.background2[x - 1][y - 1].walkable
 
@@ -433,6 +434,7 @@ def draw_menu(stdscr):
 
 
             if state_handler.able_to_move == True:
+                curses.cbreak()
                 state_handler.timer.terminate()
                 if k in [curses.KEY_DOWN, curses.KEY_UP, curses.KEY_LEFT, curses.KEY_RIGHT, ord("w"), ord("a"), ord("s"), ord("d")]:
                     if state_handler.player.phaseshift:
@@ -491,6 +493,8 @@ def draw_menu(stdscr):
             state_handler.gamemap.check_events()
             for item in state_handler.gamemap.game_map.objects:
                     if item.type == "monster":
+                        if state_handler.gamemap.fov:
+                            break
                         if item.path_to_target or item.radar == False:
                             break
                         #check target
@@ -519,7 +523,9 @@ def draw_menu(stdscr):
                             for i in range(target_range):
                                 check[0] += v[0]
                                 check[1] += v[1]
-
+                                #if not state_handler.check_collision((check[0], check[1]), player_control=False):
+                                #    breakable = True
+                                #    break
                                 if check[0] == state_handler.player.x and check[1] == state_handler.player.y:
                                     target_direction = key
                                     breakable = True
@@ -528,6 +534,8 @@ def draw_menu(stdscr):
                                 break
 
                         if breakable:
+                            if not target_direction:
+                                break
                             state_handler.able_to_move = False
                             check = [original_position[0], original_position[1]]
                             while check[0] != state_handler.player.x or check[1] != state_handler.player.y:
