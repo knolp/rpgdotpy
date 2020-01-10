@@ -297,6 +297,20 @@ class GameMap():
 				else:
 					print(self.raw_map[x][y])
 					print("Could not create map tile from Text")
+		
+	def get_raw_map(self):
+		_raw = []
+		for x in range(len(self.background2)):
+			_raw.append([])
+			for y in range(len(self.background2[0])):
+				if self.background2[x][y].walkable:
+					_raw[x].append(0)
+				else:
+					_raw[x].append(1)
+
+		return _raw
+
+
 
 
 

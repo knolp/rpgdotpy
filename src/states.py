@@ -1369,10 +1369,7 @@ class RandomCave(MapState):
 
     def check_events(self):
         monsters = [x for x in self.game_map.objects if x.type == "monster"]
-        print("")
-        print("##")
         for monster in monsters:
-            print(f"{monster.name} {monster.visible}")
             if monster.visible:
                 monster.path = []
                 path = cavegen.pathfind(self.cave_dict["raw_map"], (monster.x - 1, monster.y - 1), (self.state.player.y - 1, self.state.player.x - 1))
