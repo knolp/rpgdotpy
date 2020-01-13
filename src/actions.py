@@ -4,6 +4,8 @@ import helper
 import inventory
 import curses
 import recipes
+import random
+import events
 from curses.textpad import Textbox, rectangle
 # Actions the player can do, such as read signs and interact with NPC:s, should either do stuff or open dialog box etc
 
@@ -839,6 +841,106 @@ class SpeakEmpaLinka(Action):
 			else: #Generic catch-all for non-keywords
 				text = [
 					"Sorry, what did you say?",
+					"",
+					"I do not know what that means."
+				]
+
+class SpeakEdwardGryll(Action):
+	def __init__(self, screen, state):
+		super().__init__(screen, state, "Speak")
+		self.name = "Edward Gryll"
+		self.vocation = "Human Sailor"
+		self.price_blackcliff = 50
+	
+	@add_ungetch
+	def execute(self):
+		#0 = start of conversation / base
+		#1 = yes/no travel to Blackcliff
+		text_state = 0 #Text_state for keeping track of states for specific dialogue-trees
+		if "EdwardGryll_met" not in self.state.player.flags: #Inital meet flag, on most NPCs
+			text = [
+				"Hello there, my name is Edward Gryll!",
+				"",
+				"I am the Captain here on [Wayfarer]!",
+				"",
+				"Name a place where you want to [travel]",
+				"and I'll take you there for a small fee."
+			] #Text is always a list of sentences, add empty string to <br>/linebreak
+			self.state.player.flags.append("EdwardGryll_met") #Append flag after
+		else: #Normal text after initial meet
+			text = [
+				"Hello again!",
+				"",
+				"Name a place where you want to [travel]",
+				"and I'll take you there for a small fee."
+			]
+		
+		while True:
+			answer = input_text(self.name, self.vocation, self.screen, text, self.state).lower() #Get input
+			
+			if answer in ["e", "exit", "bye", "q", "quit"]: #Always be here
+				return False #False return to exit
+			elif answer in ["yes", "y"]:
+				if text_state == 1:
+					text = [
+						"Great, we set sail for [Port Avery] right away!"
+					]
+					helper.popup(self.state.stdscr,self.state,["You arrive at [Port Avery]"])
+					events.StarterTown_door(self.state)
+					return
+
+			elif answer in ["no", "n"]:
+				text = [
+					"Maybe another time."
+				]
+				text_state = 0
+
+			
+			elif answer in ["quest"]: #Quest should be a standard, as well as trade
+				text = [
+					"Maybe another time."
+				]
+				text_state = 0 #Set state to inital state after generic dialogues
+
+			elif answer in ["trade"]:
+				text = [
+					"I sell my goods only to merchants."
+				]
+
+			elif answer in ["wayfarer"]:
+				text = [
+					"She's a beauty, been around almost the entire realm!"
+				]
+
+			elif answer in ["travel"]:
+				text = [
+					"I can take you to:",
+					"",
+					"[Blackcliff]",
+					"[Arkthal]"
+				]
+
+			elif answer in ["blackcliff", "black cliff", "port avery", "avery"]:
+				if random.randint(1,10) == 5:
+					text = [
+						"I was actually planning to head there myself",
+						"so I'll drop you off at Port Avery and spare you the cost.",
+						"",
+						"Does that sound good?"
+					]
+				else:
+					text = [
+						"Blackcliff's not far away.",
+						f"I can take you there for [{self.price_blackcliff} gold].",
+						"And it will take about a [week].",
+						"",
+						"Does that sound okay?"
+					]
+				text_state = 1
+
+			else: #Generic catch-all for non-keywords
+				text = [
+					"Huh?",
 					"",
 					"I do not know what that means."
 				]

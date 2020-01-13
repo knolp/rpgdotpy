@@ -238,6 +238,20 @@ class EmpaLinka(NPC):
 	def action(self, screen, state):
 		actions.SpeakEmpaLinka(screen, state).execute()
 
+# Starter Town Dock
+class EdwardGryll(NPC):
+	def __init__(self, x, y):
+		name = "Edward Gryll"
+		super().__init__(name, x, y, "E")
+		self.original_x = x
+		self.original_y = y
+
+	def turn_action(self):
+		pass
+
+	def action(self, screen, state):
+		actions.SpeakEdwardGryll(screen, state).execute()
+
 
 
 
@@ -262,6 +276,7 @@ class Monster():
 		self.color = 240
 		self.path_to_target = []
 		self.path = []
+		self.speed = 1
 		self.visible = False
 
 	def draw(self, screen):
@@ -281,6 +296,7 @@ class Monster():
 class Rat(Monster):
 	def __init__(self, x, y, state, flag=False, radar=False):
 		super().__init__("Rat", x, y, "R", state, flag=flag, radar=radar)
+		self.speed = 2
 
 	def action(self):
 		result = battle.Battle(self.state, monster.Rat(self.state), "3").play()
@@ -296,6 +312,7 @@ class Rat(Monster):
 class RatKing(Monster):
 	def __init__(self, x, y, state, flag=False, radar=False):
 		super().__init__("RatKing", x, y, "R", state, flag=flag, radar=radar)
+		self.speed = 2
 
 	def action(self, run=True):
 		result = battle.Battle(self.state, monster.RatKing(self.state), "3", run=run).play()
@@ -313,6 +330,7 @@ class RatKing(Monster):
 class SkeletonGrunt(Monster):
 	def __init__(self, x, y, state, flag=False, radar=False):
 		super().__init__("SkeletonGrunt", x, y, "S", state, flag=flag, radar=radar)
+		self.speed = 3
 
 	def action(self, run=False):
 		result = battle.Battle(self.state, monster.SkeletonGrunt(self.state), "3", run=run).play()

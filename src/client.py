@@ -86,6 +86,8 @@ class StateHandler():
 
         self.action = "None"
 
+        self.turn = 0
+
         self.player = False
         self.timer = False
         self.timer_started = False
@@ -113,6 +115,7 @@ class StateHandler():
     def check_npc_action(self):
         for obj in self.gamemap.game_map.objects:
             if self.player.x == obj.x and self.player.y == obj.y:
+                print(self.game_box)
                 obj.action(self.game_box, self)
 
 
@@ -405,6 +408,7 @@ def draw_menu(stdscr):
             state_handler.start_timer()
 
         if state_handler.map_screen == True:
+            state_handler.turn += 1
             
             if k == 9 and is_tab_enabled(state_handler):
                 k = 1
@@ -603,8 +607,8 @@ def draw_menu(stdscr):
             ppos = f"Player-Pos: X: {state_handler.player.x}  Y: {state_handler.player.y}"
             stdscr.addstr(45,int((150 - len(ppos)) / 2),ppos)
 
-            temp_invent = f"Temp_ALCH: {''.join(state_handler.player.temp_alchemy_inventory)}"
-            stdscr.addstr(46,int((150 - len(temp_invent)) / 2),temp_invent)
+            turns = f"Turn: {state_handler.turn}"
+            stdscr.addstr(46,int((150 - len(turns)) / 2),turns)
 
             info = f"Phaseshift = {state_handler.player.phaseshift}"
             stdscr.addstr(47,int((150 - len(info)) / 2),info)

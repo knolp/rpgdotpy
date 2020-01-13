@@ -1231,6 +1231,8 @@ class TradeDistrict(MapState):
     def check_events(self):
         if self.state.player.y == 96:
             events.TradeDistrict_east(self.state)
+        if self.state.player.y == 1:
+            events.go_west(self.state,"StarterTownLeftWall")
         elif self.state.player.x == 37:
             events.TradeDistrict_south(self.state)
         if self.state.player.x == 19 and self.state.player.y == 20:
@@ -1383,6 +1385,8 @@ class RandomCave(MapState):
                 monster.x, monster.y = monster.path[0][0] + 1, monster.path[0][1] + 1
                 monster.path.pop(0)
             if monster.path_to_target:
+                if self.state.turn % monster.speed == 0:
+                    break
                 monster.x, monster.y = monster.path_to_target[0][0] + 1, monster.path_to_target[0][1] + 1
                 monster.path_to_target.pop(0)
 
@@ -1410,6 +1414,7 @@ class StarterTownDocks(MapState):
             state.change_map_screen()
             state.first_time = False
         objects = [
+            npc.EdwardGryll(17,14)
         ]
         self.first_time = True
         self.game_map = mapper.GameMap("StarterTownDocks.txt", objects)
@@ -1430,3 +1435,43 @@ class StarterTownDocks(MapState):
     def check_events(self):
         if self.state.player.y == 96:
             events.go_east(self.state,"HuntersCamp")
+        if self.state.player.x == 1:
+            events.go_north(self.state,"StarterTownLeftWall")
+
+
+class StarterTownLeftWall(MapState):
+    name = "Left Wall"
+    raw_name = "StarterTownLeftWall"
+    menu_commands = GameCommands
+    objects = []
+    game_map = mapper.GameMap("StarterTown_left_wall.txt", objects)
+
+
+    def __init__(self, state):
+        super().__init__(state)
+        if state.first_time == True:
+            state.change_map_screen()
+            state.first_time = False
+        objects = [
+        ]
+        self.first_time = True
+        self.game_map = mapper.GameMap("StarterTown_left_wall.txt", objects)
+        self.menu = GameMenu
+        self.menu_commands = GameCommands
+        self.ingame_menu = IngameMenu
+
+
+    def draw(self):
+        if self.state.player.phaseshift:
+            self.game_map.draw_map(self.state.game_box, inverted=True)    
+        else:
+            self.game_map.draw_map(self.state.game_box)
+
+    def execute(self):
+        pass
+
+    def check_events(self):
+        if self.state.player.x == 37:
+            events.go_south(self.state,"StarterTownDocks")
+        if self.state.player.y == 96:
+            events.go_east(self.state,"TradeDistrict")
