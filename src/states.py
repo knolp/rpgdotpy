@@ -1453,6 +1453,9 @@ class StarterTownLeftWall(MapState):
             state.change_map_screen()
             state.first_time = False
         objects = [
+            npc.Rat(7,50,self.state,radar=False),
+            npc.Rat(8,42,self.state,radar=False)
+
         ]
         self.first_time = True
         self.game_map = mapper.GameMap("StarterTown_left_wall.txt", objects)
