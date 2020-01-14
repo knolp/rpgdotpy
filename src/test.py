@@ -1,26 +1,23 @@
-class Steel():
-    mat = "steel"
+from PIL import Image
 
-    def show(self):
-        print(self.mat)
+pic = Image.open("test.png").convert("LA")
 
+xx = 150
+yy = 50
 
+pic = pic.resize((xx,yy), Image.ANTIALIAS)
 
+pic.save("output.png")
 
-
-class Longsword():
-    def __init__(self,name):
-        self.name = name
-        self.material = Steel()
-
-    def show(self):
-        print(self.material.mat)
-
-
-
-
-
-
-
-l = Longsword("slayer of beasts")
-l.material.show()
+with open("test.txt", "w")as f:
+	for y in range(yy):
+		text = ""
+		for x in range(xx):
+			print(x,y)
+			value = pic.getpixel((x,y))
+			print(value)
+			if value[0] > 100:
+				text = text + " "
+			else:
+				text = text + "#"
+		f.write(text + "\n")

@@ -25,6 +25,7 @@ import pathfinding
 import pathfinding2
 import abilities
 import books
+import animation
 
 class Timer():
     def __init__(self, tid):
@@ -753,7 +754,8 @@ def draw_menu(stdscr):
             print(state_handler.player.seed)
 
         if k == ord("4"):
-            helper.popup(state_handler.stdscr,state_handler,art.draw_necro_book())
+            anim = animation.test_animation()
+            animation.play(anim, state_handler)
 
         if k == ord("5"):
             book = books.BasicAlchemy()

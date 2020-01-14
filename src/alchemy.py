@@ -112,7 +112,7 @@ def make_juice(state):
     for item in player.temp_alchemy_inventory:
         player.inventory.append(item)
     player.temp_alchemy_inventory = []
-    curses.cbreak()
+    curses.nocbreak()
 
 
 
@@ -396,7 +396,7 @@ def make_potion(state):
                     ingredients = ["Empty","Empty","Empty","Empty"]
 
     
-    curses.cbreak()
+    curses.nocbreak()
     for item in player.temp_alchemy_inventory:
         player.inventory.append(item)
     player.temp_alchemy_inventory = []
