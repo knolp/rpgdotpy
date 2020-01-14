@@ -1,6 +1,7 @@
 import states
 import helper
 import random
+import animation
 
 def go_west(state,location):
 	state.player.location = getattr(states, location)

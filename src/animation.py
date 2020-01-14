@@ -1,19 +1,37 @@
 import curses
+import helper
 
 def test_animation():
     frames = []
-    with open("test.txt") as f:
-        lines = f.read().split("\n")
-        print(len(lines))
-        print(len(lines[0]))
-        frames.append(lines[1:45])
+    frames.append([
+        "#########",
+        "#########",
+        "#########",
+        "#########",
+        "#########",
+    ])
+    frames.append([
+        "         ",
+        "         ",
+        "         ",
+        "         ",
+        "         ",
+    ])
+    frames.append([
+        "#########",
+        "#########",
+        "#########",
+        "#########",
+        "#########",
+    ])
 
     return frames
 
+@helper.add_ungetch
 def play(frames, state):
     screen = state.stdscr
     height, width = screen.getmaxyx()
-    curses.halfdelay(44)
+    curses.halfdelay(4)
     k = -1
 
     offset_x = 0
