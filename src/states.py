@@ -605,6 +605,7 @@ class MapState():
     def __init__(self, state):
         self.state = state
         self.fov = False
+        self.cave = False
 
     def check_events(self):
         print("NOT IMPLETMENTED")
@@ -1348,6 +1349,7 @@ class RandomCave(MapState):
         self.menu_commands = GameCommands
         self.ingame_menu = IngameMenu
         self.fov = True
+        self.cave = True
         self.target = target
         self.free_squares = []
         for x in range(len(self.cave_dict["raw_map"])):
@@ -1364,7 +1366,7 @@ class RandomCave(MapState):
         #    self.game_map.draw_map(self.state.game_box, inverted=True)    
         #else:
         #    self.game_map.draw_map(self.state.game_box)
-        self.game_map.draw_vision(self.state, self.state.game_box, draw_seen=False)
+        self.game_map.draw_vision(self.state, self.state.game_box, draw_seen=True)
 
     def execute(self):
         pass
@@ -1478,3 +1480,40 @@ class StarterTownLeftWall(MapState):
             events.go_south(self.state,"StarterTownDocks")
         if self.state.player.y == 96:
             events.go_east(self.state,"TradeDistrict")
+        if self.state.player.y == 1:
+            events.go_west(self.state,"StarterTownLeftSeaWall")
+
+class StarterTownLeftSeaWall(MapState):
+    name = "Left Sea Wall"
+    raw_name = "StarterTownLeftSeaWall"
+    menu_commands = GameCommands
+    objects = []
+    game_map = mapper.GameMap("StarterTown_left_sea_wall.txt", objects)
+
+
+    def __init__(self, state):
+        super().__init__(state)
+        if state.first_time == True:
+            state.change_map_screen()
+            state.first_time = False
+        objects = [
+        ]
+        self.first_time = True
+        self.game_map = mapper.GameMap("StarterTown_left_sea_wall.txt", objects)
+        self.menu = GameMenu
+        self.menu_commands = GameCommands
+        self.ingame_menu = IngameMenu
+
+
+    def draw(self):
+        if self.state.player.phaseshift:
+            self.game_map.draw_map(self.state.game_box, inverted=True)    
+        else:
+            self.game_map.draw_map(self.state.game_box)
+
+    def execute(self):
+        pass
+
+    def check_events(self):
+        if self.state.player.y == 96:
+            events.go_east(self.state,"StarterTownLeftWall")

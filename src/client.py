@@ -373,7 +373,7 @@ def draw_menu(stdscr):
     curses.init_pair(135, curses.COLOR_CYAN, -1)
     curses.init_pair(136, curses.COLOR_YELLOW, -1)
     curses.init_pair(137, curses.COLOR_BLUE, - 1)
-    curses.init_pair(138, 130, -1)
+    curses.init_pair(138, 130, -1) # Enhanced Dialogue
     curses.init_pair(139, 238 , 242) #Cobblestone
     curses.init_pair(140, 237, 242) #Fence
     curses.init_pair(141, 240, 40) #Grass Fence
@@ -394,6 +394,7 @@ def draw_menu(stdscr):
     curses.init_pair(156, curses.COLOR_YELLOW, 40) #Yellow fg on grass bg (initally for AriamBush)
     curses.init_pair(157, curses.COLOR_YELLOW, 185) #Wheat
     curses.init_pair(158, 208,208) # Fire?
+    curses.init_pair(159, curses.COLOR_CYAN, curses.COLOR_CYAN) #Window?
 
 
     height, width = state_handler.stdscr.getmaxyx()
@@ -498,7 +499,7 @@ def draw_menu(stdscr):
             state_handler.gamemap.check_events()
             for item in state_handler.gamemap.game_map.objects:
                     if item.type == "monster":
-                        if state_handler.gamemap.fov:
+                        if state_handler.gamemap.cave:
                             break
                         if item.path_to_target or item.radar == False:
                             break

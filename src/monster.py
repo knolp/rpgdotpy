@@ -24,7 +24,7 @@ class Limb():
         dropped_item = False
         combat_text = []
 
-        if weapon.damage_type == "Slash" and random.randint(1,100) > 95:
+        if weapon.damage_type == "Slash" and random.randint(1,100) > weapon.dismember_chance:
                 combat_text.append(f"The slashing motion of {weapon.readable_name} chops the {self.name} right off.")
                 combat_text.append(f"{self.name} fall to the floor.")
                 self.owner.limbs.remove(self)
@@ -63,6 +63,7 @@ class Monster():
         self.status_effects = []
         self.immune = []
         self.player = False
+
     
     def generate_loot(self):
         loot_chances = [100,75, 50, 25, 0]

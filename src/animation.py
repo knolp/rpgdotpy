@@ -20,7 +20,7 @@ def test_animation():
     frames.append([
         "#########",
         "#########",
-        "#########",
+        "##DFGWA##",
         "#########",
         "#########",
     ])
@@ -44,7 +44,9 @@ def play(frames, state):
         "W" : 96,
         "F" : 54,
         "G" : 42,
-        "D" : 209
+        "D" : 209,
+        "U" : 240,
+        "A" : 21
     }
 
 
@@ -55,7 +57,7 @@ def play(frames, state):
             break
         for x, row in enumerate(frames[frame]):
             for y, char in enumerate(row):
-                screen.addch(offset_x + x, 0 + y, curses.ACS_BLOCK, curses.color_pair(color_map[char]))
+                screen.addch(offset_x + x, 0 + y, char, curses.color_pair(color_map[char]))
 
         screen.addstr(45,50,str(frame))
 

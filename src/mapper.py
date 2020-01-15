@@ -143,6 +143,10 @@ class MapObject():
 	@classmethod
 	def fire(cls,x,y):
 		return cls(x,y, " ", walkable = False, color=158, name="Fire")
+	
+	@classmethod
+	def window(cls,x,y):
+		return cls(x,y, " ", walkable = False, color=145, name="Window")
 
 
 	def draw(self, screen, seen=False, inverted=False,character=False):
@@ -294,6 +298,8 @@ class GameMap():
 					self.background2[x][y] = MapObject.wheat(x + 1, y + 1)
 				elif self.raw_map[x][y] == "e":
 					self.background2[x][y] = MapObject.fire(x + 1, y + 1)
+				elif self.raw_map[x][y] == "E":
+					self.background2[x][y] = MapObject.window(x + 1, y + 1)
 				else:
 					print(self.raw_map[x][y])
 					print("Could not create map tile from Text")

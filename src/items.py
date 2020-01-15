@@ -20,6 +20,7 @@ class Item():
         self.buy_price = int(self.sell_price * 1.5)
         self.effect_description = False
         self.material = False
+        self.dismember_chance = 95
 
         #Alchemy stuff
         self.dryable = False
