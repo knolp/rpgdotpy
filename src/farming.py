@@ -109,9 +109,9 @@ def select_ingredient(state, juicable=False):
                 if item.readable_name == list_of_ingredients[selected_item]:
                     return player.inventory.pop(player.inventory.index(item))
 
-    return "Empty"
+    return False
 
-@helper.add_ungetch
+@helper.add_ungetch_and_cbreak
 def farming(state, identity):
     screen = state.stdscr
     player = state.player

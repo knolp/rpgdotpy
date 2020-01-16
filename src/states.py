@@ -1132,15 +1132,13 @@ class StarterTownPlayerHouse(MapState):
             state.change_map_screen()
             state.first_time = False
         objects = []
-        patches = [
-            (3,45,"FarmingPatch1"),
-            (3,46,"FarmingPatch2"),
-            (3,47,"FarmingPatch3"),
-            (3,48,"FarmingPatch4"),
-            (3,49,"FarmingPatch5"),
-            (3,50,"FarmingPatch6"),
-            (3,51,"FarmingPatch7")
-        ]
+        patches = []
+        patch_number = 0
+        for i in range(80,91,2):
+            for j in range(4,12):
+                patches.append((j,i,f"Farming_patch_{patch_number}"))
+                patch_number += 1
+                print(i,j, )
         if "StarterTown_house_herb_patch" in state.player.flags:
             ids = [x[0] for x in state.player.active_farms]
             time = [x[2] + x[4] for x in state.player.active_farms]
@@ -1366,7 +1364,7 @@ class RandomCave(MapState):
         #    self.game_map.draw_map(self.state.game_box, inverted=True)    
         #else:
         #    self.game_map.draw_map(self.state.game_box)
-        self.game_map.draw_vision(self.state, self.state.game_box, draw_seen=True)
+        self.game_map.draw_vision(self.state, self.state.game_box, draw_seen=False)
 
     def execute(self):
         pass

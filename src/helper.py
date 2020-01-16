@@ -12,6 +12,14 @@ def add_ungetch(f):
 		return res
 	return return_func
 
+def add_ungetch_and_cbreak(f):
+	def return_func(self, *args, **kwargs):
+		res = f(self, *args, **kwargs)
+		curses.ungetch(curses.KEY_F0)
+		curses.nocbreak()
+		return res
+	return return_func
+
 def input_text(screen, text, state):
 	screen.clear()
 	start = 10

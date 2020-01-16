@@ -2,30 +2,25 @@ from PIL import Image
 
 pic = Image.open("test.png")
 
-xx = 150
-yy = 50
+xx = 25
+yy = 25
 
-pic = pic.resize((xx,yy), Image.ANTIALIAS)
+pic = pic.resize((xx,yy), Image.ANTIALIAS).convert("RGBA")
 
 pic.save("output.png")
 pixels = pic.load()
-print(type)
 values = []
 new = []
+mod = 100
 
 
 for y in range(yy):
 	for x in range(xx):
 		value = pic.getpixel((x,y))
 		values.append(value)
-		temp = value[0] - (value[0] % 10)
-		new.append(temp)
-		pixels[x,y] = (temp, 255, 100)
+		red = value[0] - (value[0] % mod)
+		green = value[1] - (value[1] % mod)
+		blue = value[2] - (value[2] % mod)
+		pixels[x,y] = (red, green, blue, value[3])
 
 pic.save("output2.png")
-
-print(len(set(values)))
-print(len(set(new)))
-
-for item in set(new):
-	print(item)

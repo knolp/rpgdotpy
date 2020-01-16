@@ -324,7 +324,24 @@ class Battle():
             self.screen.addstr(opponent_offset, opponent_offset_y, "Opponent: {}".format(self.opponent.readable_name))
             for i, v in enumerate(self.opponent.description):
                 self.screen.addstr(opponent_offset + i + 1, opponent_offset_y, v)
-            self.screen.addstr(opponent_offset + 5, opponent_offset_y, "HP: {} / {}".format(self.opponent.health, self.opponent.max_health))
+            
+            # Todo REWORK
+            #self.screen.addstr(opponent_offset + 5, opponent_offset_y, "HP: {} / {}".format(self.opponent.health, self.opponent.max_health))
+            percentage = self.opponent.health / self.opponent.max_health
+            if percentage == 1:
+                keyword = "Great Health"
+            elif percentage >= 0.7:
+                keyword = "Fine"
+            elif percentage >= 0.3:
+                keyword = "Damaged"
+            elif percentage >= 0.1:
+                keyword = "Barely hanging on"
+            else:
+                keyword = "Badly injured"
+            self.screen.addstr(opponent_offset + 5, opponent_offset_y, f"Shape: {keyword}")
+
+            # TODO END
+
             self.screen.addstr(opponent_offset + 7, opponent_offset_y, "Debuffs:")
             # allocate 6 for status effects
             for i, status in enumerate(self.opponent.status_effects):
