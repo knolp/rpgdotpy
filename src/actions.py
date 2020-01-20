@@ -411,7 +411,7 @@ class SpeakEvanKripter(Action):
 							"		[He hands you a piece of paper with the recipe]",
 							"Use it wisely."
 						]
-						self.player.recipes.append(recipes.AdralBrew())
+						self.state.player.recipes.append(recipes.AdralBrew())
 					else:
 						text = [
 							"I cannot teach you what you already know."

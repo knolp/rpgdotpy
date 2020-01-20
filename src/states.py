@@ -972,7 +972,7 @@ class StarterTown_haunted_house_3(MapState):
     def check_events(self):
         if self.state.player.x == 37 and self.state.player.y == 72:
             events.StarterTown_haunted_house_3_back_exit(self.state)
-        if self.state.player.x == 7 and self.state.player.y == 14:
+        if self.state.player.x == 21 and self.state.player.y == 14:
             if "StarterTown_sewer_door_unlocked" not in self.state.player.flags:
                 self.state.player.flags.append("StarterTown_sewer_door_unlocked")
             events.StarterTown_haunted_house_3_sewer_exit(self.state)
