@@ -19,20 +19,21 @@ class Fireball(Ability):
         self.description = "Conjures a great ball of fire, ready to throw at any foe."
 
     def execute(self, player, opponent):
-        combat_text = []
-        combat_variables = [
-            "hurls a big fireball towards",
-            "conjures a great ball of fire and throws it towards",
-            "casts a fireball at"
-        ]
-        damage_done = player.stats["Intelligence"]
-        combat_text.append("{} {} {}".format(player.name, random.choice(combat_variables), opponent.readable_name))
-        combat_text.append("It deals {} damage.".format(damage_done))
-
-        return {
-            "damage" : damage_done,
-            "combat_text" : combat_text
-        }
+        if not opponent.player:
+            combat_text = []
+            combat_variables = [
+                "hurls a big fireball towards",
+                "conjures a great ball of fire and throws it towards",
+                "casts a fireball at"
+            ]
+            damage_done = player.stats["Intelligence"]
+            combat_text.append("{} {} {}".format(player.name, random.choice(combat_variables), opponent.readable_name))
+            combat_text.append("It deals {} damage.".format(damage_done))
+    
+            return {
+                "damage" : damage_done,
+                "combat_text" : combat_text
+            }
 
 class LifeBolt(Ability):
     def __init__(self):

@@ -1072,7 +1072,7 @@ class BrownBearInn(MapState):
     def execute(self):
         pass
 
-    def check_events(self):
+    def check_events(self):    
         if self.state.player.x == 34 and self.state.player.y == 49:
             events.BrownBearInn_exit(self.state)
 
@@ -1136,7 +1136,7 @@ class StarterTownPlayerHouse(MapState):
         patch_number = 0
         for i in range(80,91,2):
             for j in range(4,12):
-                patches.append((j,i,f"Farming_patch_{patch_number}"))
+                patches.append((j,i ,f"Farming_patch_{patch_number}"))
                 patch_number += 1
                 print(i,j, )
         if "StarterTown_house_herb_patch" in state.player.flags:

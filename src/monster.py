@@ -105,7 +105,7 @@ class Monster():
                         for item in result["combat_text"]:
                             combat_text.append(item)
         if not held_item:
-            combat_text = [f"{self.readable_name} {random.choice(self.attack_styles)} you for {random.randint(0,self.damage)} damage."]
+            combat_text = [f"{self.readable_name} {random.choice(self.attack_styles)} you for {melee_damage} damage."]
 
         return {
             "combat_text" : combat_text,

@@ -871,6 +871,7 @@ def swap_spells(screen, state, old_spell_index):
 
 	k = -1
 	selected_item = 0
+	screen = state.stdscr
 
 	height, width = screen.getmaxyx()
 
@@ -885,14 +886,14 @@ def swap_spells(screen, state, old_spell_index):
 		else:
 			explain_text = "Choose a spell to replace {}".format(state.player.spells[old_spell_index].readable_name)
 
-		screen.addstr(10, offset - int((len("Inactive Spells") / 2) + 30), "Inactive Spells")
-		screen.addstr(11, offset - int((len(explain_text) / 2) + 30), explain_text)
+		screen.addstr(10, offset - int((len("Inactive Spells") / 2)), "Inactive Spells")
+		screen.addstr(11, offset - int((len(explain_text) / 2)), explain_text)
 
 		for i in range(len(state.player.spellbook)):
 			if i == selected_item:
 				screen.attron(curses.color_pair(5))
 			
-			screen.addstr(start + i, offset - int((len(state.player.spellbook[i].readable_name) / 2) + 30), state.player.spellbook[i].readable_name)
+			screen.addstr(start + i, offset - int((len(state.player.spellbook[i].readable_name) / 2)), state.player.spellbook[i].readable_name)
 
 			if i == selected_item:
 				screen.attroff(curses.color_pair(5))
@@ -922,6 +923,7 @@ def swap_spells(screen, state, old_spell_index):
 				selected_item = 0
 
 def view_spellbook(screen, state):
+	screen = state.stdscr
 	screen.clear()
 
 	k = -1
@@ -939,17 +941,17 @@ def view_spellbook(screen, state):
 
 		explain_text = "You can have a maximum of 5 active spells equipped."
 
-		screen.addstr(10, offset - int((len("Active Spells") / 2) + 30), "Active Spells")
-		screen.addstr(11, offset - int((len(explain_text) / 2) + 30), explain_text)
+		screen.addstr(10, offset - int((len("Active Spells") / 2)), "Active Spells")
+		screen.addstr(11, offset - int((len(explain_text) / 2)), explain_text)
 
 		for i in range(0,5):
 			if i == selected_item:
 				screen.attron(curses.color_pair(5))
 			
 			if state.player.spells[i] == False:
-				screen.addstr(start + i, offset - int((len("[Empty Slot]") / 2) + 30), "[Empty Slot]")
+				screen.addstr(start + i, offset - int((len("[Empty Slot]") / 2)), "[Empty Slot]")
 			else:
-				screen.addstr(start + i, offset - int((len(state.player.spells[i].readable_name) / 2) + 30), state.player.spells[i].readable_name)
+				screen.addstr(start + i, offset - int((len(state.player.spells[i].readable_name) / 2)), state.player.spells[i].readable_name)
 
 			if i == selected_item:
 				screen.attroff(curses.color_pair(5))

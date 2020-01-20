@@ -451,8 +451,8 @@ def draw_menu(stdscr):
                     name = ""
 
                 if k == curses.KEY_DOWN or k == ord("s"):
-                    if direction == "down":
-                        curses.flushinp()
+                    #if direction == "down":
+                    #    curses.flushinp()
                     direction = "down"
                     next_direction = state_handler.player.x + 1
                     next_tile = next_direction, state_handler.player.y
@@ -460,8 +460,8 @@ def draw_menu(stdscr):
                         state_handler.player.x = next_direction
                     k = 1
                 elif k == curses.KEY_UP or k == ord("w"):
-                    if direction == "up":
-                        curses.flushinp()
+                    #if direction == "up":
+                    #    curses.flushinp()
                     direction = "up"
                     next_direction = state_handler.player.x - 1
                     next_tile = next_direction, state_handler.player.y
@@ -469,8 +469,8 @@ def draw_menu(stdscr):
                         state_handler.player.x = next_direction
                     k = 1
                 elif k == curses.KEY_LEFT or k == ord("a"):
-                    if direction == "left":
-                        curses.flushinp()
+                    #if direction == "left":
+                    #    curses.flushinp()
                     direction = "left"
                     next_direction = state_handler.player.y - 1
                     next_tile = state_handler.player.x, next_direction
@@ -478,8 +478,8 @@ def draw_menu(stdscr):
                         state_handler.player.y = next_direction
                     k = 1
                 elif k == curses.KEY_RIGHT or k == ord("d"):
-                    if direction == "right":
-                        curses.flushinp()
+                    #if direction == "right":
+                    #    curses.flushinp()
                     direction = "right"
                     next_direction = state_handler.player.y + 1
                     next_tile = state_handler.player.x, next_direction
