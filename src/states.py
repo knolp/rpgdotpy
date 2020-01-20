@@ -683,6 +683,10 @@ class StarterTown_house(MapState):
             state.change_map_screen()
             state.first_time = False
         objects = [
+            npc.WoodenChest(15,45,"OskGhar_reward_chest",[
+                items.RatSmasher()
+            ],
+            requirement="RatMenace_reward"),
             npc.OskGhar(16,52)
         ]
         self.game_map = mapper.GameMap("map2.txt", objects)
@@ -930,6 +934,48 @@ class StarterTown_haunted_house_2(MapState):
             events.StarterTown_haunted_house_2_dungeon_door_left(self.state)
         if self.state.player.x == 29 and self.state.player.y == 82:
             events.StarterTown_haunted_house_2_dungeon_door_right(self.state)
+        if self.state.player.x == 1 and self.state.player.y == 72:
+            events.StarterTown_haunted_house_3_entrance(self.state)
+
+
+class StarterTown_haunted_house_3(MapState):
+    """
+        After Falling down hole
+    """
+    name = "Haunted House"
+    raw_name = "StarterTown_haunted_house_3"
+    menu_commands = GameCommands
+    objects = []
+    game_map = mapper.GameMap("StarterTown_haunted_house_3.txt", objects)
+
+    def __init__(self, state):
+        super().__init__(state)
+        if state.first_time == True:
+            state.change_map_screen()
+            state.first_time = False
+        objects = [
+        ]
+        self.game_map = mapper.GameMap("StarterTown_haunted_house_3.txt", objects)
+        self.menu = GameMenu
+        self.menu_commands = GameCommands
+        self.ingame_menu = IngameMenu
+
+        self.fov = True
+
+
+    def draw(self):
+        self.game_map.draw_vision(self.state, self.state.game_box)
+
+    def execute(self):
+        pass
+
+    def check_events(self):
+        if self.state.player.x == 37 and self.state.player.y == 72:
+            events.StarterTown_haunted_house_3_back_exit(self.state)
+        if self.state.player.x == 7 and self.state.player.y == 14:
+            if "StarterTown_sewer_door_unlocked" not in self.state.player.flags:
+                self.state.player.flags.append("StarterTown_sewer_door_unlocked")
+            events.StarterTown_haunted_house_3_sewer_exit(self.state)
 
 
 
@@ -1034,7 +1080,25 @@ class GreenForest(MapState):
             self.state.player.x, self.state.player.y = self.state.player.last_pos
 
         # TANNER
+        if self.state.player.x == 24 and self.state.player.y == 11:
+            events.GreenForest_tanner_entrance(self.state)
+        if self.state.player.x == 24 and self.state.player.y == 12:
+            helper.popup(self.state.stdscr, self.state, [
+                "[Tannery of Didric Swanson]",
+                "",
+                "Renowned Tanner and Master Craftsman."
+                ])
+            self.state.player.x, self.state.player.y = self.state.player.last_pos
 
+        #Sewer back entrance:
+        if self.state.player.x == 21 and self.state.player.y == 86:
+            if "StarterTown_sewer_door_unlocked" not in self.state.player.flags:
+                helper.popup(self.state.stdscr, self.state, [
+                    "This seems to be locked from the inside."
+                ])
+                self.state.player.x, self.state.player.y = self.state.player.last_pos
+            else:
+                events.GreenForest_sewer_entrance(self.state)
 
 class BrownBearInn(MapState):
     name = "Brown Bear Inn"
@@ -1054,13 +1118,29 @@ class BrownBearInn(MapState):
             npc.BaldirKragg(19,17),
             npc.BodvarKragg(23,17),
             npc.LarsMagnus(23,35),
-            npc.AbyrroQuatz(30,13)
         ]
+        self.abyrro = npc.AbyrroQuatz(30,33)
+        objects.append(self.abyrro)
         self.first_time = True
         self.game_map = mapper.GameMap("BrownBearInn.txt", objects)
         self.menu = GameMenu
         self.menu_commands = GameCommands
         self.ingame_menu = IngameMenu
+
+        #event stuff
+        self.abyrro_path = []
+        if "BrownBearInn_event_started" not in self.state.player.flags:
+            self.abyrro.quest = True
+            self.state.able_to_move = False
+            self.abyrro_path = [(30,33),(31,33), (32,33)]
+            for i in range(34,50):
+                self.abyrro_path.append((32,i))
+            backwards = self.abyrro_path[::-1]
+            self.abyrro_path.append("action")
+            self.abyrro_path.extend(backwards)
+            self.abyrro_path_length = len(self.abyrro_path)
+            self.state.player.flags.append("BrownBearInn_event_started")
+            curses.halfdelay(1)
 
 
     def draw(self):
@@ -1072,7 +1152,21 @@ class BrownBearInn(MapState):
     def execute(self):
         pass
 
-    def check_events(self):    
+    def check_events(self):
+        if "BrownBearInn_event_started" in self.state.player.flags and "BrownBearInn_event_done" not in self.state.player.flags:
+            if not self.abyrro_path:
+                self.state.player.flags.append("BrownBearInn_event_done")
+                
+                curses.nocbreak()
+                curses.ungetch(curses.KEY_F0)
+            else:
+                abyrro_pos = self.abyrro_path.pop(0)
+                if abyrro_pos == "action":
+                    self.abyrro.quest = False
+                    self.state.able_to_move = True
+                    self.abyrro.action(self.state.stdscr, self.state)
+                else:
+                    self.abyrro.x, self.abyrro.y = abyrro_pos
         if self.state.player.x == 34 and self.state.player.y == 49:
             events.BrownBearInn_exit(self.state)
 
@@ -1138,7 +1232,6 @@ class StarterTownPlayerHouse(MapState):
             for j in range(4,12):
                 patches.append((j,i ,f"Farming_patch_{patch_number}"))
                 patch_number += 1
-                print(i,j, )
         if "StarterTown_house_herb_patch" in state.player.flags:
             ids = [x[0] for x in state.player.active_farms]
             time = [x[2] + x[4] for x in state.player.active_farms]
@@ -1191,6 +1284,43 @@ class StarterTownPlayerHouse(MapState):
 
         elif self.state.player.x == 34 and self.state.player.y == 48:
             events.StarterTown_player_house_exit(self.state)
+
+class TannerHouse(MapState):
+    name = "Tanner"
+    raw_name = "TannerHouse"
+    menu_commands = GameCommands
+    objects = []
+    game_map = mapper.GameMap("tanner.txt", objects)
+
+
+    def __init__(self, state):
+        super().__init__(state)
+        if state.first_time == True:
+            state.change_map_screen()
+            state.first_time = False
+        objects = [
+        ]
+        self.first_time = True
+        self.game_map = mapper.GameMap("tanner.txt", objects)
+        self.menu = GameMenu
+        self.menu_commands = GameCommands
+        self.ingame_menu = IngameMenu
+
+
+    def draw(self):
+        if self.state.player.phaseshift:
+            self.game_map.draw_map(self.state.game_box, inverted=True)    
+        else:
+            self.game_map.draw_map(self.state.game_box)
+
+
+    def execute(self):
+        pass
+
+    def check_events(self):
+        if self.state.player.x == 26 and self.state.player.y == 47:
+            events.GreenForest_tanner_exit(self.state)
+
 
 
 

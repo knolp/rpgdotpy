@@ -28,10 +28,10 @@ def input_text(name, vocation, screen, text, state):
 		else:
 			screen.addstr(start, 34, item)
 		start += 1
-	screen.addstr(23,34, "Enter message:")
-	screen.addstr(26,34, "-----------------------------")
-	screen.addstr(27,34,"[Enter] to send. 'bye' or 'exit' to quit.")
-	window = curses.newwin(1,30,25,35)
+	screen.addstr(33,34, "Enter message:")
+	screen.addstr(36,34, "-----------------------------")
+	screen.addstr(37,34,"[Enter] to send. 'bye' or 'exit' to quit.")
+	window = curses.newwin(1,30,35,34)
 	screen.refresh()
 
 	tbox = Textbox(window)
@@ -562,10 +562,11 @@ class SpeakAbyrroQuatz(Action):
 				print("?")
 				if text_state == 1:
 					text = [
-						"I am in quite a pickle, I am here from Berud to buy some hides.",
-						"But the tanner doesn't seems to still hold a grudge against me.",
+						"I am in quite a pickle, I am here from [Berud] to buy some hides.",
+						"But the [tanner] seems to still hold a grudge against me.",
 						"",
-						"Would you be able to buy 5 [Deer Hides] for me?"
+						"Would you be able to buy 5 [Deer Hides] for me?",
+						"The [tanner] is just south of this inn."
 					]
 					text_state = 2
 				elif text_state == 2:
@@ -585,10 +586,11 @@ class SpeakAbyrroQuatz(Action):
 			elif answer.lower() in ["quest", "help"]:
 				if  "AbyrroQuatz_hides_started" not in self.state.player.flags:
 					text = [
-						"I am in quite a pickle, I am here from Berud to buy some hides.",
-						"But the tanner doesn't seems to still hold a grudge against me.",
+						"I am in quite a pickle, I am here from [Berud] to buy some hides.",
+						"But the [tanner] seems to still hold a grudge against me.",
 						"",
-						"Would you be able to buy 5 [Deer Hides] for me?"
+						"Would you be able to buy 5 [Deer Hides] for me?",
+						"The [tanner] is just south of the inn."
 					]
 					text_state = 2
 				
@@ -599,6 +601,21 @@ class SpeakAbyrroQuatz(Action):
 						"I must be back in Berud soon."
 					]
 					text_state = 0
+			
+			elif answer.lower() in ["tanner"]:
+				text = [
+					"[Didric Swanson] is his name.",
+					"",
+					"Horrible old man, once a resident of Berud as well.",
+					"He had a seat in the [Crafter's Guild] there too.",
+					"",
+					"His daughter went missing one day, and he blamed the [Magic Guild]",
+					"which I was a part of.",
+					"",
+					"Since it has been a few years after he left [Berud], I thought",
+					"he would have gotten over his grudge by now, but I guess not."
+				]
+				text_state = 0
 
 
 			else:

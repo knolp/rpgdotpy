@@ -169,6 +169,29 @@ def StarterTown_haunted_house_2_dungeon_door_right(state):
 		state.player.y = 81
 
 
+def StarterTown_haunted_house_3_entrance(state):
+	state.player.location = getattr(states, "StarterTown_haunted_house_3")
+
+	state.player.x = 36
+	state.player.y = 72
+
+	state.update_map()
+
+def StarterTown_haunted_house_3_back_exit(state):
+	state.player.location = getattr(states, "StarterTown_haunted_house_2")
+
+	state.player.x = 2
+	state.player.y = 72
+
+	state.update_map()
+
+def StarterTown_haunted_house_3_sewer_exit(state):
+	state.player.location = getattr(states, "GreenForest")
+
+	state.player.x = 22
+	state.player.y = 86
+
+	state.update_map()
 
 
 
@@ -191,6 +214,13 @@ def GreenForest_brown_bear_inn_entrance(state):
 
 	state.update_map()
 
+def GreenForest_sewer_entrance(state):
+	state.player.location = getattr(states, "StarterTown_haunted_house_3")
+	state.player.x = 8
+	state.player.y = 14
+
+	state.update_map()
+
 
 
 def BrownBearInn_exit(state):
@@ -205,6 +235,20 @@ def GreenForest_hall_of_justice_entrance(state):
 	state.player.location = getattr(states, "HallOfJustice")
 	state.player.x = 33
 	state.player.y = 48
+
+	state.update_map()
+
+def GreenForest_tanner_entrance(state):
+	state.player.location = getattr(states, "TannerHouse")
+	state.player.x = 25
+	state.player.y = 47
+
+	state.update_map()
+
+def GreenForest_tanner_exit(state):
+	state.player.location = getattr(states, "GreenForest")
+	state.player.x = 25
+	state.player.y = 11
 
 	state.update_map()
 

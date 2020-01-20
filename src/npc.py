@@ -18,8 +18,11 @@ class NPC():
 		self.character = character
 		self.type = "npc"
 		self.visible = False
+		self.quest = False
 
 	def draw(self, screen):
+		if self.quest:
+			screen.addch(self.x - 1, self.y, "!", curses.color_pair(138))
 		screen.attron(curses.color_pair(197))
 		screen.addch(self.x, self.y, self.character)
 		screen.attroff(curses.color_pair(197))
@@ -406,7 +409,7 @@ class Rock(Usable):
 		actions.Rock(screen, state).execute()
 
 class WoodenChest(Usable):
-	def __init__(self, x, y, flag, item_list):
+	def __init__(self, x, y, flag, item_list, requirement = False):
 		name = "WoodenChest"
 		self.readable_name = "Wooden Chest"
 		super().__init__(name,x,y,"X")
@@ -414,13 +417,19 @@ class WoodenChest(Usable):
 		self.original_y = y
 		self.flag = flag
 		self.item_list = item_list
+		self.requirement = requirement
 
 
 	def turn_action(self):
 		pass
 
 	def action(self, screen, state):
-		actions.WoodenChestOpen(screen, state, self).execute()
+		if self.requirement and self.requirement in state.player.flags:
+			actions.WoodenChestOpen(screen, state, self).execute()
+		else:
+			helper.popup(screen,state,[
+				"The chest is locked."
+			])
 
 class DeverBerries(Usable):
 	def __init__(self, x, y, state):

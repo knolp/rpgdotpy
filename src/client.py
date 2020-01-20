@@ -755,8 +755,9 @@ def draw_menu(stdscr):
             print(state_handler.player.seed)
 
         if k == ord("4"):
-            anim = animation.test_animation()
-            animation.play(anim, state_handler)
+            #anim = animation.test_animation()
+            #animation.play(anim, state_handler)
+            curses.nocbreak()
 
         if k == ord("5"):
             book = books.BasicAlchemy()

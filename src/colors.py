@@ -11,22 +11,31 @@ def main(stdscr):
 	x_start = 0
 	max_x = 40
 	y_start = 0
-	for i in range(1, curses.COLORS - 1):
-		curses.init_color(i, int(i / 0.255), 0, 500)
-		curses.init_pair(i + 1, curses.COLOR_WHITE, i)
+	curses.init_pair(1,53, 53)
+	curses.init_pair(2,51,-1)
+
 	while k != ord("q"):
 		stdscr.clear()
 		if k == ord("l"):
-			for i in range(255):
-				if x == max_x:
-					x = 0
-					y += 3
-				try:
-					stdscr.addstr(x_start + x, y_start + y, f"{'   '}", curses.color_pair(i))
-				except:
-					print(x_start + x)
-					print(y_start + y)
-				x += 1
+			stdscr.addch(0,0,curses.ACS_ULCORNER, curses.color_pair(2))
+			stdscr.addch(1,0,curses.ACS_VLINE, curses.color_pair(2))
+			stdscr.addch(2,0,curses.ACS_VLINE, curses.color_pair(2))
+
+			stdscr.addch(0,1,curses.ACS_HLINE, curses.color_pair(2))
+			stdscr.addch(0,2,curses.ACS_TTEE, curses.color_pair(2))
+			stdscr.addch(0,3,curses.ACS_HLINE, curses.color_pair(2))
+			stdscr.addch(0,4,curses.ACS_TTEE, curses.color_pair(2))
+			stdscr.addch(0,5,curses.ACS_HLINE, curses.color_pair(2))
+
+			stdscr.addch(0,6,curses.ACS_URCORNER, curses.color_pair(2))
+			stdscr.addch(1,6,curses.ACS_VLINE, curses.color_pair(2))
+			stdscr.addch(2,6,curses.ACS_VLINE, curses.color_pair(2))
+
+			
+			stdscr.addch(1,2,"#",curses.color_pair(1))
+			#stdscr.addch(2,2,"#",curses.color_pair(1))
+			stdscr.addch(1,4,"#",curses.color_pair(1))
+			#stdscr.addch(2,4,"#",curses.color_pair(1))
 
 
 #		lista = [
