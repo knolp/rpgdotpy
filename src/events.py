@@ -192,6 +192,7 @@ def StarterTown_haunted_house_3_sewer_exit(state):
 	state.player.y = 86
 
 	state.update_map()
+	state.save_player(quicksave=True)
 
 
 
@@ -308,6 +309,13 @@ def HuntersCamp_north(state):
 def HuntersCamp_east(state):
 	state.player.location = getattr(states, "StarterTown")
 	state.player.y = 2
+
+	state.update_map()
+
+def GrandPalace_interior_entrance_enter(state):
+	state.player.location = getattr(states, "GrandPalace_interior_entrance")
+	state.player.x = 33
+	state.player.y = 48
 
 	state.update_map()
 

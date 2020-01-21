@@ -120,9 +120,13 @@ class StateHandler():
                 obj.action(self.game_box, self)
 
 
-    def load_player(self):
-        with open("save.json", "r") as f:
-            load_dict = json.load(f)
+    def load_player(self, quicksave=False):
+        if not quicksave:
+            with open("save.json", "r") as f:
+                load_dict = json.load(f)
+        else:
+            with open("quicksave.json", "r") as f:
+                load_dict = json.load(f)
 
         self.player = player.Player(load_dict)
         for item in load_dict["inventory"]:
@@ -167,7 +171,7 @@ class StateHandler():
         self.player.seed = load_dict["seed"]
         self.player.last_target = load_dict["last_target"]
 
-    def save_player(self):
+    def save_player(self, quicksave=False):
         params = {}
 
         for k,v in self.player.__dict__.items()	:
@@ -214,11 +218,14 @@ class StateHandler():
         
         params["time"] = self.timer.tid
 
+        if not quicksave:
+            with open("save.json", "w") as f:
+                json.dump(params,f)
+        else:
+            with open("quicksave.json", "w") as f:
+                json.dump(params,f)
 
-        with open("save.json", "w") as f:
-            json.dump(params,f)
-
-        self.load_player()
+        self.load_player(quicksave=quicksave)
 
     def make_player(self):
         self.create_player["x"] = 13
@@ -395,6 +402,7 @@ def draw_menu(stdscr):
     curses.init_pair(157, curses.COLOR_YELLOW, 185) #Wheat
     curses.init_pair(158, 208,208) # Fire?
     curses.init_pair(159, curses.COLOR_CYAN, curses.COLOR_CYAN) #Window?
+    curses.init_pair(160, 130, curses.COLOR_RED)
 
 
     height, width = state_handler.stdscr.getmaxyx()

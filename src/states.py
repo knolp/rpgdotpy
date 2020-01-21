@@ -44,7 +44,7 @@ class main_menu_temp():
         self.command_box = command_box
         self.commands = [MenuItem("New Game", 1, NewGame_1, NewGame_1_commands),
                         MenuItem("Load Character", 2, StartGame, StartGame_commands),
-                         MenuItem("Debug", 3, Debug, False)]
+                         MenuItem("Load Quicksave", 3, StartGame, StartGame_commands)]
 
 class main_menu():
     def __init__(self, state):
@@ -52,7 +52,7 @@ class main_menu():
         self.command_box = state.command_box
         self.commands = [MenuItem("New Game", 1, NewGame_1, NewGame_1_commands),
                         MenuItem("Load Character", 2, False,False),
-                         MenuItem("Debug", 3, Debug, False)]
+                         MenuItem("Load Quicksave", 3, StartGame, StartGame_commands)]
 
 
 class NewGame_1_commands():
@@ -183,6 +183,9 @@ class Intro():
             if item.active:
                 if item.text == "Load Character":
                     self.state.load_player()
+                    self.state.command_state.commands[1] = MenuItem("Load Character", 2, self.state.player.location,self.state.player.location.menu_commands, active=True)
+                if item.text == "Load Quicksave":
+                    self.state.load_player(quicksave=True)
                     self.state.command_state.commands[1] = MenuItem("Load Character", 2, self.state.player.location,self.state.player.location.menu_commands, active=True)
 
 
@@ -1612,6 +1615,9 @@ class StarterTownLeftWall(MapState):
         if self.state.player.y == 1:
             events.go_west(self.state,"StarterTownLeftSeaWall")
 
+        if self.state.player.x == 3 and self.state.player.y == 33:
+            events.GrandPalace_interior_entrance_enter(self.state)
+
 class StarterTownLeftSeaWall(MapState):
     name = "Left Sea Wall"
     raw_name = "StarterTownLeftSeaWall"
@@ -1646,3 +1652,38 @@ class StarterTownLeftSeaWall(MapState):
     def check_events(self):
         if self.state.player.y == 96:
             events.go_east(self.state,"StarterTownLeftWall")
+
+
+class GrandPalace_interior_entrance(MapState):
+    name = "Grand Palace"
+    raw_name = "GrandPalace_interior_entrance"
+    menu_commands = GameCommands
+    objects = []
+    game_map = mapper.GameMap("GrandPalace_interior_entrance.txt", objects)
+
+
+    def __init__(self, state):
+        super().__init__(state)
+        if state.first_time == True:
+            state.change_map_screen()
+            state.first_time = False
+        objects = [
+        ]
+        self.first_time = True
+        self.game_map = mapper.GameMap("GrandPalace_interior_entrance.txt", objects)
+        self.menu = GameMenu
+        self.menu_commands = GameCommands
+        self.ingame_menu = IngameMenu
+
+
+    def draw(self):
+        if self.state.player.phaseshift:
+            self.game_map.draw_map(self.state.game_box, inverted=True)    
+        else:
+            self.game_map.draw_map(self.state.game_box)
+
+    def execute(self):
+        pass
+
+    def check_events(self):
+        pass

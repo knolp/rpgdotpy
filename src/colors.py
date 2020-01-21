@@ -38,46 +38,55 @@ def main(stdscr):
 			#stdscr.addch(2,4,"#",curses.color_pair(1))
 
 
-#		lista = [
-#			curses.ACS_ULCORNER,
-#			curses.ACS_LLCORNER,
-#			curses.ACS_URCORNER,
-#			curses.ACS_LRCORNER,
-#			curses.ACS_LTEE,
-#			curses.ACS_RTEE,
-#			curses.ACS_BTEE,
-#			curses.ACS_TTEE,
-#			curses.ACS_HLINE,
-#			curses.ACS_VLINE,
-#			curses.ACS_PLUS,
-#			curses.ACS_S1,
-#			curses.ACS_S3,
-#			curses.ACS_S7,
-#			curses.ACS_S9,
-#			curses.ACS_DIAMOND,
-#			curses.ACS_CKBOARD,
-#			curses.ACS_DEGREE,
-#			curses.ACS_PLMINUS,
-#			curses.ACS_BULLET,
-#			curses.ACS_LARROW,
-#			curses.ACS_RARROW,
-#			curses.ACS_DARROW,
-#			curses.ACS_UARROW,
-#			curses.ACS_BOARD,
-#			curses.ACS_LANTERN,
-#			curses.ACS_BLOCK,
-#			curses.ACS_LEQUAL,
-#			curses.ACS_GEQUAL,
-#			curses.ACS_PI,
-#			curses.ACS_NEQUAL,
-#			curses.ACS_STERLING
-#		]
-#		x = 22
-#		y = 0
-#		for item in lista:
-#			stdscr.addch(x,y,item)#
-
-#			y += 1
+		lista = [
+			curses.ACS_ULCORNER,
+			curses.ACS_LLCORNER,
+			curses.ACS_URCORNER,
+			curses.ACS_LRCORNER,
+			curses.ACS_LTEE,
+			curses.ACS_RTEE,
+			curses.ACS_BTEE,
+			curses.ACS_TTEE,
+			curses.ACS_HLINE,
+			curses.ACS_VLINE,
+			curses.ACS_PLUS,
+			curses.ACS_S1,
+			curses.ACS_S3,
+			curses.ACS_S7,
+			curses.ACS_S9,
+			curses.ACS_DIAMOND,
+			curses.ACS_CKBOARD,
+			curses.ACS_DEGREE,
+			curses.ACS_PLMINUS,
+			curses.ACS_BULLET,
+			curses.ACS_LARROW,
+			curses.ACS_RARROW,
+			curses.ACS_DARROW,
+			curses.ACS_UARROW,
+			curses.ACS_BOARD,
+			curses.ACS_LANTERN,
+			curses.ACS_BLOCK,
+			curses.ACS_LEQUAL,
+			curses.ACS_GEQUAL,
+			curses.ACS_PI,
+			curses.ACS_NEQUAL,
+			curses.ACS_STERLING
+		]
+		x = 22
+		y = 0
+		for item in lista:
+			stdscr.addch(x,y,item)
+			y += 1
+		x = 23
+		y = 0
+		for i in range(255):
+			stdscr.addch(x,y, chr(i))
+			if i % 100 == 0:
+				x += 1
+				y = 0
+			else:
+				y += 1
+		
 		k = stdscr.getch()
 
 curses.wrapper(main)

@@ -2,10 +2,10 @@ from PIL import Image
 
 pic = Image.open("test.png")
 
-xx = 25
-yy = 25
+	xx = 25
+	yy = 25
 
-pic = pic.resize((xx,yy), Image.ANTIALIAS).convert("RGBA")
+	pic = pic.resize((xx,yy), Image.ANTIALIAS).convert("RGBA")
 
 pic.save("output.png")
 pixels = pic.load()

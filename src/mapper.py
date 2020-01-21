@@ -148,6 +148,38 @@ class MapObject():
 	def window(cls,x,y):
 		return cls(x,y, " ", walkable = False, color=145, name="Window")
 
+	@classmethod
+	def carpetUR(cls,x,y):
+		return cls(x,y, curses.ACS_URCORNER, walkable = True, color=160, name="Carpet")
+	
+	@classmethod
+	def carpetLR(cls,x,y):
+		return cls(x,y, curses.ACS_LRCORNER, walkable = True, color=160, name="Carpet")
+	
+	@classmethod
+	def carpetUL(cls,x,y):
+		return cls(x,y, curses.ACS_ULCORNER, walkable = True, color=160, name="Carpet")
+
+	@classmethod
+	def carpetLL(cls,x,y):
+		return cls(x,y, curses.ACS_LLCORNER, walkable = True, color=160, name="Carpet")
+
+	@classmethod
+	def carpetHLINE(cls,x,y):
+		return cls(x,y, curses.ACS_HLINE, walkable = True, color=160, name="Carpet")
+	
+	@classmethod
+	def carpetVLINE(cls,x,y):
+		return cls(x,y, curses.ACS_VLINE, walkable = True, color=160, name="Carpet")
+
+	@classmethod
+	def carpet(cls,x,y):
+		return cls(x,y, " ", walkable = True, color=160, name="Carpet")
+
+	@classmethod
+	def carpetdiamond(cls,x,y):
+		return cls(x,y, curses.ACS_DIAMOND, walkable = True, color=160, name="Carpet")
+
 
 	def draw(self, screen, seen=False, inverted=False,character=False):
 		if type(self.color) == list:
@@ -300,6 +332,22 @@ class GameMap():
 					self.background2[x][y] = MapObject.fire(x + 1, y + 1)
 				elif self.raw_map[x][y] == "E":
 					self.background2[x][y] = MapObject.window(x + 1, y + 1)
+				elif self.raw_map[x][y] == "7":
+					self.background2[x][y] = MapObject.carpetUL(x + 1, y + 1)
+				elif self.raw_map[x][y] == "9":
+					self.background2[x][y] = MapObject.carpetUR(x + 1, y + 1)
+				elif self.raw_map[x][y] == "1":
+					self.background2[x][y] = MapObject.carpetLL(x + 1, y + 1)
+				elif self.raw_map[x][y] == "3":
+					self.background2[x][y] = MapObject.carpetLR(x + 1, y + 1)
+				elif self.raw_map[x][y] == "4":
+					self.background2[x][y] = MapObject.carpetVLINE(x + 1, y + 1)
+				elif self.raw_map[x][y] == "8":
+					self.background2[x][y] = MapObject.carpetHLINE(x + 1, y + 1)
+				elif self.raw_map[x][y] == "5":
+					self.background2[x][y] = MapObject.carpet(x + 1, y + 1)
+				elif self.raw_map[x][y] == "0":
+					self.background2[x][y] = MapObject.carpetdiamond(x + 1, y + 1)
 				else:
 					print(self.raw_map[x][y])
 					print("Could not create map tile from Text")
