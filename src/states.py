@@ -1114,11 +1114,12 @@ class BrownBearInn(MapState):
             state.change_map_screen()
             state.first_time = False
         objects = [
-            npc.EvanKripter(19,31),
-            npc.BaldirKragg(19,17),
-            npc.BodvarKragg(23,17),
-            npc.LarsMagnus(23,35),
         ]
+        if "WakeUpCall_done" not in self.state.player.flags:
+            objects.append(npc.EvanKripter(19,31))
+            objects.append(npc.BaldirKragg(19,17))
+            objects.append(npc.BodvarKragg(23,17))
+            objects.append(npc.LarsMagnus(23,35))
         self.abyrro = npc.AbyrroQuatz(30,33)
         objects.append(self.abyrro)
         self.first_time = True

@@ -365,22 +365,28 @@ class SpeakEvanKripter(Action):
 		super().__init__(screen, state, "Speak")
 		self.name = "Evan Kripter"
 		self.vocation = "Elf Ranger"
+		self.deverberries = [x for x in self.state.player.inventory if x.name == "DeverBerry"]
 	
 	@add_ungetch
 	def execute(self):
+		#0 = Base
+		#1 ask yes/no for taking the deveryberry from you
 		text_state = 0
 		if "EvanKripter_met" not in self.state.player.flags:
 			text = [
 				"Hello there!",
 				"My name is Evan Kripter, one of the famous ['Four Adventurers']",
 				"",
-				"Don't let my appearance scare you, I am not like the other elves."
+				"Don't let my appearance scare you, I am not like the [other elves]."
 			]
 			self.state.player.flags.append("EvanKripter_met")
 		else:
 			text = [
 				"What can I, the leader of the [four adventurers] do for you, friend?"
 			]
+		if "WakeUpCall_started" in self.state.player.flags and "WakeUpCall_done" not in self.state.player.flags:
+			text.append("")
+			text.append("I heard you were gonna help us with the [brew].")
 
 		while True:
 			recipe_learned = False
@@ -391,8 +397,39 @@ class SpeakEvanKripter(Action):
 
 			if answer.lower() in ["e", "exit", "bye", "q", "quit"]:
 				return False
+			
+			elif answer.lower() in ["no", "n"]:
+				if text_state == 1:
+					text = [
+						"I am not happy to hear that, but I am sure waking up a few dwarves",
+						"are not the highest priority use for such a rare [berry].",
+						"",
+						"I hope you use it well."
+					]
+				else:
+					text = [
+						"Huh? No what?"
+					]
 
-			elif answer.lower() in ["four", "adventurers", "four adventurers"]:
+			elif answer.lower() in ["yes", "y"]:
+				if text_state == 1:
+					self.state.player.inventory.pop(self.state.player.inventory.index(self.deverberries[0]))
+					text = [
+						"Splendid!",
+						"",
+						"Thanks a lot, we, the [four adventurers] are in your debt!",
+						"Finally we can start our true quest for glory!",
+						"",
+						"Pray our paths meet again!"
+					]
+					text_state = 0
+					self.state.player.flags.append("WakeUpCall_done")
+				else:
+					text = [
+						"Huh?"
+					]
+
+			elif answer.lower() in ["four", "adventurers", "four adventurers", "the four adventurers"]:
 				text = [
 					"Yes, our party may be a weird one to an outsider.",
 					"We originally met in Blackcliff during a storm",
@@ -430,10 +467,18 @@ class SpeakEvanKripter(Action):
 					"Can be difficult and dangerous to find around here though."
 				]
 			elif answer.lower() in ["berries", "berry", "deverberries", "deverberry"]:
-				text = [
-					"[Deverberries] can usually be found near the burial sites of the dead",
-					"They grow exceptionally often where necromancy or dark arts have been performed."
-				]
+				if len(self.deverberries) >= 1:
+					text = [
+						"Great, you found a [deverberry]!",
+						"",
+						"Is it ok if you give it to me so we can finally wake these dwarves up?"
+					]
+					text_state = 1
+				else:
+					text = [
+						"[Deverberries] can usually be found near the burial sites of the dead",
+						"They grow exceptionally often where necromancy or dark arts have been performed."
+					]
 
 			elif answer.lower() in ["ad'ral brew", "adral brew"]:
 				text = [
@@ -448,7 +493,45 @@ class SpeakEvanKripter(Action):
 				]
 				if self.state.player.stats["Alchemy"] > 4 and not recipe_learned:
 					text.append("I'll be happy to share the [formula] with you.")
+			elif answer.lower() in ["barbura leaves", "barbura leaf", "leaves", "leaf", "barbura"]:
+				text = [
+					"Barbura leaves are easy to finds, grows like the plague this far up north.",
+					"",
+					"So I only need help finding a [deverberry]"
+				]
+				text_state = 0
 
+			elif answer.lower() in ["quest"]:
+				text = [
+					"A man searching for his own glory is not at liberty to give others quest.",
+					"We are actually far too busy with our own.",
+					"",
+					"We're gonna head out of here as soon as these damn dwarves wake up."
+				]
+
+			elif answer.lower() in ["join", "can i join", "can i join?"]:
+				text = [
+					"We are not called the [four adventurers] for nothing.",
+					"Our marketing team back in [Berud] would not be happy if we -",
+					"accepted a new member to our team.",
+					"",
+					"We'd have to print a whole set of new posters, and ink is not cheap!",
+					"",
+					"But here, take an autograph!",
+					"",
+					"	[Evan writes his name in your open palm with some ink]",
+					"	[As he lifts the quill, it already starts to fade]",
+					"",
+					"There we go, a memory for life!"
+				]
+			elif answer.lower() in ["other elves", "elves"]:
+				text = [
+					"Yes, I have broken free from the mental bond that binds us.",
+					"So I cannot be controlled by the elvish hivemind, and I have",
+					"never been happier.",
+					"",
+					"I cannot claim glory for myself if I do not control my own actions."
+				]
 			else:
 					text = [
 						"Huh?"
