@@ -87,8 +87,6 @@ class StateHandler():
 
         self.action = "None"
 
-        self.turn = 0
-
         self.player = False
         self.timer = False
         self.timer_started = False
@@ -170,6 +168,7 @@ class StateHandler():
         self.player.time = load_dict["time"]
         self.player.seed = load_dict["seed"]
         self.player.last_target = load_dict["last_target"]
+        self.player.turn = load_dict["turn"]
 
     def save_player(self, quicksave=False):
         params = {}
@@ -230,6 +229,7 @@ class StateHandler():
     def make_player(self):
         self.create_player["x"] = 13
         self.create_player["y"] = 13
+        self.create_player["turn"] = 0
 
         self.player = player.Player(self.create_player)
 
@@ -418,7 +418,7 @@ def draw_menu(stdscr):
             state_handler.start_timer()
 
         if state_handler.map_screen == True:
-            state_handler.turn += 1
+            state_handler.player.turn += 1
             
             if k == 9 and is_tab_enabled(state_handler):
                 k = 1
@@ -449,6 +449,7 @@ def draw_menu(stdscr):
 
             if state_handler.able_to_move == True:
                 curses.cbreak()
+                #curses.halfdelay(3)
                 state_handler.timer.terminate()
                 if k in [curses.KEY_DOWN, curses.KEY_UP, curses.KEY_LEFT, curses.KEY_RIGHT, ord("w"), ord("a"), ord("s"), ord("d")]:
                     if state_handler.player.phaseshift:
@@ -617,7 +618,7 @@ def draw_menu(stdscr):
             ppos = f"Player-Pos: X: {state_handler.player.x}  Y: {state_handler.player.y}"
             stdscr.addstr(45,int((150 - len(ppos)) / 2),ppos)
 
-            turns = f"Turn: {state_handler.turn}"
+            turns = f"Turn: {state_handler.player.turn}"
             stdscr.addstr(46,int((150 - len(turns)) / 2),turns)
 
             info = f"Phaseshift = {state_handler.player.phaseshift}"

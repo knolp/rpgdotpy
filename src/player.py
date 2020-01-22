@@ -52,7 +52,7 @@ class Player():
 		self.active_farms = [] #0=id,1=Plant,2=time_planted,3=result,4=harvest_time
 		self.hotkeys = {
 			"1" : False,
-			"2" : abilities.MindVision(),
+			"2" : abilities.PhaseShift(),
 			"3" : False,
 			"4" : False,
 			"5" : False,

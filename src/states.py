@@ -626,7 +626,7 @@ class StarterTown(MapState):
     raw_name = "StarterTown"
     menu_commands = GameCommands
     objects = [
-            npc.ErolKipman(13, 37)
+            npc.ErolKipman(13, 37),
         ]
     game_map = mapper.GameMap("map1.txt", objects)
 
@@ -643,15 +643,27 @@ class StarterTown(MapState):
         self.menu_commands = GameCommands
         self.ingame_menu = IngameMenu
         self.random_monsters = [monster.Rat]
+        self.turn = 0
 
     def draw(self):
-        self.game_map.draw_map(self.state.game_box)
+        if self.state.player.phaseshift:
+            self.game_map.draw_map(self.state.game_box, inverted=True)    
+        else:
+            self.game_map.draw_map(self.state.game_box)
         #self.game_map.draw_vision(self.state, self.state.game_box)
 
     def execute(self):
         pass
 
     def check_events(self):
+        for item in self.game_map.objects:
+            if not item.check_inbound():
+                self.game_map.objects.pop(self.game_map.objects.index(item))
+            item.turn_action()
+        if self.state.player.turn % 2 == 0:
+            smoke = npc.Smoke(11,50)
+            self.game_map.objects.append(smoke)
+
         # Check door
         if self.state.player.x == 17 and self.state.player.y == 47:
             events.StarterTown_door(self.state)
@@ -664,12 +676,12 @@ class StarterTown(MapState):
             events.StarterTown_haunted_house_entrance(self.state)
 
         # Check NPCs
-        for npc in self.game_map.objects:
-            if self.state.player.x == npc.x and self.state.player.y == npc.y:
-                self.state.action = "Talk"
-                break
-            else:
-                self.state.action = "None"
+        #for npc in self.game_map.objects:
+        #    if self.state.player.x == npc.x and self.state.player.y == npc.y:
+        #        self.state.action = "Talk"
+        #        break
+        #    else:
+        #        self.state.action = "None"
 
 class StarterTown_house(MapState):
     name = "Starter Town House"
@@ -1589,7 +1601,6 @@ class StarterTownLeftWall(MapState):
         objects = [
             npc.Rat(7,50,self.state,radar=False),
             npc.Rat(8,42,self.state,radar=False)
-
         ]
         self.first_time = True
         self.game_map = mapper.GameMap("StarterTown_left_wall.txt", objects)

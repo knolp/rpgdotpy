@@ -39,11 +39,11 @@ class MapObject():
 
 	@classmethod
 	def grass(cls, x, y):
-		return cls(x, y, "'", walkable=True, color=[42], name="Grass")
+		return cls(x, y, "'", walkable=True, color=42, name="Grass")
 
 	@classmethod
 	def water(cls, x, y):
-		return cls(x, y, "~", walkable=False, color=21, name="Water")
+		return cls(x, y, "~", walkable=False, color=22, name="Water")
 
 	@classmethod
 	def door(cls, x, y):
@@ -67,7 +67,7 @@ class MapObject():
 
 	@classmethod
 	def castle_wall(cls,x,y):
-		return cls(x, y, "#", walkable=False, color=248, visible=False, name="Castle Wall")
+		return cls(x, y, " ", walkable=False, color=248, visible=False, name="Castle Wall")
 	
 	@classmethod
 	def cobblestone(cls, x, y):
@@ -189,13 +189,13 @@ class MapObject():
 		if character:
 			char = character
 
-		if self.colors:
-			if self.color == False:
-				self.color, useless = self.colors
-			if self.color == self.colors[1]:
-				self.color, useless = self.colors
-			elif self.color == self.colors[0]:
-				useless, self.color = self.colors
+		#if self.colors:
+		#	if self.color == False:
+		#		self.color, useless = self.colors
+		#	if self.color == self.colors[1]:
+		#		self.color, useless = self.colors
+		#	elif self.color == self.colors[0]:
+		#		useless, self.color = self.colors
 		
 		if not inverted:
 			if self.color and seen == False:

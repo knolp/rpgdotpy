@@ -314,7 +314,7 @@ def HuntersCamp_east(state):
 
 def GrandPalace_interior_entrance_enter(state):
 	state.player.location = getattr(states, "GrandPalace_interior_entrance")
-	state.player.x = 33
+	state.player.x = 34
 	state.player.y = 48
 
 	state.update_map()

@@ -33,6 +33,13 @@ class NPC():
 	def action(self):
 		print("Not implemented")
 
+	def check_inbound(self):
+		if self.x < 1 or self.x > 37:
+			return False
+		if self.y < 1 or self.y > 96:
+			return False
+		return True
+
 
 class Usable():
 	def __init__(self, name, x, y, character, color=142):
@@ -54,6 +61,13 @@ class Usable():
 
 	def action(self):
 		print("Not implemented")
+	
+	def check_inbound(self):
+		if self.x < 1 or self.x > 37:
+			return False
+		if self.y < 1 or self.y > 96:
+			return False
+		return True
 
 
 
@@ -283,10 +297,14 @@ class Monster():
 		self.visible = False
 
 	def draw(self, screen):
-		screen.addstr(self.x -1, self.y - 1, "N/A")
-		screen.attron(curses.color_pair(self.color))
-		screen.addch(self.x, self.y, self.character)
-		screen.attroff(curses.color_pair(self.color))
+		try:
+			screen.addstr(self.x -1, self.y - 1, "N/A")
+			screen.attron(curses.color_pair(self.color))
+			screen.addch(self.x, self.y, self.character)
+			screen.attroff(curses.color_pair(self.color))
+			return True
+		except:
+			return False
 
 	def turn_action(self):
 		pass
@@ -375,10 +393,23 @@ class SkeletonGrunt(Monster):
 
 
 
+class Smoke(Usable):
+	def __init__(self, x, y):
+		name = "Smoke"
+		self.readable_name = "Smoke"
+		super().__init__(name,x,y," ", color=random.choice([139, 248]))
+		self.original_x = x
+		self.original_y = y
+
+	def turn_action(self):
+		self.x -= 1
+		self.y -= random.randint(-3,-1)
+
+	def action(self, screen, state):
+		pass
 
 
-
-# Objects
+# Objects (Usable)
 
 class BasementLever(Usable):
 	def __init__(self, x, y):
