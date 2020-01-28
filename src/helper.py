@@ -93,15 +93,16 @@ def popup(screen, state, text):
 	while k != ord(" ") and k != ord("q"):
 		start = 10
 		for item in text:
+			y_offset = int((width - len(item)) / 2)
 			if "[" in item:
 				before, keyword, after = item.split("[")[0], item.split("[")[1].split("]")[0], item.split("]")[1]
-				screen.addstr(start,34,before)
+				screen.addstr(start, y_offset, before)
 				screen.attron(curses.color_pair(136))
-				screen.addstr(start,34 + len(before),keyword)
+				screen.addstr(start, y_offset + len(before), keyword)
 				screen.attroff(curses.color_pair(136))
-				screen.addstr(start, 34 + len(before) + len(keyword), after)
+				screen.addstr(start, y_offset + len(before) + len(keyword), after)
 			else:
-				screen.addstr(start, 34, item)
+				screen.addstr(start, y_offset, item)
 
 			screen.attron(curses.color_pair(5))
 			screen.addstr(30,int(width/ 2) - 2, "Ok")
@@ -137,4 +138,13 @@ def get_spell(spell):
 		if var == "Ability":
 			continue
 		if var == spell:
+			return getattr(abilities, var)
+
+def get_status_effects(effect):
+	for var in dir(abilities):
+		if var.startswith("__"):
+			continue
+		if var == "Ability":
+			continue
+		if var == effect:
 			return getattr(abilities, var)

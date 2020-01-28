@@ -26,6 +26,7 @@ import pathfinding2
 import abilities
 import books
 import animation
+import abilities
 
 class Timer():
     def __init__(self, tid):
@@ -165,6 +166,9 @@ class StateHandler():
         for item in load_dict["flora"]:
             self.player.flora.append(item)
 
+        for item in load_dict["status_effects"]:
+            self.player.status_effects.append(helper.get_status_effects(item[0])(item[1], item[2], item[3]))
+
         self.player.time = load_dict["time"]
         self.player.seed = load_dict["seed"]
         self.player.last_target = load_dict["last_target"]
@@ -214,6 +218,10 @@ class StateHandler():
             if k == "flora":
                 for i in range(len(params[k])):
                     params[k][i] = params[k][i]
+            
+            if k == "status_effects":
+                for i in range(len(params[k])):
+                    params[k][i] = [params[k][i].__dict__["type"], params[k][i].__dict__["turns_left"], params[k][i].__dict__["damage"], params[k][i].__dict__["opponent_name"]]
         
         params["time"] = self.timer.tid
 
@@ -258,6 +266,14 @@ class StateHandler():
         self.t = threading.Thread(target=self.timer.run)
         self.t.start()
         self.timer_started = True
+
+    def check_overworld_status_effects(self):
+        if len(self.player.status_effects) == 0:
+            return
+        for effect in self.player.status_effects:
+            result = effect.execute()
+            if result["done"]:
+                self.player.status_effects.pop(self.player.status_effects.index(effect))
 
 
 def is_tab_enabled(state):
@@ -409,6 +425,7 @@ def draw_menu(stdscr):
 
 
 
+
     while (k != ord('q')):
         stdscr.erase()
 
@@ -419,6 +436,7 @@ def draw_menu(stdscr):
 
         if state_handler.map_screen == True:
             state_handler.player.turn += 1
+            state_handler.check_overworld_status_effects()
             
             if k == 9 and is_tab_enabled(state_handler):
                 k = 1
@@ -624,7 +642,7 @@ def draw_menu(stdscr):
             info = f"Phaseshift = {state_handler.player.phaseshift}"
             stdscr.addstr(47,int((150 - len(info)) / 2),info)
 
-            info_2 = f"Mindvision = {state_handler.player.mindvision}"
+            info_2 = f"Nr. of Status_effects = {len(state_handler.player.status_effects)}"
             stdscr.addstr(48,int((150 - len(info_2)) / 2),info_2)
 
 
@@ -764,9 +782,7 @@ def draw_menu(stdscr):
             print(state_handler.player.seed)
 
         if k == ord("4"):
-            #anim = animation.test_animation()
-            #animation.play(anim, state_handler)
-            curses.nocbreak()
+            pass
 
         if k == ord("5"):
             book = books.BasicAlchemy()

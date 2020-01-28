@@ -113,9 +113,6 @@ class Scorch(Ability):
 
 
 
-
-
-
 #DEBUFFS
 class Bleed():
     def __init__(self, turns, damage, opponent_name):

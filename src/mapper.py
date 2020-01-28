@@ -71,7 +71,7 @@ class MapObject():
 	
 	@classmethod
 	def cobblestone(cls, x, y):
-		return cls(x, y, curses.ACS_BULLET, walkable=True, color=139, name="Cobblestone")
+		return cls(x, y, ".", walkable=True, color=139, name="Cobblestone")
 
 	@classmethod
 	def fence_left(cls, x, y):
