@@ -1531,7 +1531,7 @@ class RandomCave(MapState):
                 monster.x, monster.y = monster.path[0][0] + 1, monster.path[0][1] + 1
                 monster.path.pop(0)
             if monster.path_to_target:
-                if self.state.turn % monster.speed == 0:
+                if self.state.player.turn % monster.speed == 0:
                     break
                 monster.x, monster.y = monster.path_to_target[0][0] + 1, monster.path_to_target[0][1] + 1
                 monster.path_to_target.pop(0)

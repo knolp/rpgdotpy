@@ -39,7 +39,7 @@ class MapObject():
 
 	@classmethod
 	def grass(cls, x, y):
-		return cls(x, y, "'", walkable=True, color=42, name="Grass")
+		return cls(x, y, " ", walkable=True, color=42, name="Grass")
 
 	@classmethod
 	def water(cls, x, y):
@@ -67,7 +67,7 @@ class MapObject():
 
 	@classmethod
 	def castle_wall(cls,x,y):
-		return cls(x, y, " ", walkable=False, color=248, visible=False, name="Castle Wall")
+		return cls(x, y, "/", walkable=False, color=248, visible=False, name="Castle Wall")
 	
 	@classmethod
 	def cobblestone(cls, x, y):
@@ -179,6 +179,14 @@ class MapObject():
 	@classmethod
 	def carpetdiamond(cls,x,y):
 		return cls(x,y, curses.ACS_DIAMOND, walkable = True, color=160, name="Carpet")
+
+	@classmethod
+	def castle_wall_walkable(cls,x,y):
+		return cls(x, y, " ", walkable=True, color=248, visible=False, name="Floor")
+	
+	@classmethod
+	def under_wall_walkable(cls, x, y):
+		return cls(x, y, curses.ACS_BOARD, walkable=True, color=240, name="Floor")
 
 
 	def draw(self, screen, seen=False, inverted=False,character=False):
@@ -348,6 +356,10 @@ class GameMap():
 					self.background2[x][y] = MapObject.carpet(x + 1, y + 1)
 				elif self.raw_map[x][y] == "0":
 					self.background2[x][y] = MapObject.carpetdiamond(x + 1, y + 1)
+				elif self.raw_map[x][y] == "R":
+					self.background2[x][y] = MapObject.castle_wall_walkable(x + 1, y + 1)
+				elif self.raw_map[x][y] == "r":
+					self.background2[x][y] = MapObject.under_wall_walkable(x + 1, y + 1)
 				else:
 					print(self.raw_map[x][y])
 					print("Could not create map tile from Text")

@@ -335,9 +335,9 @@ class Battle():
             elif percentage >= 0.3:
                 keyword = "Damaged"
             elif percentage >= 0.1:
-                keyword = "Barely hanging on"
-            else:
                 keyword = "Badly injured"
+            else:
+                keyword = "Barely hanging on"
             self.screen.addstr(opponent_offset + 5, opponent_offset_y, f"Shape: {keyword}")
 
             # TODO END
