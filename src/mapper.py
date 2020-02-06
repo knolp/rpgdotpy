@@ -55,7 +55,7 @@ class MapObject():
 
 	@classmethod
 	def tall_grass(cls,x,y):
-		return cls(x, y, curses.ACS_PLMINUS, walkable=True, color=43, name="Tall Grass")
+		return cls(x, y, "_", walkable=True, color=43, name="Tall Grass")
 
 	@classmethod
 	def hole(cls,x,y):
@@ -142,7 +142,7 @@ class MapObject():
 
 	@classmethod
 	def fire(cls,x,y):
-		return cls(x,y, " ", walkable = False, color=158, name="Fire")
+		return cls(x,y, "*", walkable = False, color=158, name="Fire")
 	
 	@classmethod
 	def window(cls,x,y):
@@ -189,7 +189,10 @@ class MapObject():
 		return cls(x, y, curses.ACS_BOARD, walkable=True, color=240, name="Floor")
 
 
-	def draw(self, screen, seen=False, inverted=False,character=False):
+	def draw(self, state, seen=False, inverted=False, character=False):
+		screen = state.game_box
+		player = state.player
+		
 		if type(self.color) == list:
 			self.color = random.choice(self.color)
 
@@ -207,24 +210,32 @@ class MapObject():
 		
 		if not inverted:
 			if self.color and seen == False:
-				screen.attron(curses.color_pair(self.color))
+				if player.ascii == False:
+					screen.attron(curses.color_pair(self.color))
 				screen.addch(self.x, self.y, char)
-				screen.attroff(curses.color_pair(self.color))
+				if player.ascii == False:
+					screen.attroff(curses.color_pair(self.color))
 			elif self.color and seen == True:
-				screen.attron(curses.color_pair(self.color))
+				if player.ascii == False:
+					screen.attron(curses.color_pair(self.color))
 				screen.addch(self.x, self.y, char, curses.A_REVERSE)
-				screen.attroff(curses.color_pair(self.color))
+				if player.ascii == False:
+					screen.attroff(curses.color_pair(self.color))
 			else:
 				screen.addstr(self.x, self.y, char)
 		else:
 			if self.color and seen == False:
-				screen.attron(curses.color_pair(self.color))
+				if player.ascii == False:
+					screen.attron(curses.color_pair(self.color))
 				screen.addch(self.x, self.y, char,curses.A_REVERSE)
-				screen.attroff(curses.color_pair(self.color))
+				if player.ascii == False:
+					screen.attroff(curses.color_pair(self.color))
 			elif self.color and seen == True:
-				screen.attron(curses.color_pair(self.color))
+				if player.ascii == False:
+					screen.attron(curses.color_pair(self.color))
 				screen.addch(self.x, self.y, char, curses.A_REVERSE)
-				screen.attroff(curses.color_pair(self.color))
+				if player.ascii == False:
+					screen.attroff(curses.color_pair(self.color))
 			else:
 				screen.addstr(self.x, self.y, char,curses.A_REVERSE)
 
@@ -384,15 +395,16 @@ class GameMap():
 		for item in self.objects:
 			item.turn_action()
 
-	def draw_map(self, screen, inverted = False):
+	def draw_map(self, state, inverted = False):
+		print(state.player.name)
 		#for item in self.background:
 		#	item.draw(screen)
 		for x in range(len(self.background2)):
 			for y in range(len(self.background2[x])):
 				if not inverted:
-					self.background2[x][y].draw(screen)
+					self.background2[x][y].draw(state)
 				else:
-					self.background2[x][y].draw(screen, inverted=True)
+					self.background2[x][y].draw(state, inverted=True)
 		#for item in self.objects:
 		#	item.draw(screen)
 		
@@ -419,7 +431,7 @@ class GameMap():
 		state.game_box.clear()
 
 		if draw_seen:
-			self.draw_seen(screen)
+			self.draw_seen(state)
 
 		for i in range(0,360, 2):
 			x = math.cos(i * 0.01745)
@@ -430,7 +442,7 @@ class GameMap():
 			if item not in self.objects_to_draw:
 				item.visible = False
 		for item in self.objects_to_draw:
-			item.draw(screen)
+			item.draw(state)
 		#self.update_objects()
 
 	def do_fov(self, x, y, state, screen, objects, a):
@@ -441,7 +453,7 @@ class GameMap():
 			if ox < 0 or oy < 0:
 				return
 			try:
-				self.background2[int(ox)][int(oy)].draw(screen)
+				self.background2[int(ox)][int(oy)].draw(state)
 				if self.background2[int(ox)][int(oy)].walkable == False or self.background2[int(ox)][int(oy)].visible == False:
 						if self.background2[int(ox)][int(oy)] not in self.seen:
 							self.seen.append(self.background2[int(ox)][int(oy)])
@@ -458,9 +470,9 @@ class GameMap():
 			
 			ox += x
 			oy += y
-	def draw_seen(self, screen):
+	def draw_seen(self, state):
 		for item in self.seen:
-			item.draw(screen, seen=True)
+			item.draw(state, seen=True)
 if __name__ == '__main__':
 	gamemap = GameMap("map1.txt", [])
 	gamemap.make_background()

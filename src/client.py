@@ -599,13 +599,13 @@ def draw_menu(stdscr):
                             char = "@"
                             if state_handler.player.phaseshift:
                                 char = str(state_handler.player.phaseshift)
-                            state_handler.gamemap.game_map.background2[x][y].draw(game_box, inverted=True, character=char)
+                            state_handler.gamemap.game_map.background2[x][y].draw(state_handler, inverted=True, character=char)
                         else:
-                            state_handler.gamemap.game_map.background2[x][y].draw(game_box)
+                            state_handler.gamemap.game_map.background2[x][y].draw(state_handler)
 
             for item in state_handler.gamemap.game_map.objects:
                 if (item.x, item.y) != (state_handler.player.x, state_handler.player.y) and not state_handler.gamemap.fov:
-                    item.draw(game_box)
+                    item.draw(state_handler)
 
             #If adding pets or followers later, this is the "formula" for translating last pos to draw
             #stdscr.addch(state_handler.player.last_pos[0], state_handler.player.last_pos[1] + 1, "h")
@@ -782,7 +782,7 @@ def draw_menu(stdscr):
             print(state_handler.player.seed)
 
         if k == ord("4"):
-            pass
+            state_handler.player.ascii = True
 
         if k == ord("5"):
             book = books.BasicAlchemy()

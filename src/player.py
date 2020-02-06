@@ -72,6 +72,8 @@ class Player():
 		self.last_pos = (3,3)
 		self.last_target = ["TradeDistrict", 0, 0]
 
+		self.ascii = False
+
 		#Combat stuff
 
 		self.status_effects = []

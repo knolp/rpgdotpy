@@ -616,9 +616,9 @@ class MapState():
 
     def draw(self):
         if self.state.player.phaseshift:
-            self.game_map.draw_map(self.state.game_box, inverted=True)    
+            self.game_map.draw_map(self.state, inverted=True)    
         else:
-            self.game_map.draw_map(self.state.game_box)
+            self.game_map.draw_map(self.state)
 
 
 class StarterTown(MapState):
@@ -647,9 +647,9 @@ class StarterTown(MapState):
 
     def draw(self):
         if self.state.player.phaseshift:
-            self.game_map.draw_map(self.state.game_box, inverted=True)    
+            self.game_map.draw_map(self.state, inverted=True)    
         else:
-            self.game_map.draw_map(self.state.game_box)
+            self.game_map.draw_map(self.state)
         #self.game_map.draw_vision(self.state, self.state.game_box)
 
     def execute(self):
@@ -712,9 +712,9 @@ class StarterTown_house(MapState):
 
     def draw(self):
         if self.state.player.phaseshift:
-            self.game_map.draw_map(self.state.game_box, inverted=True)    
+            self.game_map.draw_map(self.state, inverted=True)    
         else:
-            self.game_map.draw_map(self.state.game_box)
+            self.game_map.draw_map(self.state)
 
     def execute(self):
         pass
@@ -1023,9 +1023,9 @@ class GreenForest(MapState):
 
     def draw(self):
         if self.state.player.phaseshift:
-            self.game_map.draw_map(self.state.game_box, inverted=True)    
+            self.game_map.draw_map(self.state, inverted=True)    
         else:
-            self.game_map.draw_map(self.state.game_box)
+            self.game_map.draw_map(self.state)
         self.state.stdscr.addstr(11,72,"H.O.J", curses.color_pair(151))
 
     def execute(self):
@@ -1161,9 +1161,9 @@ class BrownBearInn(MapState):
 
     def draw(self):
         if self.state.player.phaseshift:
-            self.game_map.draw_map(self.state.game_box, inverted=True)    
+            self.game_map.draw_map(self.state, inverted=True)    
         else:
-            self.game_map.draw_map(self.state.game_box)
+            self.game_map.draw_map(self.state)
 
     def execute(self):
         pass
@@ -1212,9 +1212,9 @@ class HallOfJustice(MapState):
 
     def draw(self):
         if self.state.player.phaseshift:
-            self.game_map.draw_map(self.state.game_box, inverted=True)    
+            self.game_map.draw_map(self.state, inverted=True)    
         else:
-            self.game_map.draw_map(self.state.game_box)
+            self.game_map.draw_map(self.state)
 
     def execute(self):
         pass
@@ -1271,7 +1271,7 @@ class StarterTownPlayerHouse(MapState):
 
 
     def draw(self):
-        self.game_map.draw_map(self.state.game_box)
+        self.game_map.draw_map(self.state)
 
     def execute(self):
         pass
@@ -1325,9 +1325,9 @@ class TannerHouse(MapState):
 
     def draw(self):
         if self.state.player.phaseshift:
-            self.game_map.draw_map(self.state.game_box, inverted=True)    
+            self.game_map.draw_map(self.state, inverted=True)    
         else:
-            self.game_map.draw_map(self.state.game_box)
+            self.game_map.draw_map(self.state)
 
 
     def execute(self):
@@ -1365,9 +1365,9 @@ class TradeDistrict(MapState):
 
     def draw(self):
         if self.state.player.phaseshift:
-            self.game_map.draw_map(self.state.game_box, inverted=True)    
+            self.game_map.draw_map(self.state, inverted=True)    
         else:
-            self.game_map.draw_map(self.state.game_box)
+            self.game_map.draw_map(self.state)
 
 
     def execute(self):
@@ -1413,9 +1413,9 @@ class TradeDistrictAlchemist(MapState):
 
     def draw(self):
         if self.state.player.phaseshift:
-            self.game_map.draw_map(self.state.game_box, inverted=True)    
+            self.game_map.draw_map(self.state, inverted=True)    
         else:
-            self.game_map.draw_map(self.state.game_box)
+            self.game_map.draw_map(self.state)
 
     def execute(self):
         pass
@@ -1452,9 +1452,9 @@ class HuntersCamp(MapState):
 
     def draw(self):
         if self.state.player.phaseshift:
-            self.game_map.draw_map(self.state.game_box, inverted=True)    
+            self.game_map.draw_map(self.state, inverted=True)    
         else:
-            self.game_map.draw_map(self.state.game_box)
+            self.game_map.draw_map(self.state)
 
     def execute(self):
         pass
@@ -1507,9 +1507,9 @@ class RandomCave(MapState):
 
     def draw(self):
         #if self.state.player.phaseshift:
-        #    self.game_map.draw_map(self.state.game_box, inverted=True)    
+        #    self.game_map.draw_map(self.state, inverted=True)    
         #else:
-        #    self.game_map.draw_map(self.state.game_box)
+        #    self.game_map.draw_map(self.state)
         self.game_map.draw_vision(self.state, self.state.game_box, draw_seen=False)
 
     def execute(self):
@@ -1571,9 +1571,9 @@ class StarterTownDocks(MapState):
 
     def draw(self):
         if self.state.player.phaseshift:
-            self.game_map.draw_map(self.state.game_box, inverted=True)    
+            self.game_map.draw_map(self.state, inverted=True)    
         else:
-            self.game_map.draw_map(self.state.game_box)
+            self.game_map.draw_map(self.state)
 
     def execute(self):
         pass
@@ -1611,9 +1611,9 @@ class StarterTownLeftWall(MapState):
 
     def draw(self):
         if self.state.player.phaseshift:
-            self.game_map.draw_map(self.state.game_box, inverted=True)    
+            self.game_map.draw_map(self.state, inverted=True)    
         else:
-            self.game_map.draw_map(self.state.game_box)
+            self.game_map.draw_map(self.state)
 
     def execute(self):
         pass
@@ -1653,9 +1653,9 @@ class StarterTownLeftSeaWall(MapState):
 
     def draw(self):
         if self.state.player.phaseshift:
-            self.game_map.draw_map(self.state.game_box, inverted=True)    
+            self.game_map.draw_map(self.state, inverted=True)    
         else:
-            self.game_map.draw_map(self.state.game_box)
+            self.game_map.draw_map(self.state)
 
     def execute(self):
         pass
@@ -1689,9 +1689,9 @@ class GrandPalace_interior_entrance(MapState):
 
     def draw(self):
         if self.state.player.phaseshift:
-            self.game_map.draw_map(self.state.game_box, inverted=True)    
+            self.game_map.draw_map(self.state, inverted=True)    
         else:
-            self.game_map.draw_map(self.state.game_box)
+            self.game_map.draw_map(self.state)
 
     def execute(self):
         pass

@@ -20,7 +20,8 @@ class NPC():
 		self.visible = False
 		self.quest = False
 
-	def draw(self, screen):
+	def draw(self, state):
+		screen = state.game_box
 		if self.quest:
 			screen.addch(self.x - 1, self.y, "!", curses.color_pair(138))
 		screen.attron(curses.color_pair(197))
@@ -51,7 +52,8 @@ class Usable():
 		self.color = color
 		self.visible = False
 
-	def draw(self, screen):
+	def draw(self, state):
+		screen = state.game_box
 		screen.attron(curses.color_pair(self.color))
 		screen.addch(self.x, self.y, self.character)
 		screen.attroff(curses.color_pair(self.color))
@@ -295,15 +297,18 @@ class Monster():
 		self.path = []
 		self.speed = 1
 		self.visible = False
+		self.text = "N/A"
 
-	def draw(self, screen):
+	def draw(self, state):
+		screen = state.game_box
 		try:
-			screen.addstr(self.x -1, self.y - 1, "N/A")
+			screen.addstr(self.x - 1, self.y - int((len(self.text) / 2)), self.text)
 			screen.attron(curses.color_pair(self.color))
 			screen.addch(self.x, self.y, self.character)
 			screen.attroff(curses.color_pair(self.color))
 			return True
 		except:
+			print("WTF")
 			return False
 
 	def turn_action(self):
@@ -318,52 +323,34 @@ class Rat(Monster):
 	def __init__(self, x, y, state, flag=False, radar=False):
 		super().__init__("Rat", x, y, "R", state, flag=flag, radar=radar)
 		self.speed = 2
+		self.text = "RAT"
 
 	def action(self):
 		result = battle.Battle(self.state, monster.Rat(self.state), "3").play()
 		return result
 
-	def draw(self, screen):
-		text = "RAT"
-		screen.addstr(self.x - 1, self.y - int((len(text) / 2)), text)
-		screen.attron(curses.color_pair(self.color))
-		screen.addch(self.x, self.y, self.character)
-		screen.attroff(curses.color_pair(self.color))
+		
 
 class RatKing(Monster):
 	def __init__(self, x, y, state, flag=False, radar=False):
 		super().__init__("RatKing", x, y, "R", state, flag=flag, radar=radar)
 		self.speed = 2
+		self.text = "RATKING"
 
 	def action(self, run=True):
 		result = battle.Battle(self.state, monster.RatKing(self.state), "3", run=run).play()
 		return result
-
-	def draw(self, screen):
-		text = "RATKING"
-		screen.addstr(self.x - 1, self.y - int((len(text) / 2)), text)
-		screen.attron(curses.color_pair(self.color))
-		screen.addch(self.x, self.y, self.character)
-		screen.attroff(curses.color_pair(self.color))
-
 
 
 class SkeletonGrunt(Monster):
 	def __init__(self, x, y, state, flag=False, radar=False):
 		super().__init__("SkeletonGrunt", x, y, "S", state, flag=flag, radar=radar)
 		self.speed = 3
+		self.text = "SKG"
 
 	def action(self, run=False):
 		result = battle.Battle(self.state, monster.SkeletonGrunt(self.state), "3", run=run).play()
 		return result
-
-	def draw(self, screen):
-		text = "SKG"
-		screen.addstr(self.x - 1, self.y - int((len(text) / 2)), text)
-		screen.attron(curses.color_pair(self.color))
-		screen.addch(self.x, self.y, self.character)
-		screen.attroff(curses.color_pair(self.color))
-
 
 
 
