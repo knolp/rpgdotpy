@@ -751,7 +751,8 @@ def draw_menu(stdscr):
             inventory.view_equipment(state_handler.stdscr, state_handler)
 
         if k == ord("i") and state_handler.player != False:
-            inventory.view_inventory(state_handler.stdscr, state_handler)
+            #inventory.view_inventory(state_handler.stdscr, state_handler)
+            inventory.view_inventory_2(state_handler)
 
         if k == ord("p") and state_handler.player != False:
             inventory.view_spellbook(state_handler.stdscr, state_handler)
@@ -779,10 +780,10 @@ def draw_menu(stdscr):
             state_handler.player.hotkeys["2"].execute(state_handler.player)
 
         if k == ord("3"):
-            print(state_handler.player.seed)
+            state_handler.stdscr.addch(49,149,"c")
 
         if k == ord("4"):
-            state_handler.player.ascii = True
+            state_handler.player.ascii = not state_handler.player.ascii
 
         if k == ord("5"):
             book = books.BasicAlchemy()

@@ -396,7 +396,6 @@ class GameMap():
 			item.turn_action()
 
 	def draw_map(self, state, inverted = False):
-		print(state.player.name)
 		#for item in self.background:
 		#	item.draw(screen)
 		for x in range(len(self.background2)):

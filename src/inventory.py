@@ -569,6 +569,124 @@ def trade(npc, screen, state):
 
 	return True
 
+def view_inventory_2(state):
+	#Initial thoughs
+	#Go for a skyrim-esque inventory management composed of "tabs" going deeper and a marker for equipped items (automatically at the top)
+	#Try to go for alphabetical order
+	#Inital thoughts of width: (1) + 10,(1) + 10,(1) + 35, (1) + 90 (for item art etc) + (1)
+	
+	###############################################################################
+	#Armor -> # Head     # Leather Gloves *     # Assassin Vambrace               #
+	#Weapons  #	Chest -> # Assassin Vambrace -> # Attack: 0                       #
+	#Crafting # Hands    # Plate Gloves         # Defence: 2                      #
+	#         # Feet     #                      # Effect: Critical chance +3%     #
+	#         #          #                      #                                 #
+	###############################################################################
+	#Space: Use                                                                   #
+	#E    : Equip                                                                 #
+	###############################################################################
+
+	#Init some variables regarding player inventory and equipment
+	inventory = state.player.inventory
+	list_of_equipped_items = list(state.player.equipment.values())
+
+	#Static values
+	list_of_types = ["Armor", "Weapons", "Crafting", "KeyItems", "Consumables"]
+	type_end = 14
+	slot_end = 30
+	item_end = 61
+	
+	#Selection variables
+	#0 = Type
+	#1 = slot
+	#2 = item
+	selected_tab = [0,0,0]
+	currently_selected_tab = 0
+
+	#init screen variable to make easier use
+	screen = state.stdscr #Use whole screen with stdscr
+	k = -1 #Reset key
+
+	while k != ord("q"): #Press Q to enter inventory menu
+		screen.clear() # Clear old screen
+
+		#Init the border-grid
+		#Top row, all the way
+		screen.addch(0, 0, curses.ACS_ULCORNER) #Upper left corner of the columns
+		screen.addch(0, 148, curses.ACS_URCORNER) #Upper right corner of the columns
+		for i in range(1, 148):
+			screen.addch(49, i, curses.ACS_HLINE) # Add horizontal line on bottom row
+			if i == type_end:
+				screen.addch(0, i, curses.ACS_TTEE) #Add our first pillar
+				screen.addch(43, i, curses.ACS_BTEE) #Add our first pillar
+				continue
+			if i == slot_end:
+				screen.addch(0, i, curses.ACS_TTEE) #Add our second pillar
+				screen.addch(43, i, curses.ACS_BTEE) #Add our second pillar
+				continue
+			if i == item_end:
+				screen.addch(0, i, curses.ACS_TTEE) #Add our Third pillar
+				screen.addch(43, i, curses.ACS_BTEE) #Add our Third pillar
+				continue
+			screen.addch(0, i, curses.ACS_HLINE) # Add horizontal lines on top row
+			screen.addch(43, i, curses.ACS_HLINE) # Add horizontal Line on "middle" row
+			
+
+		#Bottom Row, all the way
+		screen.addch(49, 0, curses.ACS_LLCORNER) # Lower left corner
+		screen.addch(49, 148, curses.ACS_LRCORNER) #Lower Right Corner
+		# For the line between them we can bake in to the for-loop from before
+
+		# "Middle Row" just above commands
+		#Let's give that about 5 rows of information (49 - 5 = 44) (44 - 1 = 43)
+		screen.addch(43, 0, curses.ACS_LTEE) #Connecting left T
+		screen.addch(43, 148, curses.ACS_RTEE) #Reversed on other side
+		for i in range(1,49):
+			if i == 43:
+				continue # Skip our tee-slots
+			if i < 43: #Between "middle" and top row, where our information go
+				screen.addch(i, type_end, curses.ACS_VLINE) #First pillar
+				screen.addch(i, slot_end, curses.ACS_VLINE) #Second pillar
+				screen.addch(i, item_end, curses.ACS_VLINE) #Third pillar
+			screen.addch(i, 0, curses.ACS_VLINE) #Add Vertical line
+			screen.addch(i,148, curses.ACS_VLINE)
+
+		#Add Labels
+		screen.addstr(0, 1 , "Type")
+		screen.addstr(0, type_end + 1, "Slot")
+		screen.addstr(0, slot_end + 1, "Item")
+		screen.addstr(0, item_end + 1, "Information")
+
+		#Static Stuff
+		for idx, item in enumerate(list_of_types):
+			print(item)
+			print(list_of_types[idx - 1])
+			if item == list_of_types[selected_tab[0]]:
+				if currently_selected_tab == 0:
+					screen.attron(curses.color_pair(5))
+				else:
+					screen.attron(curses.color_pair(138))
+				screen.addstr(idx + 2, 1, item)
+				if currently_selected_tab == 0:
+					screen.attroff(curses.color_pair(5))
+				else:
+					screen.attroff(curses.color_pair(138))
+			else:
+				screen.addstr(idx + 2, 1, item)
+
+
+		k = screen.getch() #Get the player input
+
+		if k == curses.KEY_DOWN:
+			selected_tab[currently_selected_tab] += 1
+			if selected_tab[currently_selected_tab] > len(list_of_types) - 1: #check if we go over
+				selected_tab[currently_selected_tab] = len(list_of_types) - 1 #If so, reset to max index 0
+
+		if k == curses.KEY_UP:
+			selected_tab[currently_selected_tab] -= 1
+			if selected_tab[currently_selected_tab] < 0: #Check if we go under 0
+				selected_tab[currently_selected_tab] = 0 #If so, reset it to 0
+
 
 
 def select_new_item(slot, inventory, screen, old_item):
