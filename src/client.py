@@ -756,15 +756,29 @@ def draw_menu(stdscr):
 
         if k == ord("p") and state_handler.player != False:
             inventory.view_spellbook(state_handler.stdscr, state_handler)
+        
+        if k == ord("o") and state_handler.player != False:
+            inventory.view_inventory(state_handler.stdscr, state_handler)
 
         if k == ord("c") and state_handler.player != False:
             battlemode = battle.Battle(state_handler, monster.SkeletonGrunt(state_handler), "3")
             battlemode.play()
 
         if k == ord("k") and state_handler.player != False:
-            item_list = [items.DeverBerrySkinDried, items.ObsidianShard, items.TrollHair, items.DesertSalt, items.ArcaneDust, items.RatSmasher, items.Rapier, items.Longsword]
-            for i in range(150):
-                state_handler.player.inventory.append(random.choice(item_list)())
+            for var in dir(items):
+                if var.startswith("__"):
+                    continue
+                elif var == "Item":
+                    continue
+                elif var == "abilities":
+                    continue
+                elif var == "random":
+                    continue
+                elif var == "art":
+                    continue
+                else:
+                    item_to_add = getattr(items, var)()
+                    state_handler.player.inventory.append(item_to_add)
 
         if k == ord("1"):
             if direction == "up":

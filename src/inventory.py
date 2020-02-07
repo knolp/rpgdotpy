@@ -597,7 +597,7 @@ def view_inventory_2(state):
 		"Weapons" : ["Swords", "Maces", "Shields", "Wands", "Staves", "Catalysts"],
 		"Crafting" : ["Flora","Seeds", "Metals", "Creature products", "Magical", "Misc"],
 		"Key Items": ["Quest", "Keys", "Books", "Tools"],
-		"Consumables" : ["Potions", "Elixirs", "Brews" "Scrolls", "Food"]
+		"Consumables" : ["Potions", "Elixirs", "Brews", "Scrolls", "Food"]
 	}
 	dict_of_subtypes_translations = {
 		"Armor" : ["head", "chest", "legs", "boots", "neck", "ring"],
@@ -644,6 +644,20 @@ def view_inventory_2(state):
 				screen.addch(0, i, curses.ACS_TTEE) #Add our Third pillar
 				screen.addch(43, i, curses.ACS_BTEE) #Add our Third pillar
 				continue
+			if i == item_end + 20: #1/4 of information window
+				screen.addch(0, i, curses.ACS_TTEE) #Add art-border
+				screen.addch(23, i, curses.ACS_LLCORNER)
+				screen.addch(43, i, curses.ACS_HLINE) # Add horizontal Line on "middle" row
+				continue
+			if i == item_end + 20 + 39: # 1/4 + 2/4 of information window
+				screen.addch(0, i, curses.ACS_TTEE)
+				screen.addch(23, i, curses.ACS_LRCORNER)
+				screen.addch(43, i, curses.ACS_HLINE) # Add horizontal Line on "middle" row
+				continue
+			if item_end + 20 < i < item_end + 20 + 39:
+				screen.addch(23, i, curses.ACS_HLINE)
+
+
 			screen.addch(0, i, curses.ACS_HLINE) # Add horizontal lines on top row
 			screen.addch(43, i, curses.ACS_HLINE) # Add horizontal Line on "middle" row
 			
@@ -664,6 +678,9 @@ def view_inventory_2(state):
 				screen.addch(i, type_end, curses.ACS_VLINE) #First pillar
 				screen.addch(i, subtype_end, curses.ACS_VLINE) #Second pillar
 				screen.addch(i, item_end, curses.ACS_VLINE) #Third pillar
+				if i < 23:
+					screen.addch(i, item_end + 20, curses.ACS_VLINE)
+					screen.addch(i, item_end + 20 + 39, curses.ACS_VLINE)
 			screen.addch(i, 0, curses.ACS_VLINE) #Add Vertical line
 			screen.addch(i,148, curses.ACS_VLINE)
 
@@ -718,11 +735,15 @@ def view_inventory_2(state):
 				dynamic_inventory.append(item) # we add it to the dynamic inventory
 
 		already_printed = {} #This dict holds just the name and number of that item we have, so we can print it easily
+		real_name_translation = {}
 		for item in dynamic_inventory:
 			if item.readable_name not in already_printed.keys():
 				already_printed[item.readable_name] = 1
 			else:
 				already_printed[item.readable_name] += 1
+
+			if item.name not in real_name_translation.items():
+				real_name_translation[item.readable_name] = item.name
 
 		dynamic_print_inventory = [(item_name, count) for item_name, count in already_printed.items()]
 		
@@ -741,11 +762,33 @@ def view_inventory_2(state):
 					screen.attroff(curses.color_pair(138))
 
 		#Information screen
-		try:
-			screen.addstr(25, item_end + 15, f"{dynamic_print_inventory[selected_tab[2]][0]}")
-		except IndexError:
-			screen.addstr(25, item_end + 15, f"N/A")
+		if len(dynamic_print_inventory) != 0:
+			copy_of_item = helper.get_item(real_name_translation[dynamic_print_inventory[selected_tab[2]][0]])() #init an item based on the readable name from print_inventory, translated
+			
+			#Art furthest up, info lower, preferably enclose art in a border
+			# Update: border added to earlier functions defining x/y-axis ACS_stuff
+			#Let's give art about ~20 spaces offset by 5
+			if copy_of_item.art:
+				art_height = len(copy_of_item.art)
+				art_length = max([len(item) for item in copy_of_item.art])
+				art_x_start = int((21 - art_height) / 2) #Get the offset to make sure the height of the art is in the middle of the "artbox"
+				art_y_start = int((39 - art_length) / 2) #Get the offset to make sure the length of the art is in the middle of the "artbox"
+				for idx, row in enumerate(copy_of_item.art):
+					screen.addstr(idx + art_x_start, item_end + 20 + art_y_start, row) #Print the art
 
+			# Now for the actual information
+			#Let's make use of the left side column next to the art for some general stats (or maybe no...)
+			#For weapons:
+			if copy_of_item.type == "weapon":
+				screen.addstr(24, item_end + 2, f"Attack: {copy_of_item.attack}")
+				screen.addstr(25, item_end + 2, f"Attack: {copy_of_item.defence}")
+				screen.addstr(26, item_end + 2, f"Damage type: {copy_of_item.damage_type}")
+				if copy_of_item.effect_description:
+					screen.addstr(27, item_end + 2, f"Effect: {copy_of_item.effect_description}")
+				else:
+					screen.addstr(27, item_end + 2, "Effect: None")
+			screen.addstr(29, item_end + 2, f"Description:")
+			screen.addstr(30, item_end + 2, copy_of_item.description)
 
 		#Debug
 		screen.addstr(44, 0, f"Currently_selected_tab = {currently_selected_tab}")
@@ -776,7 +819,13 @@ def view_inventory_2(state):
 				selected_tab[currently_selected_tab] = 0 #If so, reset it to 0
 
 		if k == curses.KEY_RIGHT: #Right is to "go forward" a tab
-			currently_selected_tab += 1
+			if currently_selected_tab == 1:
+				if len(dynamic_print_inventory) !=0:
+					currently_selected_tab += 1
+				else:
+					currently_selected_tab += 0
+			else:
+				currently_selected_tab += 1
 			if currently_selected_tab > len(selected_tab) - 1: #Check if we go under length of all columns
 				currently_selected_tab = len(selected_tab) - 1 #If so, reset it to max
 

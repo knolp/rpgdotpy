@@ -1,5 +1,6 @@
 import random
-
+#FOR ITEM ART: MAX ROW LENGTH = 37
+#FOR ITEM ART: MAX HEIGHT = 20
 def draw_shield(game_box, row, col):
 	game_box.addstr(row, col, "   |\\                     /)")
 	game_box.addstr(row + 1 , col, " /\\_\\\\__               (_//")
