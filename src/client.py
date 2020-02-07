@@ -762,7 +762,7 @@ def draw_menu(stdscr):
             battlemode.play()
 
         if k == ord("k") and state_handler.player != False:
-            item_list = [items.DeverBerrySkinDried, items.ObsidianShard, items.TrollHair, items.DesertSalt, items.ArcaneDust]
+            item_list = [items.DeverBerrySkinDried, items.ObsidianShard, items.TrollHair, items.DesertSalt, items.ArcaneDust, items.RatSmasher, items.Rapier, items.Longsword]
             for i in range(150):
                 state_handler.player.inventory.append(random.choice(item_list)())
 

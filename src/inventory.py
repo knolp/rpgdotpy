@@ -591,14 +591,30 @@ def view_inventory_2(state):
 	list_of_equipped_items = list(state.player.equipment.values())
 
 	#Static values
-	list_of_types = ["Armor", "Weapons", "Crafting", "KeyItems", "Consumables"]
+	list_of_types = ["Armor", "Weapons", "Crafting", "Key Items", "Consumables"]
+	dict_of_subtypes = {
+		"Armor": ["Head", "Chest", "Legs", "Feet", "Neck", "Finger"],
+		"Weapons" : ["Swords", "Maces", "Shields", "Wands", "Staves", "Catalysts"],
+		"Crafting" : ["Flora","Seeds", "Metals", "Creature products", "Magical", "Misc"],
+		"Key Items": ["Quest", "Keys", "Books", "Tools"],
+		"Consumables" : ["Potions", "Elixirs", "Brews" "Scrolls", "Food"]
+	}
+	dict_of_subtypes_translations = {
+		"Armor" : ["head", "chest", "legs", "boots", "neck", "ring"],
+		"Weapons" : ["sword", "mace", "shield", "wand", "staff", "catalyst"],
+		"Crafting" : ["flora", "seed", "metal", "creature", "magical", "misc"],
+		"Key Items" : ["quest", "key", "book", "tool"],
+		"Consumables" : ["potion", "elixir", "brew", "scroll", "food"]
+	}
+	
+	#Distance for each column
 	type_end = 14
-	slot_end = 30
-	item_end = 61
+	subtype_end = 34
+	item_end = 70
 	
 	#Selection variables
 	#0 = Type
-	#1 = slot
+	#1 = subtype
 	#2 = item
 	selected_tab = [0,0,0]
 	currently_selected_tab = 0
@@ -607,7 +623,7 @@ def view_inventory_2(state):
 	screen = state.stdscr #Use whole screen with stdscr
 	k = -1 #Reset key
 
-	while k != ord("q"): #Press Q to enter inventory menu
+	while k != ord("q"): #Press Q to exit inventory menu
 		screen.clear() # Clear old screen
 
 		#Init the border-grid
@@ -620,7 +636,7 @@ def view_inventory_2(state):
 				screen.addch(0, i, curses.ACS_TTEE) #Add our first pillar
 				screen.addch(43, i, curses.ACS_BTEE) #Add our first pillar
 				continue
-			if i == slot_end:
+			if i == subtype_end:
 				screen.addch(0, i, curses.ACS_TTEE) #Add our second pillar
 				screen.addch(43, i, curses.ACS_BTEE) #Add our second pillar
 				continue
@@ -643,49 +659,131 @@ def view_inventory_2(state):
 		screen.addch(43, 148, curses.ACS_RTEE) #Reversed on other side
 		for i in range(1,49):
 			if i == 43:
-				continue # Skip our tee-slots
+				continue # Skip our tee-subtypes
 			if i < 43: #Between "middle" and top row, where our information go
 				screen.addch(i, type_end, curses.ACS_VLINE) #First pillar
-				screen.addch(i, slot_end, curses.ACS_VLINE) #Second pillar
+				screen.addch(i, subtype_end, curses.ACS_VLINE) #Second pillar
 				screen.addch(i, item_end, curses.ACS_VLINE) #Third pillar
 			screen.addch(i, 0, curses.ACS_VLINE) #Add Vertical line
 			screen.addch(i,148, curses.ACS_VLINE)
 
 		#Add Labels
 		screen.addstr(0, 1 , "Type")
-		screen.addstr(0, type_end + 1, "Slot")
-		screen.addstr(0, slot_end + 1, "Item")
+		screen.addstr(0, type_end + 1, "Subtype")
+		screen.addstr(0, subtype_end + 1, "Item")
 		screen.addstr(0, item_end + 1, "Information")
 
-		#Static Stuff
-		for idx, item in enumerate(list_of_types):
-			print(item)
-			print(list_of_types[idx - 1])
-			if item == list_of_types[selected_tab[0]]:
-				if currently_selected_tab == 0:
-					screen.attron(curses.color_pair(5))
-				else:
-					screen.attron(curses.color_pair(138))
+		#Static Stuff (ex. Labels (types and subtypes (will always be the same)))
+		#Print out the types (First column)
+		for idx, item in enumerate(list_of_types): #List over the item types and their indexx
+			if item == list_of_types[selected_tab[0]]: #If the item is equal to selected (x-axis) item in the types list
+				if currently_selected_tab == 0: #if the type-tab is also currently selected (means we can move in it)
+					screen.attron(curses.color_pair(5)) #Add a green color
+				else: #Else if we are on another tab, but the selected type is the last one we chose
+					screen.attron(curses.color_pair(138)) #Add a nice orange color (Our favourite)
 				screen.addstr(idx + 2, 1, item)
-				if currently_selected_tab == 0:
+				if currently_selected_tab == 0: #Deactivate it all
 					screen.attroff(curses.color_pair(5))
 				else:
 					screen.attroff(curses.color_pair(138))
 			else:
 				screen.addstr(idx + 2, 1, item)
 
+		temp_subtypes = dict_of_subtypes[list_of_types[selected_tab[0]]] #To make it easier to type
+		for idx, item in enumerate(temp_subtypes): #For each in temp subtype we made earlier
+			if item == temp_subtypes[selected_tab[1]]: #If the current iteration is the one we have selected, make it coloured green
+				if currently_selected_tab == 1:
+					screen.attron(curses.color_pair(5))
+				else:
+					screen.attron(curses.color_pair(138)) #Else if we are on another tab, make it a nice orange color (our favorite)
+				screen.addstr(idx + 2, type_end + 1, item)
+				if currently_selected_tab == 1:
+					screen.attroff(curses.color_pair(5))
+				else:
+					screen.attroff(curses.color_pair(138))
+			else:
+				screen.addstr(idx + 2, type_end + 1, item)
+
+
+		#Dynamic content (ex. items and item information)
+
+		#Possible rebase: just print the right subtypes and their list.count(item), can be hard to sort a-z though
+
+
+		#Get the currently selected type and subtype items from the player inventory
+		dynamic_inventory = []
+		for item in inventory:
+			typ = list_of_types[selected_tab[0]] #wow, long line, we need to shorten it to just "subtype" variable
+			if item.subtype == dict_of_subtypes_translations[typ][selected_tab[1]]: #If it is the right subtype
+				dynamic_inventory.append(item) # we add it to the dynamic inventory
+
+		already_printed = {} #This dict holds just the name and number of that item we have, so we can print it easily
+		for item in dynamic_inventory:
+			if item.readable_name not in already_printed.keys():
+				already_printed[item.readable_name] = 1
+			else:
+				already_printed[item.readable_name] += 1
+
+		dynamic_print_inventory = [(item_name, count) for item_name, count in already_printed.items()]
+		
+		#Here we do the outputting to the terminal for the item panel
+		for idx, item in enumerate(dynamic_print_inventory):
+			if item[0] == dynamic_print_inventory[selected_tab[2]][0]:
+				if currently_selected_tab == 2:
+					screen.attron(curses.color_pair(5))
+				else:
+					screen.attron(curses.color_pair(138))
+			screen.addstr(idx + 1, subtype_end + 2, f"{item[0]}: {item[1]}")
+			if item[0] == dynamic_print_inventory[selected_tab[2]][0]:
+				if currently_selected_tab == 2:
+					screen.attroff(curses.color_pair(5))
+				else:
+					screen.attroff(curses.color_pair(138))
+
+		#Information screen
+		try:
+			screen.addstr(25, item_end + 15, f"{dynamic_print_inventory[selected_tab[2]][0]}")
+		except IndexError:
+			screen.addstr(25, item_end + 15, f"N/A")
+
+
+		#Debug
+		screen.addstr(44, 0, f"Currently_selected_tab = {currently_selected_tab}")
+		screen.addstr(45, 0, f"selected_tab[currently_selected_tab] = {selected_tab[currently_selected_tab]}")
+
 
 		k = screen.getch() #Get the player input
 
 		if k == curses.KEY_DOWN:
+			if currently_selected_tab < 2: #Hardcoded number of tabs (0 = types, 1 = subtypes 2 = items)
+				selected_tab[currently_selected_tab + 1] = 0
 			selected_tab[currently_selected_tab] += 1
-			if selected_tab[currently_selected_tab] > len(list_of_types) - 1: #check if we go over
-				selected_tab[currently_selected_tab] = len(list_of_types) - 1 #If so, reset to max index 0
+			if currently_selected_tab == 0: #Here we neede to make a 
+				if selected_tab[currently_selected_tab] > len(list_of_types) - 1: #check if we go over
+					selected_tab[currently_selected_tab] = len(list_of_types) - 1 #If so, reset to max index 
+			elif currently_selected_tab == 1:
+				if selected_tab[currently_selected_tab] > len(temp_subtypes) - 1: #check if we go over
+					selected_tab[currently_selected_tab] = len(temp_subtypes) - 1 #If so, reset to max index
+			elif currently_selected_tab == 2:
+				if selected_tab[currently_selected_tab] > len(dynamic_print_inventory) - 1: #check if we go over
+					selected_tab[currently_selected_tab] = len(dynamic_print_inventory) - 1 #If so, reset to max index
 
 		if k == curses.KEY_UP:
+			if currently_selected_tab < 2:
+				selected_tab[currently_selected_tab + 1] = 0
 			selected_tab[currently_selected_tab] -= 1
 			if selected_tab[currently_selected_tab] < 0: #Check if we go under 0
 				selected_tab[currently_selected_tab] = 0 #If so, reset it to 0
+
+		if k == curses.KEY_RIGHT: #Right is to "go forward" a tab
+			currently_selected_tab += 1
+			if currently_selected_tab > len(selected_tab) - 1: #Check if we go under length of all columns
+				currently_selected_tab = len(selected_tab) - 1 #If so, reset it to max
+
+		if k == curses.KEY_LEFT: #Left is to "go back" a tab
+			currently_selected_tab -= 1
+			if currently_selected_tab < 0: #Check if we go under 0
+				currently_selected_tab = 0 #If so, reset it to 0
 
 
 
