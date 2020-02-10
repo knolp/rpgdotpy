@@ -235,8 +235,8 @@ class StateHandler():
         self.load_player(quicksave=quicksave)
 
     def make_player(self):
-        self.create_player["x"] = 13
-        self.create_player["y"] = 13
+        self.create_player["x"] = 17
+        self.create_player["y"] = 57
         self.create_player["turn"] = 0
 
         self.player = player.Player(self.create_player)

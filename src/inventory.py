@@ -611,6 +611,9 @@ def view_inventory_2(state):
 	type_end = 14
 	subtype_end = 34
 	item_end = 70
+
+	splice_start = 0
+	splice_stop = 40
 	
 	#Selection variables
 	#0 = Type
@@ -744,18 +747,18 @@ def view_inventory_2(state):
 
 			if item.name not in real_name_translation.items():
 				real_name_translation[item.readable_name] = item.name
-
-		dynamic_print_inventory = [(item_name, count) for item_name, count in already_printed.items()]
-		
-		#Here we do the outputting to the terminal for the item panel
-		for idx, item in enumerate(dynamic_print_inventory):
-			if item[0] == dynamic_print_inventory[selected_tab[2]][0]:
+		full_dynamic_print_inventory = [(item_name, count) for item_name, count in already_printed.items()]
+		print(len(full_dynamic_print_inventory))
+		dynamic_print_inventory = full_dynamic_print_inventory[splice_start : splice_stop] #! Here is the full list of unique items
+		#Here we do the outputting to the terminal for the item panel #! Here's the output of that list
+		for idx, item in enumerate(full_dynamic_print_inventory[splice_start : splice_stop]): #! Here we need to only loop over the spliced list
+			if item[0] == full_dynamic_print_inventory[splice_start : splice_stop][selected_tab[2]][0]:
 				if currently_selected_tab == 2:
 					screen.attron(curses.color_pair(5))
 				else:
 					screen.attron(curses.color_pair(138))
 			screen.addstr(idx + 1, subtype_end + 2, f"{item[0]}: {item[1]}")
-			if item[0] == dynamic_print_inventory[selected_tab[2]][0]:
+			if item[0] == full_dynamic_print_inventory[splice_start : splice_stop][selected_tab[2]][0]:
 				if currently_selected_tab == 2:
 					screen.attroff(curses.color_pair(5))
 				else:
@@ -763,7 +766,8 @@ def view_inventory_2(state):
 
 		#Information screen
 		if len(dynamic_print_inventory) != 0:
-			copy_of_item = helper.get_item(real_name_translation[dynamic_print_inventory[selected_tab[2]][0]])() #init an item based on the readable name from print_inventory, translated
+			#! Copy should be of the spliced list
+			copy_of_item = helper.get_item(real_name_translation[full_dynamic_print_inventory[splice_start : splice_stop][selected_tab[2]][0]])() #init an item based on the readable name from print_inventory, translated
 			
 			#Art furthest up, info lower, preferably enclose art in a border
 			# Update: border added to earlier functions defining x/y-axis ACS_stuff
@@ -791,14 +795,17 @@ def view_inventory_2(state):
 			screen.addstr(30, item_end + 2, copy_of_item.description)
 
 		#Debug
-		screen.addstr(44, 0, f"Currently_selected_tab = {currently_selected_tab}")
-		screen.addstr(45, 0, f"selected_tab[currently_selected_tab] = {selected_tab[currently_selected_tab]}")
+		screen.addstr(44, 1, f"Currently_selected_tab = {currently_selected_tab}")
+		screen.addstr(45, 1, f"selected_tab[currently_selected_tab] = {selected_tab[currently_selected_tab]}")
+		screen.addstr(46, 1, f"Splice_start/stop = [{splice_start}:{splice_stop}")
 
 
 		k = screen.getch() #Get the player input
 
 		if k == curses.KEY_DOWN:
 			if currently_selected_tab < 2: #Hardcoded number of tabs (0 = types, 1 = subtypes 2 = items)
+				splice_start = 0 #! Hardcoded reset of splicing 
+				splice_stop = 40 #! Hardcoded reset of splicing
 				selected_tab[currently_selected_tab + 1] = 0
 			selected_tab[currently_selected_tab] += 1
 			if currently_selected_tab == 0: #Here we neede to make a 
@@ -808,15 +815,29 @@ def view_inventory_2(state):
 				if selected_tab[currently_selected_tab] > len(temp_subtypes) - 1: #check if we go over
 					selected_tab[currently_selected_tab] = len(temp_subtypes) - 1 #If so, reset to max index
 			elif currently_selected_tab == 2:
-				if selected_tab[currently_selected_tab] > len(dynamic_print_inventory) - 1: #check if we go over
-					selected_tab[currently_selected_tab] = len(dynamic_print_inventory) - 1 #If so, reset to max index
+				if selected_tab[currently_selected_tab] > len(full_dynamic_print_inventory[splice_start : splice_stop]) - 1: #! Check if over spliced list
+					selected_tab[currently_selected_tab] = len(full_dynamic_print_inventory[splice_start : splice_stop]) - 1
+					if splice_stop < len(full_dynamic_print_inventory): #! If there is more, splice more
+						splice_start += 1
+						splice_stop += 1
 
 		if k == curses.KEY_UP:
 			if currently_selected_tab < 2:
 				selected_tab[currently_selected_tab + 1] = 0
 			selected_tab[currently_selected_tab] -= 1
-			if selected_tab[currently_selected_tab] < 0: #Check if we go under 0
-				selected_tab[currently_selected_tab] = 0 #If so, reset it to 0
+			if currently_selected_tab != 2:
+				splice_start = 0 #! Hardcoded reset of splicing
+				splice_stop = 40 #! Hardcoded reset of splicing
+				if selected_tab[currently_selected_tab] < 0: #Check if we go under 0
+					selected_tab[currently_selected_tab] = 0 #If so, reset it to 0
+			else:
+				if selected_tab[currently_selected_tab] < 0:
+					if splice_start == 0:
+						pass
+					else: #! If not at reset splice, go down lower
+						splice_start -= 1
+						splice_stop -= 1
+					selected_tab[currently_selected_tab] = 0
 
 		if k == curses.KEY_RIGHT: #Right is to "go forward" a tab
 			if currently_selected_tab == 1:
