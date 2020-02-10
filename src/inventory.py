@@ -614,6 +614,8 @@ def view_inventory_2(state):
 
 	splice_start = 0
 	splice_stop = 40
+
+	sort = "alph"
 	
 	#Selection variables
 	#0 = Type
@@ -736,6 +738,15 @@ def view_inventory_2(state):
 			typ = list_of_types[selected_tab[0]] #wow, long line, we need to shorten it to just "subtype" variable
 			if item.subtype == dict_of_subtypes_translations[typ][selected_tab[1]]: #If it is the right subtype
 				dynamic_inventory.append(item) # we add it to the dynamic inventory
+		
+
+		# Sorting goes here
+		if sort == "alph":
+			dynamic_inventory = sorted(dynamic_inventory, key=lambda x: x.name)
+		elif sort == "alph-reversed":
+			dynamic_inventory = sorted(dynamic_inventory, key=lambda x: x.name)[::-1]
+		elif sort == "rarity":
+			dynamic_inventory = sorted(dynamic_inventory, key=lambda x: x.rarity)
 
 		already_printed = {} #This dict holds just the name and number of that item we have, so we can print it easily
 		real_name_translation = {}
@@ -747,9 +758,10 @@ def view_inventory_2(state):
 
 			if item.name not in real_name_translation.items():
 				real_name_translation[item.readable_name] = item.name
+
 		full_dynamic_print_inventory = [(item_name, count) for item_name, count in already_printed.items()]
-		print(len(full_dynamic_print_inventory))
 		dynamic_print_inventory = full_dynamic_print_inventory[splice_start : splice_stop] #! Here is the full list of unique items
+
 		#Here we do the outputting to the terminal for the item panel #! Here's the output of that list
 		for idx, item in enumerate(full_dynamic_print_inventory[splice_start : splice_stop]): #! Here we need to only loop over the spliced list
 			if item[0] == full_dynamic_print_inventory[splice_start : splice_stop][selected_tab[2]][0]:
@@ -855,6 +867,12 @@ def view_inventory_2(state):
 			if currently_selected_tab < 0: #Check if we go under 0
 				currently_selected_tab = 0 #If so, reset it to 0
 
+		if k == ord("a"):
+			sort = "alph"
+		if k == ord("s"):
+			sort = "alph-reversed"
+		if k == ord("d"):
+			sort = "rarity"
 
 
 def select_new_item(slot, inventory, screen, old_item):
