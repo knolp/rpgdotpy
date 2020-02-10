@@ -879,7 +879,7 @@ def view_inventory_2(state):
 
 		#If we press space to do stuff
 		if k == ord(" "):
-			if list_of_types[selected_tab[0]] == "Consumables" and len(full_dynamic_print_inventory) != 0:
+			if list_of_types[selected_tab[0]] == "Consumables" and len(full_dynamic_print_inventory) != 0 and currently_selected_tab == 2:
 				item = helper.get_item(real_name_translation[full_dynamic_print_inventory[splice_start : splice_stop][selected_tab[2]][0]])()
 				item.consume(state.player)
 				#Delete the item
