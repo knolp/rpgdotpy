@@ -588,7 +588,6 @@ def view_inventory_2(state):
 
 	#Init some variables regarding player inventory and equipment
 	inventory = state.player.inventory
-	list_of_equipped_items = list(state.player.equipment.values())
 
 	#Static values
 	list_of_types = ["Armor", "Weapons", "Crafting", "Key Items", "Consumables"]
@@ -615,6 +614,8 @@ def view_inventory_2(state):
 	splice_start = 0
 	splice_stop = 40
 
+	splice_max = 40
+
 	sort = "alph"
 	
 	#Selection variables
@@ -630,6 +631,9 @@ def view_inventory_2(state):
 
 	while k != ord("q"): #Press Q to exit inventory menu
 		screen.clear() # Clear old screen
+
+		#Init some variables regarding player equipment
+		list_of_equipped_items = list(state.player.equipment.values())
 
 		#Init the border-grid
 		#Top row, all the way
@@ -737,7 +741,7 @@ def view_inventory_2(state):
 		for item in inventory:
 			typ = list_of_types[selected_tab[0]] #wow, long line, we need to shorten it to just "subtype" variable
 			if item.subtype == dict_of_subtypes_translations[typ][selected_tab[1]]: #If it is the right subtype
-				dynamic_inventory.append(item) # we add it to the dynamic inventory
+				dynamic_inventory.append(item) # we add it to the dynamic inventory #! Here is the full list of non-unique items that matches type/subtype
 		
 
 		# Sorting goes here
@@ -759,17 +763,22 @@ def view_inventory_2(state):
 			if item.name not in real_name_translation.items():
 				real_name_translation[item.readable_name] = item.name
 
-		full_dynamic_print_inventory = [(item_name, count) for item_name, count in already_printed.items()]
-		dynamic_print_inventory = full_dynamic_print_inventory[splice_start : splice_stop] #! Here is the full list of unique items
+		full_dynamic_print_inventory = [(item_name, count) for item_name, count in already_printed.items()] #! Here is the full list of unique items
+		dynamic_print_inventory = full_dynamic_print_inventory[splice_start : splice_stop] 
 
 		#Here we do the outputting to the terminal for the item panel #! Here's the output of that list
+		if splice_stop < len(full_dynamic_print_inventory): #! If there are more items than can be shown, add a D-ARROW
+			screen.addch(42, item_end - 1, curses.ACS_DARROW)
+		if splice_start != 0: #! If we have scrolled past some items and can scroll upp, add a U-ARROW
+			screen.addch(2, item_end - 1, curses.ACS_UARROW)
+
 		for idx, item in enumerate(full_dynamic_print_inventory[splice_start : splice_stop]): #! Here we need to only loop over the spliced list
 			if item[0] == full_dynamic_print_inventory[splice_start : splice_stop][selected_tab[2]][0]:
 				if currently_selected_tab == 2:
 					screen.attron(curses.color_pair(5))
 				else:
 					screen.attron(curses.color_pair(138))
-			screen.addstr(idx + 1, subtype_end + 2, f"{item[0]}: {item[1]}")
+			screen.addstr(idx + 1, subtype_end + 2, f"{item[0]}{' ' * (34 - len(item[0]) - len(str(item[1])))}{item[1]}") # f"{name + space * remainder + count}"
 			if item[0] == full_dynamic_print_inventory[splice_start : splice_stop][selected_tab[2]][0]:
 				if currently_selected_tab == 2:
 					screen.attroff(curses.color_pair(5))
@@ -809,7 +818,7 @@ def view_inventory_2(state):
 		#Debug
 		screen.addstr(44, 1, f"Currently_selected_tab = {currently_selected_tab}")
 		screen.addstr(45, 1, f"selected_tab[currently_selected_tab] = {selected_tab[currently_selected_tab]}")
-		screen.addstr(46, 1, f"Splice_start/stop = [{splice_start}:{splice_stop}")
+		screen.addstr(46, 1, f"Item_tab pos [{selected_tab[2]}")
 
 
 		k = screen.getch() #Get the player input
@@ -817,7 +826,7 @@ def view_inventory_2(state):
 		if k == curses.KEY_DOWN:
 			if currently_selected_tab < 2: #Hardcoded number of tabs (0 = types, 1 = subtypes 2 = items)
 				splice_start = 0 #! Hardcoded reset of splicing 
-				splice_stop = 40 #! Hardcoded reset of splicing
+				splice_stop = splice_max #! Hardcoded reset of splicing
 				selected_tab[currently_selected_tab + 1] = 0
 			selected_tab[currently_selected_tab] += 1
 			if currently_selected_tab == 0: #Here we neede to make a 
@@ -837,9 +846,11 @@ def view_inventory_2(state):
 			if currently_selected_tab < 2:
 				selected_tab[currently_selected_tab + 1] = 0
 			selected_tab[currently_selected_tab] -= 1
+			if currently_selected_tab == 0:
+				selected_tab[2] = 0
 			if currently_selected_tab != 2:
 				splice_start = 0 #! Hardcoded reset of splicing
-				splice_stop = 40 #! Hardcoded reset of splicing
+				splice_stop = splice_max #! Hardcoded reset of splicing
 				if selected_tab[currently_selected_tab] < 0: #Check if we go under 0
 					selected_tab[currently_selected_tab] = 0 #If so, reset it to 0
 			else:
@@ -850,7 +861,6 @@ def view_inventory_2(state):
 						splice_start -= 1
 						splice_stop -= 1
 					selected_tab[currently_selected_tab] = 0
-
 		if k == curses.KEY_RIGHT: #Right is to "go forward" a tab
 			if currently_selected_tab == 1:
 				if len(dynamic_print_inventory) !=0:
