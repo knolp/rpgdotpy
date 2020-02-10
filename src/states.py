@@ -1697,4 +1697,5 @@ class GrandPalace_interior_entrance(MapState):
         pass
 
     def check_events(self):
-        pass
+        if self.state.player.x == 35 and self.state.player.y == 48:
+            events.GrandPalace_interior_entrance_exit(self.state)

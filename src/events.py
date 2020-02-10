@@ -319,6 +319,13 @@ def GrandPalace_interior_entrance_enter(state):
 
 	state.update_map()
 
+def GrandPalace_interior_entrance_exit(state):
+	state.player.location = getattr(states, "StarterTownLeftWall")
+	state.player.x = 4
+	state.player.y = 33
+
+	state.update_map()
+
 
 def RandomCave(state, target):
 	state.player.seed = random.randint(3554,19929292)

@@ -9,8 +9,8 @@ RPG.py takes place in a persistent world known as Beladir, it's a simple fantasy
     - [ ] Battlefields
       - [ ] Type (Plains, Dungeon, Cave, Grassland etc)
       - [ ] Hazards/Weather (Lava, rain, snow)
-    - [ ] Weapon disarming
-    - [ ] Disabling of dead limbs
+    - [x] Weapon disarming
+    - [x] Disabling of dead limbs
 
 2. World 
     - [ ] Cities
@@ -24,7 +24,6 @@ RPG.py takes place in a persistent world known as Beladir, it's a simple fantasy
     - [x] Alchemy
     - [x] Farming
     - [ ] Wilderness
-
 ### Current Features
 
 1. Combat

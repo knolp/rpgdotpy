@@ -758,7 +758,7 @@ def draw_menu(stdscr):
             inventory.view_spellbook(state_handler.stdscr, state_handler)
         
         if k == ord("o") and state_handler.player != False:
-            inventory.view_inventory(state_handler.stdscr, state_handler)
+            state_handler.player.health -= 200
 
         if k == ord("c") and state_handler.player != False:
             battlemode = battle.Battle(state_handler, monster.SkeletonGrunt(state_handler), "3")

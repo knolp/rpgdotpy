@@ -863,7 +863,7 @@ def view_inventory_2(state):
 					selected_tab[currently_selected_tab] = 0
 		if k == curses.KEY_RIGHT: #Right is to "go forward" a tab
 			if currently_selected_tab == 1:
-				if len(dynamic_print_inventory) !=0:
+				if len(full_dynamic_print_inventory) !=0: # We can only go forward if there actually are items in that subtype
 					currently_selected_tab += 1
 				else:
 					currently_selected_tab += 0
@@ -876,6 +876,17 @@ def view_inventory_2(state):
 			currently_selected_tab -= 1
 			if currently_selected_tab < 0: #Check if we go under 0
 				currently_selected_tab = 0 #If so, reset it to 0
+
+		#If we press space to do stuff
+		if k == ord(" "):
+			if list_of_types[selected_tab[0]] == "Consumables" and len(full_dynamic_print_inventory) != 0:
+				item = helper.get_item(real_name_translation[full_dynamic_print_inventory[splice_start : splice_stop][selected_tab[2]][0]])()
+				item.consume(state.player)
+				#Delete the item
+				for thing in inventory:
+					if item.name == thing.name:
+						inventory.pop(inventory.index(thing))
+						break
 
 		if k == ord("a"):
 			sort = "alph"

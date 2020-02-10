@@ -519,6 +519,7 @@ class AriamSeed(Item):
         self.harvest_time = 2629746 #1 month
 
 #Consumable
+# Can only affect players themselves, consume-function will be passed the state.player parameter
 class MinorHealthPotion(Item):
     def __init__(self):
         super().__init__("MinorHealthPotion", False)
@@ -527,6 +528,15 @@ class MinorHealthPotion(Item):
         self.subtype = "potion"
         self.equippable = False
         self.description = "A small vial of red fluid."
+
+    def consume(self, player):
+        print("Drinking potion")
+        if player.health == player.max_health:
+            return False
+        player.health += 10
+        if player.health > player.max_health:
+            player.health = player.max_health
+        return True
 
 class AdralBrew(Item):
     def __init__(self):
@@ -537,6 +547,14 @@ class AdralBrew(Item):
         self.equippable = False
         self.description = "A vial of brown fluid, created by the elves."
         self.effect_description = "+1 perception, +1 strength"
+
+    def consume(self, player):
+        if player.health == player.max_health:
+            return False
+        player.health += 20
+        if player.health > player.max_health:
+            player.health = player.max_health
+        return True
 
 
 
