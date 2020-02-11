@@ -330,6 +330,9 @@ class BasementKey(Item):
         self.subtype = "key"
         self.equippable = False
         self.description = "Unlocks the basement door at Osk'Ghar."
+        self.art = art.draw_key()
+        for i in range(len(self.art)):
+            self.art[i] = self.art[i][::-1]
 
 class DungeonKeyHaunted(Item):
     def __init__(self):
@@ -339,6 +342,7 @@ class DungeonKeyHaunted(Item):
         self.subtype = "key"
         self.equippable = False
         self.description = "Unlocks a dungeon door somewhere."
+        self.art = art.draw_key()[::-1]
 
 class Shovel(Item):
     def __init__(self):
@@ -530,13 +534,14 @@ class MinorHealthPotion(Item):
         self.description = "A small vial of red fluid."
 
     def consume(self, player):
-        print("Drinking potion")
         if player.health == player.max_health:
-            return False
-        player.health += 10
-        if player.health > player.max_health:
-            player.health = player.max_health
-        return True
+            return False, "You are already at full health"
+        healed = 10
+        if player.health + healed > player.max_health:
+            healed = player.max_health - player.health
+        player.health += healed
+        
+        return True, f"You consumed a {self.readable_name}, it healed for {healed}"
 
 class AdralBrew(Item):
     def __init__(self):
@@ -550,11 +555,13 @@ class AdralBrew(Item):
 
     def consume(self, player):
         if player.health == player.max_health:
-            return False
-        player.health += 20
-        if player.health > player.max_health:
-            player.health = player.max_health
-        return True
+            return False, "You are already at full health"
+        healed = 10
+        if player.health + healed > player.max_health:
+            healed = player.max_health - player.health
+        player.health += healed
+        
+        return True, f"You consumed an {self.readable_name}, it healed for {healed}"
 
 
 

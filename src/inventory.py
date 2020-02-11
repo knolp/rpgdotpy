@@ -617,6 +617,8 @@ def view_inventory_2(state):
 	splice_max = 40
 
 	sort = "alph"
+
+	info_list = []
 	
 	#Selection variables
 	#0 = Type
@@ -815,6 +817,12 @@ def view_inventory_2(state):
 			screen.addstr(29, item_end + 2, f"Description:")
 			screen.addstr(30, item_end + 2, copy_of_item.description)
 
+		#add info
+		for idx, item in enumerate(info_list[-5:]): #The last 5 items of info_list
+			if item[1]:
+				screen.addstr(44 + idx, item_end + 1, item[0], curses.color_pair(134)) #! Bad red color (indicates no success)
+			else:
+				screen.addstr(44 + idx, item_end + 1, item[0], curses.color_pair(133)) # Nice green color (indicates success)
 		#Debug
 		screen.addstr(44, 1, f"Currently_selected_tab = {currently_selected_tab}")
 		screen.addstr(45, 1, f"selected_tab[currently_selected_tab] = {selected_tab[currently_selected_tab]}")
@@ -825,9 +833,10 @@ def view_inventory_2(state):
 
 		if k == curses.KEY_DOWN:
 			if currently_selected_tab < 2: #Hardcoded number of tabs (0 = types, 1 = subtypes 2 = items)
-				splice_start = 0 #! Hardcoded reset of splicing 
-				splice_stop = splice_max #! Hardcoded reset of splicing
+				splice_start = 0 #! Reset splice 
+				splice_stop = splice_max #! Reset splice
 				selected_tab[currently_selected_tab + 1] = 0
+				selected_tab[2] = 0
 			selected_tab[currently_selected_tab] += 1
 			if currently_selected_tab == 0: #Here we neede to make a 
 				if selected_tab[currently_selected_tab] > len(list_of_types) - 1: #check if we go over
@@ -849,8 +858,8 @@ def view_inventory_2(state):
 			if currently_selected_tab == 0:
 				selected_tab[2] = 0
 			if currently_selected_tab != 2:
-				splice_start = 0 #! Hardcoded reset of splicing
-				splice_stop = splice_max #! Hardcoded reset of splicing
+				splice_start = 0 #! Reset splice
+				splice_stop = splice_max #! Reset splice
 				if selected_tab[currently_selected_tab] < 0: #Check if we go under 0
 					selected_tab[currently_selected_tab] = 0 #If so, reset it to 0
 			else:
@@ -879,14 +888,23 @@ def view_inventory_2(state):
 
 		#If we press space to do stuff
 		if k == ord(" "):
-			if list_of_types[selected_tab[0]] == "Consumables" and len(full_dynamic_print_inventory) != 0 and currently_selected_tab == 2:
+			result = False
+			result_text = "You cannot use that item here."
+			if currently_selected_tab == 2  and len(full_dynamic_print_inventory) != 0:
 				item = helper.get_item(real_name_translation[full_dynamic_print_inventory[splice_start : splice_stop][selected_tab[2]][0]])()
-				item.consume(state.player)
+
+				if list_of_types[selected_tab[0]] == "Consumables":
+					result, result_text = item.consume(state.player)
+					
 				#Delete the item
-				for thing in inventory:
-					if item.name == thing.name:
-						inventory.pop(inventory.index(thing))
-						break
+				if result:
+					info_list.append((result_text, True))
+					for thing in inventory:
+						if item.name == thing.name:
+							inventory.pop(inventory.index(thing))
+							break
+				else:
+					info_list.append((result_text, False))
 
 		if k == ord("a"):
 			sort = "alph"
