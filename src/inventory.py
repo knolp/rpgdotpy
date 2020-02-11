@@ -605,6 +605,13 @@ def view_inventory_2(state):
 		"Key Items" : ["quest", "key", "book", "tool"],
 		"Consumables" : ["potion", "elixir", "brew", "scroll", "food"]
 	}
+	dict_of_uses = {
+		"Armor" : "Equip",
+		"Weapons" : "Equip",
+		"Crafting" : "Use",
+		"Key Items" : "Use",
+		"Consumables" : "Consume"
+	}
 	
 	#Distance for each column
 	type_end = 14
@@ -820,13 +827,23 @@ def view_inventory_2(state):
 		#add info
 		for idx, item in enumerate(info_list[-5:]): #The last 5 items of info_list
 			if item[1]:
-				screen.addstr(44 + idx, item_end + 1, item[0], curses.color_pair(134)) #! Bad red color (indicates no success)
+				screen.addstr(44 + idx, item_end + 1, item[0], curses.color_pair(134)) # Nice green color (indicates success)
 			else:
-				screen.addstr(44 + idx, item_end + 1, item[0], curses.color_pair(133)) # Nice green color (indicates success)
-		#Debug
-		screen.addstr(44, 1, f"Currently_selected_tab = {currently_selected_tab}")
-		screen.addstr(45, 1, f"selected_tab[currently_selected_tab] = {selected_tab[currently_selected_tab]}")
-		screen.addstr(46, 1, f"Item_tab pos [{selected_tab[2]}")
+				screen.addstr(44 + idx, item_end + 1, item[0], curses.color_pair(133)) #! Bad red color (indicates no success)
+
+
+
+		#Key-information
+		#Directions
+		for idx, arrow in enumerate([curses.ACS_UARROW, curses.ACS_DARROW, curses.ACS_LARROW, curses.ACS_RARROW]):
+			screen.addch(44, idx + 1, arrow)
+		screen.addstr(44, 5, ": Move Cursor")
+		
+		screen.addstr(45, 1, f"Space:")
+		if currently_selected_tab == 2:
+			screen.addstr(45, 1 + len("Space: "), f"{dict_of_uses[list_of_types[selected_tab[0]]]}", curses.color_pair(134))
+		else:
+			screen.addstr(45, 1 + len("Space: "), "No item selected", curses.color_pair(133))
 
 
 		k = screen.getch() #Get the player input

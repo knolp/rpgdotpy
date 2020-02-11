@@ -1,7 +1,6 @@
 import curses
 import random
 import time
-import npc
 import os
 import math
 
