@@ -783,12 +783,20 @@ def draw_menu(stdscr):
         if k == ord("1"):
             if direction == "up":
                 state_handler.player.x -= 4
+                if state_handler.player.x < 2:
+                    state_handler.player.x = 2
             elif direction == "down":
                 state_handler.player.x += 4
+                if state_handler.player.x > 36:
+                    state_handler.player.x = 36
             elif direction == "left":
                 state_handler.player.y -= 4
+                if state_handler.player.y < 2:
+                    state_handler.player.y = 2
             elif direction == "right":
                 state_handler.player.y += 4
+                if state_handler.player.y > 95:
+                    state_handler.player.y = 95
 
         if k == ord("2"):
             state_handler.player.hotkeys["2"].execute(state_handler.player)
