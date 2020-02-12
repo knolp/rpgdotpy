@@ -550,18 +550,23 @@ class AdralBrew(Item):
         self.type = "consumable"
         self.subtype = "brew"
         self.equippable = False
+        self.increase = 4
+        self.stat = "Strength"
+        self.turns = 600
         self.description = "A vial of brown fluid, created by the elves."
-        self.effect_description = "+1 perception, +1 strength"
+        self.effect_description = f"+{self.increase} {self.stat}"
 
     def consume(self, player):
-        if player.health == player.max_health:
-            return False, "You are already at full health"
-        healed = 10
-        if player.health + healed > player.max_health:
-            healed = player.max_health - player.health
-        player.health += healed
-        
-        return True, f"You consumed an {self.readable_name}, it healed for {healed}"
+        for item in player.status_effects:
+            if item.name == "StatBuff":
+                if item.origin == "AdralBrew":
+                    if item.turns_left > 100:
+                        return False, "You are already affected by this brew."
+                    else:
+                        player.status_effects.append(abilities.StatBuff(self.turns, self.stat, self.increase, player, origin="AdralBrew"))
+                        return True, f"You refreshed your {self.readable_name}, reseting it to {self.turns} turns."
+        player.status_effects.append(abilities.StatBuff(self.turns, self.stat, self.increase, player, origin="AdralBrew"))
+        return True, f"You consumed an {self.readable_name}, it increases your {self.stat} by {self.increase} for {self.turns} turns."
 
 
 

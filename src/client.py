@@ -808,8 +808,7 @@ def draw_menu(stdscr):
             state_handler.player.ascii = not state_handler.player.ascii
 
         if k == ord("5"):
-            book = books.BasicAlchemy()
-            book.read(state_handler.stdscr)
+            state_handler.player.status_effects.append(abilities.StatBuff(5,"Strength", 2, state_handler.player))
         
         if k == ord("6"):
             state_handler.timer.tid += 1209600
