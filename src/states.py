@@ -271,6 +271,63 @@ class NewGame_2():
         self.state = state
         self.game_box = state.game_box
         self.command_state = state.command_state
+        self.starter_town_art = [
+            "                    |####                ",
+            "                    |####                ",
+            "      MM            |                    ",
+            "     MMMM           M                    ",
+            "    MMMMMM         MMM                   ",
+            "   MMMMMMMM       MMMMM            M     ",
+            "  MMMMMMMMMM       ###            MMM    ",
+            "   ########      #######         MMMMM   ",
+            "   ########   #############       ###    ",
+            "   ########   #############       ###    ",
+            "  ###########################   #######  ",
+            " ############################# ######### ",
+            "#########################################",
+            "###################+++###################",
+            "##################+++++##################",
+            "##################     ##################",
+            "##################     ##################"
+        ]
+        self.orctheral_art = [
+            "                    |                    ",
+            "                                         ",
+            "                 \\  O  /                 ",
+            "                   OOO                   ",
+            "                - OOOOO -                ",
+            "                   OOO                   ",
+            "                 /  O  \\                 ",
+            "        /\\                     /\\        ",
+            "       /##\\         |         /##\\       ",
+            "      /####\\                 /####\\      ",
+            "     /##  ##\\---ooo---ooo---/##  ##\\     ",
+            "    /##    ##\\             /##    ##\\    ",
+            "   /##      ##\\           /##      ##\\   ",
+            "  /##        ##\\   (()   /##        ##\\  ",
+            " /###        ###\\  )((  /###        ###\\ ",
+            "/####        ####\\ ### /####        ####\\",
+            "SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS",
+        ]
+        self.blackcliff_art = [
+            "                                         ",
+            "  ##\                                    ",
+            "  ##v\                                   ",
+            "  ##vv\                                  ",
+            "  ##vvv\                                 ",
+            "  ##vvv/                              WWW",
+            "  ##vv/                              WWWW",
+            "  ##v/                              WWWWW",
+            "  ##/            #                 W#####",
+            "###################----             ###  ",
+            "##################                  ###  ",
+            "###############                     #####",
+            "#############                 BBBBBBBBBBB",
+            "###########                   | |        ",
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+            "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+        ]
 
     def draw(self):
         height, width = self.game_box.getmaxyx()
@@ -279,6 +336,8 @@ class NewGame_2():
         for item in self.command_state.commands:
             if item.active:
                 if item.text == "Starter Town":
+                    for idx, text in enumerate(self.starter_town_art):
+                        self.game_box.addstr(2 + idx, center(width, text),text)
                     text = "A basic town in the southern part of the realm"
                     self.game_box.addstr(20, center(width, text),text)
                     text = "Notable features:"
@@ -293,6 +352,8 @@ class NewGame_2():
                     self.game_box.addstr(27, center(width, text), text)
 
                 if item.text == "Orc'Theral":
+                    for idx, text in enumerate(self.orctheral_art):
+                        self.game_box.addstr(2 + idx, center(width, text),text)
                     text = "The Orc hometown in the east"
                     self.game_box.addstr(20, center(width, text),text)
                     text = "Notable features:"
@@ -305,6 +366,8 @@ class NewGame_2():
                     self.game_box.addstr(26, center(width, text),text)
 
                 if item.text == "Blackcliff":
+                    for idx, text in enumerate(self.blackcliff_art):
+                        self.game_box.addstr(2 + idx, center(width, text),text)
                     text = "The largest fishing colony in the west"
                     self.game_box.addstr(20, center(width, text),text)
                     text = "Notable features:"
@@ -345,6 +408,8 @@ class NewGame_3():
         for item in self.command_state.commands:
             if item.active:
                 if item.text == "Human":
+                    text = "HUMAN"
+                    self.game_box.addstr(6, center(width, text),text)
                     text = "A recent addition to the many races of Beladir"
                     self.game_box.addstr(10, center(width, text),text)
                     text = "Once being freed from the grips of the elves"
@@ -367,6 +432,8 @@ class NewGame_3():
                     self.game_box.addstr(24, center(width, text),text)
 
                 if item.text == "Orc":
+                    text = "ORC"
+                    self.game_box.addstr(6, center(width, text),text)
                     text = "The native race of the eastern parts of Beladir"
                     self.game_box.addstr(10, center(width, text),text)
                     text = "Due to extreme deforestation, the Orcs reside in a large desert"
@@ -393,6 +460,8 @@ class NewGame_3():
                     self.game_box.addstr(26, center(width, text),text)
 
                 if item.text == "Elf":
+                    text = "ELF"
+                    self.game_box.addstr(6, center(width, text),text)
                     text = "The oldest native race in Beladir"
                     self.game_box.addstr(10, center(width, text),text)
                     text = "They have some sense of individuality, but are yet all connected"
@@ -417,6 +486,8 @@ class NewGame_3():
                     self.game_box.addstr(25, center(width, text),text)
 
                 if item.text == "Dwarf":
+                    text = "DWARF"
+                    self.game_box.addstr(6, center(width, text),text)
                     text = "Another recent refugee in the lands of Beladir"
                     self.game_box.addstr(10, center(width, text),text)
                     text = "This race of deep cave dwellers came to these lands"
