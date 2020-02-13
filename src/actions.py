@@ -685,10 +685,8 @@ class SpeakAbyrroQuatz(Action):
 					]
 					text_state = 0
 			
-			elif answer.lower() in ["tanner"]:
+			elif answer.lower() in ["tanner", "didric burton", "didric", "burton"]:
 				text = [
-					"[Didric Swanson] is his name.",
-					"",
 					"Horrible old man, once a resident of Berud as well.",
 					"He had a seat in the [Crafter's Guild] there too.",
 					"",
@@ -698,7 +696,10 @@ class SpeakAbyrroQuatz(Action):
 					"Since it has been a few years after he left [Berud], I thought",
 					"he would have gotten over his grudge by now, but I guess not."
 				]
-				text_state = 0
+				if answer.lower() == "tanner":
+					text.insert(0,"[Didric Burton] is his name.")
+					text.insert(1,"")
+				text_state =0
 
 
 			else:

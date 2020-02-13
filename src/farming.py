@@ -109,7 +109,7 @@ def select_ingredient(state, juicable=False):
                 if item.readable_name == list_of_ingredients[selected_item]:
                     return player.inventory.pop(player.inventory.index(item))
 
-    return False
+    return "pressed_q"
 
 @helper.add_ungetch_and_cbreak
 def farming(state, identity):
@@ -203,8 +203,11 @@ def farming(state, identity):
                         planted = False
             else:
                 seed_to_plant = select_ingredient(state)
-                if not seed_to_plant:
+                if seed_to_plant == "pressed_q":
+                    pass
+                elif not seed_to_plant:
                     no_seeds = True
                 else:
                     player.active_farms.append([identity,seed_to_plant.readable_name,state.timer.tid, seed_to_plant.result, seed_to_plant.harvest_time])
                     planted = True
+                    return

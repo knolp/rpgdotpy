@@ -300,13 +300,13 @@ class Battle():
 
                 combat_log_start += 1
 
-            percent_health = round(self.player.health / self.player.max_health, 2)
-            percent_lost = 1 - percent_health
-            self.screen.addstr(37, 0, "HP:")
-            self.screen.attron(curses.color_pair(5))
-            self.screen.addstr(37, 5, "{}".format("-" * int(100 * percent_health)))
-            self.screen.attroff(curses.color_pair(5))
-            self.screen.addstr(37, int(105 * percent_health), "{}".format("-" * int(100 * percent_lost)))
+            percent_health = round(self.player.health / self.player.max_health, 2) #hur många %
+            percent_lost = 1 - percent_health # hur mycket som inte är HP
+            self.screen.addstr(37, 0, "HP:") #Base
+            self.screen.attron(curses.color_pair(5)) # På med grönt
+            self.screen.addstr(37, 5, "{}".format(" " * int(100 * percent_health))) # hela rad = 100, så typ 0.6 * 100 = 60 rutor
+            self.screen.attroff(curses.color_pair(5)) #Av med grönt
+            self.screen.addstr(37, 5 + int(100 * percent_health), "{}".format(" " * int(100 * percent_lost)), curses.color_pair(2)) # Adda på percent_lost efter första addstr
 
             for i in range(len(self.commands)):
                 if i == selected_command:
@@ -384,7 +384,7 @@ class Battle():
                     self.player_attack()
 
                 if self.commands[selected_command] == "Block":
-                    pass
+                    self.player.health -= 100
 
                 if self.commands[selected_command] == "Run":
                     self.update_log(["neutral", "Attempting to run away."])
