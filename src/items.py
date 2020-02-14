@@ -43,6 +43,37 @@ class Item():
     def effect(self, player, opponent):
         return False
 
+    def equip(self, player):
+        translate_slots = {
+            "right_hand" : "in the right hand",
+            "left_hand" : "in the left hand",
+            "head" : "",
+            "legs" : "",
+            "chest" : "",
+            "ring" : "",
+            "neck" : "on your neck",
+            "boots" : ""
+        } #For the output to inventory information console
+        text = []
+        if not self.equippable: #It does not have an equippable slot
+            text.append("Item is not equippable")
+            return False, text
+        if self.equippable == "ring": #Since we have 2 rings slots we need to check which one to assign it to
+            text.append("PLEASE MAKE RING SELECTION")
+            return False, text
+
+        current_item = player.equipment[self.equippable]
+        if current_item and current_item.name == self.name: #If we have the same item equipped, unnecessary to equip the same item again
+            text.append("You already have one of these equipped.")
+            return False, text
+        if current_item: # Place the old weapon/armor back into inventory before overwriting the slot with the new one
+            player.inventory.append(current_item)
+            text.append(f"{current_item.readable_name} placed back into inventory.")
+
+        player.equipment[self.equippable] = self #Add item to player EQ
+        text.append(f"{self.readable_name} equipped {translate_slots[self.equippable]}.")
+        return True, text
+
 
 
 

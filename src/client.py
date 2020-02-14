@@ -173,6 +173,7 @@ class StateHandler():
         self.player.seed = load_dict["seed"]
         self.player.last_target = load_dict["last_target"]
         self.player.turn = load_dict["turn"]
+        self.player.ascii = load_dict["ascii"]
 
     def save_player(self, quicksave=False):
         params = {}

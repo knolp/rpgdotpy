@@ -696,7 +696,7 @@ class SpeakAbyrroQuatz(Action):
 					"Since it has been a few years after he left [Berud], I thought",
 					"he would have gotten over his grudge by now, but I guess not."
 				]
-				if answer.lower() == "tanner":
+				if answer.lower() == "tanner": # To not repeat his name when you asks his name
 					text.insert(0,"[Didric Burton] is his name.")
 					text.insert(1,"")
 				text_state =0

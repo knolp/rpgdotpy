@@ -912,16 +912,26 @@ def view_inventory_2(state):
 
 				if list_of_types[selected_tab[0]] == "Consumables":
 					result, result_text = item.consume(state.player)
+				if list_of_types[selected_tab[0]] in ["Armor", "Weapons"]:
+					result, result_text = item.equip(state.player)
 					
 				#Delete the item
 				if result:
-					info_list.append((result_text, True))
+					if type(result_text) == type("stringgoeshere"):
+						info_list.append((result_text, True))
+					elif type(result_text) == type(["list", "of", "strings"]):
+						for text in result_text:
+							info_list.append((text, True))
 					for thing in inventory:
 						if item.name == thing.name:
 							inventory.pop(inventory.index(thing))
 							break
 				else:
-					info_list.append((result_text, False))
+					if type(result_text) == type("stringgoeshere"):
+						info_list.append((result_text, False))
+					elif type(result_text) == type(["list", "of", "strings"]):
+						for text in result_text:
+							info_list.append((text, False))
 
 		if k == ord("a"):
 			sort = "alph"
