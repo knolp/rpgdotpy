@@ -68,10 +68,10 @@ class Item():
             return False, text
         if current_item: # Place the old weapon/armor back into inventory before overwriting the slot with the new one
             player.inventory.append(current_item)
-            text.append(f"{current_item.readable_name} placed back into inventory.")
+            text.append(f"[{current_item.readable_name}] placed back into inventory.")
 
         player.equipment[self.equippable] = self #Add item to player EQ
-        text.append(f"{self.readable_name} equipped {translate_slots[self.equippable]}.")
+        text.append(f"[{self.readable_name}] equipped {translate_slots[self.equippable]}.")
         return True, text
 
 
@@ -572,7 +572,7 @@ class MinorHealthPotion(Item):
             healed = player.max_health - player.health
         player.health += healed
         
-        return True, f"You consumed a {self.readable_name}, it healed for {healed}"
+        return True, f"You consumed a [{self.readable_name}], it healed for {healed}"
 
 class AdralBrew(Item):
     def __init__(self):
@@ -595,9 +595,9 @@ class AdralBrew(Item):
                         return False, "You are already affected by this brew."
                     else:
                         player.status_effects.append(abilities.StatBuff(self.turns, self.stat, self.increase, player, origin="AdralBrew"))
-                        return True, f"You refreshed your {self.readable_name}, reseting it to {self.turns} turns."
+                        return True, f"You refreshed your [{self.readable_name}], reseting it to {self.turns} turns."
         player.status_effects.append(abilities.StatBuff(self.turns, self.stat, self.increase, player, origin="AdralBrew"))
-        return True, f"You consumed an {self.readable_name}, it increases your {self.stat} by {self.increase} for {self.turns} turns."
+        return True, f"You consumed an [{self.readable_name}], it increases your {self.stat} by {self.increase} for {self.turns} turns."
 
 
 

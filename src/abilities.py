@@ -267,39 +267,11 @@ class HomeTeleport():
         self.description = "Teleport to your home."
 
 
-
-# Player Buffs
-class Chill():
-    def __init__(self, turns, damage, opponent_name):
-        self.type = "Chill"
-        self.color = 133
-        self.max_turn = turns + 1
-        self.turns_left = turns + 1
-        self.damage = damage
-        self.opponent_name = opponent_name
-        self.combat_text = "{} is chilled and takes {} more damage from frost abilities.".format(self.opponent_name, self.damage)
-        self.combat_text_over = "{} is no longer chilled".format(self.opponent_name)
-
-    def execute(self):
-        self.turns_left -= 1
-        if self.turns_left == 0:
-            return {
-                "combat_text" : self.combat_text_over,
-                "done" : True,
-                "damage" : False
-            }
-        else:
-            return {
-                "combat_text" : self.combat_text,
-                "done" : False,
-                "damage" : 0
-            }
-
 class StatBuff():
     def __init__(self, turns, stat, increase, player, origin=False):
         self.name = "StatBuff"
-        self.readable_name = "Increased Strength"
-        self.description = "Increase Strength"
+        self.readable_name = f"Increased {stat}"
+        self.description = "Increase stat"
         self.combat_text = False
         self.combat_text_over = f"{player.name}'s {self.readable_name} has worn off."
         self.type = "Buff"

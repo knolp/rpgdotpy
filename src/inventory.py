@@ -827,7 +827,20 @@ def view_inventory_2(state):
 		#add info
 		for idx, item in enumerate(info_list[-5:]): #The last 5 items of info_list
 			if item[1]:
-				screen.addstr(44 + idx, item_end + 1, item[0], curses.color_pair(134)) # Nice green color (indicates success)
+				if "[" in item[0]:
+					
+					start = 44 + idx
+					y_offset = item_end + 1
+
+					before, keyword, after = item[0].split("[")[0], item[0].split("[")[1].split("]")[0], item[0].split("]")[1]
+					screen.addstr(start, y_offset, before)
+					screen.attron(curses.color_pair(136))
+					screen.addstr(start, y_offset + len(before), keyword)
+					screen.attroff(curses.color_pair(136))
+					screen.addstr(start, y_offset + len(before) + len(keyword), after)
+
+				else:
+					screen.addstr(44 + idx, item_end + 1, item[0], curses.color_pair(134)) # Nice green color (indicates success)
 			else:
 				screen.addstr(44 + idx, item_end + 1, item[0], curses.color_pair(133)) #! Bad red color (indicates no success)
 

@@ -30,7 +30,7 @@ class MapObject():
 
 	@classmethod
 	def wall(cls, x, y):
-		return cls(x, y, "#", walkable=False, color=96, visible=False, name="Wall")
+		return cls(x, y, "*", walkable=False, color=96, visible=False, name="Wall")
 
 	@classmethod
 	def floor(cls, x, y):
@@ -66,7 +66,7 @@ class MapObject():
 
 	@classmethod
 	def castle_wall(cls,x,y):
-		return cls(x, y, "/", walkable=False, color=248, visible=False, name="Castle Wall")
+		return cls(x, y, "#", walkable=False, color=248, visible=False, name="Castle Wall")
 	
 	@classmethod
 	def cobblestone(cls, x, y):

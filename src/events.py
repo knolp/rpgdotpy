@@ -217,7 +217,7 @@ def GreenForest_brown_bear_inn_entrance(state):
 
 def GreenForest_sewer_entrance(state):
 	state.player.location = getattr(states, "StarterTown_haunted_house_3")
-	state.player.x = 21
+	state.player.x = 20
 	state.player.y = 14
 
 	state.update_map()

@@ -78,8 +78,8 @@ class Player():
 
 		self.status_effects = []
 		self.immune = []
-		self.health = 1000
-		self.max_health = 1000
+		self.health = 15
+		self.max_health = 20
 		self.gold = 10000
 		self.player = True
 
