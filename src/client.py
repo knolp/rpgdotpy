@@ -424,6 +424,8 @@ def draw_menu(stdscr):
 
     height, width = state_handler.stdscr.getmaxyx()
 
+    player_first_init = False
+
 
 
 
@@ -432,6 +434,10 @@ def draw_menu(stdscr):
 
         game_box.border()
         command_box.border()
+        if state_handler.player and state_handler.gamemap and not player_first_init:
+            last_gamemap = state_handler.gamemap.name
+            player_first_init = True
+            #print("Player initialized")
         if state_handler.player is not False and state_handler.timer_started == False:
             state_handler.start_timer()
 
@@ -474,7 +480,7 @@ def draw_menu(stdscr):
                     if state_handler.player.phaseshift:
                         state_handler.player.phaseshift -= 1
 
-                    state_handler.player.last_pos = state_handler.player.x, state_handler.player.y
+                    
                     #state_handler.check_tall_grass()
                     name = ""
 
@@ -485,6 +491,10 @@ def draw_menu(stdscr):
                     next_direction = state_handler.player.x + 1
                     next_tile = next_direction, state_handler.player.y
                     if state_handler.player.x < 37 and state_handler.check_collision(next_tile):
+                        state_handler.player.last_pos = state_handler.player.x, state_handler.player.y
+                        state_handler.player.minion_pos.append(state_handler.player.last_pos)
+                        if len(state_handler.player.minion_pos) > state_handler.player.max_minions:
+                            state_handler.player.minion_pos.pop(0)
                         state_handler.player.x = next_direction
                     k = 1
                 elif k == curses.KEY_UP or k == ord("w"):
@@ -494,6 +504,10 @@ def draw_menu(stdscr):
                     next_direction = state_handler.player.x - 1
                     next_tile = next_direction, state_handler.player.y
                     if state_handler.player.x > 1 and state_handler.check_collision(next_tile):
+                        state_handler.player.last_pos = state_handler.player.x, state_handler.player.y
+                        state_handler.player.minion_pos.append(state_handler.player.last_pos)
+                        if len(state_handler.player.minion_pos) > state_handler.player.max_minions:
+                            state_handler.player.minion_pos.pop(0)
                         state_handler.player.x = next_direction
                     k = 1
                 elif k == curses.KEY_LEFT or k == ord("a"):
@@ -503,6 +517,10 @@ def draw_menu(stdscr):
                     next_direction = state_handler.player.y - 1
                     next_tile = state_handler.player.x, next_direction
                     if state_handler.player.y > 1 and state_handler.check_collision(next_tile):
+                        state_handler.player.last_pos = state_handler.player.x, state_handler.player.y
+                        state_handler.player.minion_pos.append(state_handler.player.last_pos)
+                        if len(state_handler.player.minion_pos) > state_handler.player.max_minions:
+                            state_handler.player.minion_pos.pop(0)
                         state_handler.player.y = next_direction
                     k = 1
                 elif k == curses.KEY_RIGHT or k == ord("d"):
@@ -512,6 +530,10 @@ def draw_menu(stdscr):
                     next_direction = state_handler.player.y + 1
                     next_tile = state_handler.player.x, next_direction
                     if state_handler.player.y < 96 and state_handler.check_collision(next_tile):
+                        state_handler.player.last_pos = state_handler.player.x, state_handler.player.y
+                        state_handler.player.minion_pos.append(state_handler.player.last_pos)
+                        if len(state_handler.player.minion_pos) > state_handler.player.max_minions:
+                            state_handler.player.minion_pos.pop(0)
                         state_handler.player.y = next_direction
                     k = 1
 
@@ -588,9 +610,18 @@ def draw_menu(stdscr):
                         state_handler.gamemap.game_map.objects.remove(item)
                         curses.cbreak()
 
+            
 
             state_handler.gamemap.draw()
             draw_commands(state_handler.ingame_menu, state_handler.command_box)
+            if last_gamemap != state_handler.gamemap.name: #If we went to a new screen
+                last_gamemap = state_handler.gamemap.name
+                if state_handler.player:
+                    state_handler.player.minion_pos = [(state_handler.player.x, state_handler.player.y)] * state_handler.player.max_minions
+            print(f"{state_handler.player.minion_pos}")
+            for idx, item in enumerate(state_handler.player.minions):
+                print(idx, item)
+                stdscr.addch(state_handler.player.minion_pos[::-1][idx][0], state_handler.player.minion_pos[::-1][idx][1] + 1, state_handler.player.minions[idx])
             state_handler.player.draw(game_box)
 
             for x in range(len(state_handler.gamemap.game_map.background2)):
@@ -610,6 +641,9 @@ def draw_menu(stdscr):
 
             #If adding pets or followers later, this is the "formula" for translating last pos to draw
             #stdscr.addch(state_handler.player.last_pos[0], state_handler.player.last_pos[1] + 1, "h")
+
+            
+
 
             #Drawing 'player interface'
             #interface_start = 41
@@ -759,7 +793,8 @@ def draw_menu(stdscr):
             inventory.view_spellbook(state_handler.stdscr, state_handler)
         
         if k == ord("o") and state_handler.player != False:
-            state_handler.player.health -= 200
+            if len(state_handler.player.minions) < state_handler.player.max_minions:
+                state_handler.player.minions.append("W")
 
         if k == ord("c") and state_handler.player != False:
             battlemode = battle.Battle(state_handler, monster.SkeletonGrunt(state_handler), "3")
@@ -803,7 +838,7 @@ def draw_menu(stdscr):
             state_handler.player.hotkeys["2"].execute(state_handler.player)
 
         if k == ord("3"):
-            state_handler.stdscr.addch(49,149,"c")
+            state_handler.player.max_minions += 1
 
         if k == ord("4"):
             state_handler.player.ascii = not state_handler.player.ascii

@@ -828,7 +828,7 @@ def view_inventory_2(state):
 		for idx, item in enumerate(info_list[-5:]): #The last 5 items of info_list
 			if item[1]:
 				if "[" in item[0]:
-					
+
 					start = 44 + idx
 					y_offset = item_end + 1
 
@@ -928,7 +928,7 @@ def view_inventory_2(state):
 				if list_of_types[selected_tab[0]] in ["Armor", "Weapons"]:
 					result, result_text = item.equip(state.player)
 					
-				#Delete the item
+				#Delete the item and append info_list to print output to the inventory console
 				if result:
 					if type(result_text) == type("stringgoeshere"):
 						info_list.append((result_text, True))

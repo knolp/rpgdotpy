@@ -70,7 +70,13 @@ class Player():
 		}
 
 		self.last_pos = (3,3)
+		print(self.last_pos)
 		self.last_target = ["TradeDistrict", 0, 0]
+
+		#Minions
+		self.max_minions = 3
+		self.minion_pos = [self.last_pos] * self.max_minions
+		self.minions = []
 
 		self.ascii = False
 
