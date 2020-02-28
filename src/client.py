@@ -115,7 +115,6 @@ class StateHandler():
     def check_npc_action(self):
         for obj in self.gamemap.game_map.objects:
             if self.player.x == obj.x and self.player.y == obj.y:
-                print(self.game_box)
                 obj.action(self.game_box, self)
 
 
@@ -618,9 +617,7 @@ def draw_menu(stdscr):
                 last_gamemap = state_handler.gamemap.name
                 if state_handler.player:
                     state_handler.player.minion_pos = [(state_handler.player.x, state_handler.player.y)] * state_handler.player.max_minions
-            print(f"{state_handler.player.minion_pos}")
             for idx, item in enumerate(state_handler.player.minions):
-                print(idx, item)
                 stdscr.addch(state_handler.player.minion_pos[::-1][idx][0], state_handler.player.minion_pos[::-1][idx][1] + 1, state_handler.player.minions[idx])
             state_handler.player.draw(game_box)
 
