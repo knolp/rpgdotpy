@@ -125,6 +125,84 @@ def two_options(screen, state, text, options):
 	curses.ungetch(curses.KEY_F0)
 	return first_selected
 
+def ring_select(state):
+	"""
+		For selecting which slot to equip ring
+
+		:param state: State
+
+		:return bool (True for right, False for left)
+	"""
+	screen = state.stdscr
+	screen.clear()
+	k = -1
+	first_selected = True
+	right_ring = state.player.equipment["ring_1"]
+	left_ring = state.player.equipment["ring_2"]
+	options = ["Left", "Right"]
+	orange = curses.color_pair(136)
+
+	start_x = 15
+	
+	while k != ord(" "):
+		# Left
+		screen.addstr(12, 37, "LEFT", curses.color_pair(135))
+		screen.addstr(start_x - 1, 5, "Name: ")
+		screen.addstr(start_x - 1, 5 + len("Name: "), left_ring.readable_name, orange)
+		screen.addstr(start_x + 1, 5, "Attack: ")
+		screen.addstr(start_x + 1, 5 + len("Attack: "), str(left_ring.attack), orange)
+		screen.addstr(start_x + 2, 5, "Defence: ")
+		screen.addstr(start_x + 2, 5 + len("Defence: "), str(left_ring.defence), orange)
+		screen.addstr(start_x + 3, 5, "Description: ")
+		screen.addstr(start_x + 3, 5 + len("Description: "), str(left_ring.description), orange)
+		screen.addstr(start_x + 4, 5, "Effect: ")
+		screen.addstr(start_x + 4, 5 + len("Effect: "), str(left_ring.effect_description), orange)
+
+		# Right
+		screen.addstr(12, 112, "RIGHT", curses.color_pair(135))
+		screen.addstr(start_x - 1, 80, "Name: ")
+		screen.addstr(start_x - 1, 80 + len("Name: "), right_ring.readable_name, orange)
+		screen.addstr(start_x + 1, 80, "Attack: ")
+		screen.addstr(start_x + 1, 80 + len("Attack: "), str(right_ring.attack), orange)
+		screen.addstr(start_x + 2, 80, "Defence: ")
+		screen.addstr(start_x + 2, 80 + len("Defence: "), str(right_ring.defence), orange)
+		screen.addstr(start_x + 3, 80, "Description: ")
+		screen.addstr(start_x + 3, 80 + len("Description: "), str(right_ring.description), orange)
+		screen.addstr(start_x + 4, 80, "Effect: ")
+		screen.addstr(start_x + 4, 80 + len("Effect: "), str(right_ring.effect_description), orange)
+
+		#Info text
+		screen.addstr(44, 65, "[Space]: Select", orange)
+		screen.addstr(45, 65, "[Q]: Back", orange)
+
+		
+
+
+
+
+		if first_selected:
+			screen.attron(curses.color_pair(5))
+			screen.addstr(35, 65, options[0])
+			screen.attroff(curses.color_pair(5))
+			screen.addstr(35, 75, options[1])
+		else:
+			screen.addstr(35, 65, options[0])
+			screen.attron(curses.color_pair(5))
+			screen.addstr(35, 75, options[1])
+			screen.attroff(curses.color_pair(5))
+
+		k = screen.getch()
+
+		if k == curses.KEY_LEFT:
+			first_selected = True
+		elif k == curses.KEY_RIGHT:
+			first_selected = False
+		elif k == ord("q"):
+			return "no ring selected"
+	
+	curses.ungetch(curses.KEY_F0)
+	return first_selected
+
 
 def popup(screen, state, text):
 	screen.clear()

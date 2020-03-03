@@ -69,17 +69,10 @@ class Item():
                 text.append(f"[{self.readable_name}] equipped in left hand ring slot.")
                 return True, text
             else:
-                right = helper.two_options(state.stdscr,
-                        state, 
-                        [
-                            f"Right ring: [{player.equipment['ring_1']}]",
-                            f"Left ring: [{player.equipment['ring_2']}]",
-                            "",
-                            "Choose which ring to replace."
-                        ],
-                        ["Right", "Left"])
-
-                if right:
+                left = helper.ring_select(state)
+                if left == "no ring selected":
+                    return False, [""]
+                if not left:
                     current_item = player.equipment["ring_1"]
                     player.inventory.append(current_item)
                     player.equipment["ring_1"] = self
@@ -404,6 +397,23 @@ class TopazRing(Item):
                 return 1.3
             else:
                 return False
+
+
+class SilverRing(Item):
+    def __init__(self):
+        super().__init__("SilverRing", False)
+        self.readable_name = "Silver Ring"
+        self.type = "armor"
+        self.equippable = self.subtype = "ring"
+        self.attack = 2
+        self.defence = 0
+        self.description = "A silver ring with a worn out engravement on it."
+        self.rarity = "rare"
+        self.effect_description = "Boosts attack."
+
+    def effect(self, spell=False, Melee=False, on_attack=False):
+        return False
+
 
 
 
