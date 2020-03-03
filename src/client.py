@@ -810,6 +810,8 @@ def draw_menu(stdscr):
                     continue
                 elif var == "art":
                     continue
+                elif var == "helper":
+                    continue
                 else:
                     item_to_add = getattr(items, var)()
                     state_handler.player.inventory.append(item_to_add)

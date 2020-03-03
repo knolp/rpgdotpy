@@ -1,6 +1,7 @@
 import abilities
 import art
 import random
+import helper
 
 # Materials
 
@@ -43,7 +44,7 @@ class Item():
     def effect(self, player, opponent):
         return False
 
-    def equip(self, player):
+    def equip(self, state, player):
         translate_slots = {
             "right_hand" : "in the right hand",
             "left_hand" : "in the left hand",
@@ -59,7 +60,40 @@ class Item():
             text.append("Item is not equippable")
             return False, text
         if self.equippable == "ring": #Since we have 2 rings slots we need to check which one to assign it to
-            text.append("PLEASE MAKE RING SELECTION")
+            if not player.equipment["ring_1"]:
+                player.equipment["ring_1"] = self
+                text.append(f"[{self.readable_name}] equipped in right hand ring slot.")
+                return True, text
+            elif not player.equipment["ring_2"]:
+                player.equipment["ring_2"] = self
+                text.append(f"[{self.readable_name}] equipped in left hand ring slot.")
+                return True, text
+            else:
+                right = helper.two_options(state.stdscr,
+                        state, 
+                        [
+                            f"Right ring: [{player.equipment['ring_1']}]",
+                            f"Left ring: [{player.equipment['ring_2']}]",
+                            "",
+                            "Choose which ring to replace."
+                        ],
+                        ["Right", "Left"])
+
+                if right:
+                    current_item = player.equipment["ring_1"]
+                    player.inventory.append(current_item)
+                    player.equipment["ring_1"] = self
+                    text.append(f"[{current_item.readable_name}] placed back into inventory.")
+                    text.append(f"[{self.readable_name}] equipped equipped in right hand ring slot.")
+                else:
+                    current_item = player.equipment["ring_2"]
+                    player.inventory.append(current_item)
+                    player.equipment["ring_2"] = self
+                    text.append(f"[{current_item.readable_name}] placed back into inventory.")
+                    text.append(f"[{self.readable_name}] equipped equipped in left hand ring slot.")
+                return True, text
+
+
             return False, text
 
         current_item = player.equipment[self.equippable]
@@ -73,7 +107,6 @@ class Item():
         player.equipment[self.equippable] = self #Add item to player EQ
         text.append(f"[{self.readable_name}] equipped {translate_slots[self.equippable]}.")
         return True, text
-
 
 
 
@@ -334,7 +367,7 @@ class LeatherBoots(Item):
         self.art = art.draw_LeatherBoots()
         self.rarity = "legendary"
 
-#NECKLACES / JEWELERRY
+# NECKLACES
 
 class RatFangNecklace(Item):
     def __init__(self):
@@ -347,6 +380,30 @@ class RatFangNecklace(Item):
         self.description = "A \"necklace\" made out of a large rat fang."
         self.art = art.draw_RatFangNecklace()
         self.rarity = "unique"
+
+# Rings
+
+class TopazRing(Item):
+    def __init__(self):
+        super().__init__("TopazRing", False)
+        self.readable_name = "Topaz Ring"
+        self.type = "armor"
+        self.equippable = self.subtype = "ring"
+        self.attack = 0
+        self.defence = 0
+        self.description = "A small iron ring with a topaz attached to it."
+        self.rarity = "rare"
+        self.effect_description = "30% increased fire damage."
+
+    def effect(self, spell=False, Melee=False, on_attack=False):
+        if not spell:
+            return False
+        
+        else:
+            if spell.damage_type == "fire":
+                return 1.3
+            else:
+                return False
 
 
 

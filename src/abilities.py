@@ -17,6 +17,7 @@ class Fireball(Ability):
         super().__init__("Fireball")
         self.readable_name = "Fireball"
         self.description = "Conjures a great ball of fire, ready to throw at any foe."
+        self.damage_type = "fire"
 
     def execute(self, player, opponent):
         if not opponent.player:
@@ -40,6 +41,7 @@ class LifeBolt(Ability):
         super().__init__("LifeBolt")
         self.readable_name = "Lifedraining Bolt"
         self.description = "Shoots out a bolt that can drain life from your opponent."
+        self.damage_type = "occult"
 
     
     def execute(self, player, opponent):
@@ -69,6 +71,7 @@ class Scorch(Ability):
         super().__init__("Scorch")
         self.readable_name = "Scorch"
         self.description = "Ignites the target and causes it to burn for 5 turns"
+        self.damage_type = "fire"
 
     def execute(self, player, opponent):
         combat_text = []

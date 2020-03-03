@@ -926,7 +926,7 @@ def view_inventory_2(state):
 				if list_of_types[selected_tab[0]] == "Consumables":
 					result, result_text = item.consume(state.player)
 				if list_of_types[selected_tab[0]] in ["Armor", "Weapons"]:
-					result, result_text = item.equip(state.player)
+					result, result_text = item.equip(state, state.player)
 					
 				#Delete the item and append info_list to print output to the inventory console
 				if result:

@@ -85,6 +85,47 @@ def yes_no(screen, state, text):
 	return yes_selected
 
 
+def two_options(screen, state, text, options):
+	screen.clear()
+	k = -1
+	first_selected = True
+	
+	while k != ord(" "):
+		start = 10
+		for item in text:
+			if "[" in item:
+				before, keyword, after = item.split("[")[0], item.split("[")[1].split("]")[0], item.split("]")[1]
+				screen.addstr(start,34,before)
+				screen.attron(curses.color_pair(136))
+				screen.addstr(start,34 + len(before),keyword)
+				screen.attroff(curses.color_pair(136))
+				screen.addstr(start, 34 + len(before) + len(keyword), after)
+			else:
+				screen.addstr(start, 34, item)
+			
+			start += 1
+		if first_selected:
+			screen.attron(curses.color_pair(5))
+			screen.addstr(18,34, options[0])
+			screen.attroff(curses.color_pair(5))
+			screen.addstr(18, 40, options[1])
+		else:
+			screen.addstr(18,34, options[0])
+			screen.attron(curses.color_pair(5))
+			screen.addstr(18, 40, options[1])
+			screen.attroff(curses.color_pair(5))
+
+		k = screen.getch()
+
+		if k == curses.KEY_LEFT:
+			first_selected = True
+		elif k == curses.KEY_RIGHT:
+			first_selected = False
+	
+	curses.ungetch(curses.KEY_F0)
+	return first_selected
+
+
 def popup(screen, state, text):
 	screen.clear()
 	height, width = screen.getmaxyx()
