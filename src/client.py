@@ -84,12 +84,12 @@ class StateHandler():
         self.ingame_menu = False
         self.first_time = True
         self.stdscr = stdscr
-        self.able_to_move = True
+        self.able_to_move = True #Ifall man är i ett scripted event t.ex
 
         self.action = "None"
 
         self.player = False
-        self.timer = False
+        self.timer = False # Timer object
         self.timer_started = False
         self.t = False # thread for timer
 
@@ -611,6 +611,7 @@ def draw_menu(stdscr):
 
             
 
+            #Rendering to screen
             state_handler.gamemap.draw()
             draw_commands(state_handler.ingame_menu, state_handler.command_box)
             if last_gamemap != state_handler.gamemap.name: #If we went to a new screen

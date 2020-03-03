@@ -3,7 +3,17 @@ import art
 import items
 
 class Limb():
-    def __init__(self, owner, name, vital, grabbable, health, multiplier,fur=False, held_item=False):
+    def __init__(
+            self, 
+            owner, 
+            name, 
+            vital, 
+            grabbable, 
+            health, 
+            multiplier, 
+            fur=False, 
+            held_item=False):
+
         self.owner = owner
         self.name = name
         self.vital = vital
@@ -12,7 +22,10 @@ class Limb():
         self.health = health
         self.multiplier = multiplier
         self.held_item = held_item
+
+        #Flammables
         self.fur = fur
+
         self.alive = True
 
         self.effects = []
@@ -306,10 +319,9 @@ class SkeletonGrunt(Monster):
 
         self.max_health = sum([x.max_health for x in self.limbs])
         self.health = self.max_health
+
     def __str__(self):
         return self.name
-
-    
 
     def special_attack(self):
         pass

@@ -53,15 +53,43 @@ class Battle():
             self.commands.append("Run")
 
     def dice(self, sides):
+        """
+            Dice for generating rolls
+
+            :param sides = sides of the die
+
+            :returns integer
+        """
         return random.randint(1, sides)
 
     def update_log(self, text):
+        """
+            Add information to the combat log, most important.
+
+            :param text = list("<type>", "<information string>)
+
+            types:
+                player = green text (indicating good)
+                opponent = red text (indicating bad)
+                neutral = ??? text (indicating neutral information) ex. opponent is stunned
+                opponent_effect = blue text (indicating good effects)
+                player_effect = orange text (indicating bad effects)
+                loot = orange text (loot drops) #! Change this
+
+            max length for combat_log is 36 rows
+        """
         text.append(self.turn)
         self.combat_log.append(text)
         if len(self.combat_log) > 36:
             self.combat_log.pop(0)
 
     def check_opponent(self):
+        """
+            This is where the opponent get's it turn
+
+            TODO: Maybe add more than just attack, maybe usage of consumables or something
+            TODO: Or maybe better off having all that on the monster class
+        """
         self.update_log(["neutral", " "])
         if self.opponent_effects["stunned"]:
             # self.update_log(["effect", "{} is stunned and unable to respond."])
@@ -74,6 +102,13 @@ class Battle():
         self.player.health -= attack["damage"]
 
     def check_effects(self):
+        """
+            Check the opponent for effects
+
+            1. Execute them
+            2. Check if they are done
+            3. if done, remove
+        """
         if len(self.opponent.status_effects) == 0:
             return
         for item in self.opponent.status_effects:
@@ -90,6 +125,13 @@ class Battle():
                 self.opponent.health -= result["damage"]
 
     def check_player_effects(self):
+        """
+            Check the player for effects and
+
+            1. Execute them
+            2. check if they are done
+            3. if done, remove.
+        """
         if len(self.player.status_effects) == 0:
             return
         for item in self.player.status_effects:
@@ -106,10 +148,28 @@ class Battle():
                 self.player.health -= result["damage"]
 
     def limb_damage_modifier(self):
+        """
+            Get the modifier from the limb of opponent
+
+            Modifier = damage scaling
+            Limb = Limb object of opponent
+
+            :return Tuple
+        """
         limb, modifier = self.opponent.return_limb()
         return limb, modifier
 
     def unarmed_attack(self):
+        """
+            Unarmed attacks
+
+            Scale with strength
+
+
+            TODO: Add check for items that scale unarmed attacks
+
+            :return None
+        """
         damage = self.player.stats["Strength"]
         self.update_log(["player", "{} attacks with fists".format(self.player.name)])
         if self.opponent.has_limbs:
@@ -124,9 +184,27 @@ class Battle():
         self.player.health -= recoil
 
     def player_attack(self):
+        """
+            This is where the player melee attack is performed
+
+            The general idea is:
+            
+            1. Get base damage
+            2. Add in strength modifier
+            3. Check weapon modifier, if so, add that one
+            4. Check which limb hit, and add appropiate modifier
+            5. Check weapon effects, stuns, debuffs etc.
+
+            TODO: Add critical change, critical hit damage, check jewellery and other armor modifiers
+
+            :return None
+
+        """
         if self.player_effects["stunned"]:
             return
         weapon = self.player.equipment["right_hand"]
+
+        # If no weapon, skip to unarmed attack
         if weapon is False:
             self.unarmed_attack()
             return
@@ -136,26 +214,40 @@ class Battle():
 
         # MODIFIERS and DAMAGE CALC
 
-        weapon_unique_modifier = weapon.modifier(self.player, self.opponent)
-
+        # Add strength modifier for melee hits
         damage = weapon_damage + strength_modifier
+
+        # Weapon modifier t.ex Rat mace, Moonlight sword intelligence scaling
+        weapon_unique_modifier = weapon.modifier(self.player, self.opponent)
         if weapon_unique_modifier:
             damage = damage * weapon_unique_modifier
+
+        # Add limb damage
         if self.opponent.has_limbs:
+            # Limb modifier, t.ex 2x damage against head
             limb, modifier = self.limb_damage_modifier()
             damage = int(damage * modifier)
+
             self.update_log(["player", "It hits {} in the {}, dealing {} ({}) damage.".format(self.opponent.readable_name, limb, damage, weapon.damage_type)])
+
+            # Find the limb and deal damage to it and the result of that
             for opp_limb in self.opponent.limbs:
                 if opp_limb.name == limb:
                     opp_limb.health -= damage
+                    
+                    # If the limb dies or get chopped off
                     limb_result = opp_limb.check_limb(weapon)
                     for item in limb_result["combat_text"]:
                         self.update_log(["opponent_effect", item])
         else:
+
+            # Update combat log with attack message and damage
             self.update_log(["player", "it hits {} for {} ({}) damage.".format(self.opponent.readable_name, damage, weapon.damage_type)])
+
+        # Remove damage from opponent health pool
         self.opponent.health -= damage
 
-        # EFFECTS
+        # EFFECTS ex. Bleed, burn, chill, stun
         effect = weapon.effect(self.player, self.opponent)
         if effect:
             if effect["combat_text"] is not False:
@@ -163,6 +255,13 @@ class Battle():
                     self.update_log(["player", item])
 
     def select_spell(self):
+        """
+            Select spell from main combat menu
+
+            :return Spell (if spell selected)
+            :return False (if no spell selected)
+        """
+
         k = -1
         start = 10
         offset = 15
@@ -218,6 +317,13 @@ class Battle():
         return "False"
 
     def player_run(self):
+        """
+            If selected Run from main combat menu
+
+            Note: Run is only added if enabled when combat is started, default False.
+
+            :return bool (if successful or not)
+        """
         chance = self.dice(100)
         if chance > 70:
             self.update_log(["neutral", "You ran away."])
@@ -227,6 +333,16 @@ class Battle():
             return False
 
     def player_spell(self, spell_index):
+        """
+            Here the player attacks with a spell
+
+            Right now it is:
+
+            1. perform spell
+            2. remove damage
+
+            TODO: Rework completely, add limb damage, check gear for mods, etc
+        """
         attack = self.player.spells[spell_index].execute(self.player, self.opponent)
         damage = attack["damage"]
         for item in attack["combat_text"]:
@@ -241,6 +357,22 @@ class Battle():
         pass
 
     def play(self):
+        """
+            Main combat loop interface
+
+            1. Add encounter start info to the update_log so it doesn't appear empty at start
+            2. Loop begins
+            3. Check if dead.
+            4. Check if opponent dead.
+                4.1. If so, handle loot, and loot interface
+
+            5. Render everything
+            6. Player chooses command and command gets executed
+            7. Opponent response
+            8. Repeat until something dies.
+
+            :return bool (if succesful or not)
+        """
         self.update_log(["opponent", "{} encounters {} {}".format(self.player.name, self.opponent.before_name, self.opponent.readable_name)])
         self.update_log(["neutral", ""])
         k = -1
@@ -414,6 +546,13 @@ class Battle():
                 curses.ungetch(curses.KEY_F0)
 
     def loot(self, random_loot):
+        """
+            Loot interface
+
+            :param random_loot = loot generated in monster class, specific to that mob
+
+            :return None
+        """
         k = -1
         start = 10
         offset = 15
