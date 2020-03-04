@@ -927,12 +927,13 @@ def view_inventory_2(state):
 					result, result_text = item.consume(state.player)
 				if list_of_types[selected_tab[0]] in ["Armor", "Weapons"]:
 					result, result_text = item.equip(state, state.player)
-					if item.subtype == "ring":
-						#TODO Rework
-						#TODO Issue: Opening ring interface with 2x 2 rings and equipping 2 of the same (leaving 2 of the other in inventory)
-						#TODO then equipping the other crashes
-						selected_tab[currently_selected_tab] = 0 #! Quick fix for rings, find real issue later 
-						#TODO REWORK_END
+					#if item.subtype == "ring":
+					#	#TODO Rework
+					#	#TODO Issue: Opening ring interface with 2x 2 rings and equipping 2 of the same (leaving 2 of the other in inventory)
+					#	#TODO then equipping the other crashes
+					#	selected_tab[currently_selected_tab] = 0 #! Quick fix for rings, find real issue later 
+					#	#TODO REWORK_END
+					
 						
 					
 				#Delete the item and append info_list to print output to the inventory console
@@ -952,6 +953,10 @@ def view_inventory_2(state):
 					elif type(result_text) == type(["list", "of", "strings"]):
 						for text in result_text:
 							info_list.append((text, False))
+				
+				#! FIX FOR OFFSYNC WHEN EQUIPPING LAST ITEM IN LIST OF WHICH THERE ARE EXACTLY ONE ITEM
+				if selected_tab[2] >= len(full_dynamic_print_inventory[splice_start:splice_stop]) - 1:
+						selected_tab[2] -= 1
 
 		if k == ord("a"):
 			sort = "alph"
