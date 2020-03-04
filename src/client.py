@@ -784,7 +784,6 @@ def draw_menu(stdscr):
             inventory.view_equipment(state_handler.stdscr, state_handler)
 
         if k == ord("i") and state_handler.player != False:
-            #inventory.view_inventory(state_handler.stdscr, state_handler)
             inventory.view_inventory_2(state_handler)
 
         if k == ord("p") and state_handler.player != False:

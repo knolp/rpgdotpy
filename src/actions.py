@@ -244,7 +244,7 @@ class SpeakOskGhar(Action):
 						"I have a great quest for you if you wish.",
 						"You see, I have a...",
 						"",
-						"*cough* Rodent problem. *cough*",
+						"Rodent problem.",
 						"",
 						"It's a bit embarassing being an Orc and",
 						"still afraid of a few measly rats.",

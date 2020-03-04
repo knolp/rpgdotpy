@@ -4,6 +4,7 @@ class Ability():
     def __init__(self, name):
         self.name = name
         self.aoe = False
+        self.no_direct_damage = False
     
     def execute(self):
         pass
@@ -96,6 +97,7 @@ class Scorch(Ability):
         self.readable_name = "Scorch"
         self.description = "Ignites the target and causes it to burn for 5 turns"
         self.damage_type = "fire"
+        self.no_direct_damage = True
 
     def execute(self, player, opponent):
         combat_text = []

@@ -41,9 +41,7 @@ class Item():
         return False
 
     def effect(self, player, opponent, spell=False, weapon=False, on_damage_taken=False):
-        return {
-            "success" : False
-        }
+        return self.get_base_ret_dict()
 
     def get_base_ret_dict(self):
         return {
