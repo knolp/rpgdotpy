@@ -99,7 +99,27 @@ class Battle():
         attack = self.opponent.attack()
         for item in attack["combat_text"]:
             self.update_log(["opponent", item])
-        self.player.health -= attack["damage"]
+        damage = attack["damage"]
+        for _, value in self.player.equipment.items():
+            if not value:
+                continue
+            if value.type != "armor":
+                continue
+            else:
+                ret_dict = value.effect(self.player, self.opponent, on_damage_taken=True)
+                if ret_dict["success"] != True:
+                    continue
+                if ret_dict["multiplier"]:
+                    damage *= ret_dict["multiplier"]
+                if ret_dict["additive"]:
+                    damage += ret_dict["additive"]
+                if ret_dict["damage"]:
+                    self.opponent.health -= ret_dict["damage"]
+                if ret_dict["combat_text"]:
+                    for text in ret_dict["combat_text"]:
+                        self.update_log(["player", text])
+
+        self.player.health -= damage
 
     def check_effects(self):
         """
@@ -190,6 +210,7 @@ class Battle():
             The general idea is:
             
             1. Get base damage
+                1.1 add in gear attack
             2. Add in strength modifier
             3. Check weapon modifier, if so, add that one
             4. Check which limb hit, and add appropiate modifier
@@ -208,7 +229,18 @@ class Battle():
         if weapon is False:
             self.unarmed_attack()
             return
-        weapon_damage = random.randint(0, weapon.attack)
+
+        # Add weapon damage
+        weapon_damage = random.randint(1, weapon.attack)
+
+        # Add in gear damage
+        gear_damage = 0
+        for k, value in self.player.equipment.items():
+            if value:
+                gear_damage += value.attack
+        weapon_damage += gear_damage
+        
+        # Add in strength modifier
         strength_modifier = random.randint(int(0.75 * self.player.stats["Strength"]), self.player.stats["Strength"])
         self.update_log(["player", "{} attacks with {}".format(self.player.name, weapon.readable_name)])
 
@@ -236,7 +268,7 @@ class Battle():
                     opp_limb.health -= damage
                     
                     # If the limb dies or get chopped off
-                    limb_result = opp_limb.check_limb(weapon)
+                    limb_result = opp_limb.check_limb_weapon(weapon)
                     for item in limb_result["combat_text"]:
                         self.update_log(["opponent_effect", item])
         else:
@@ -343,10 +375,61 @@ class Battle():
 
             TODO: Rework completely, add limb damage, check gear for mods, etc
         """
-        attack = self.player.spells[spell_index].execute(self.player, self.opponent)
+
+        # Execute spell, get base damage
+        spell = self.player.spells[spell_index]
+        attack = spell.execute(self.player, self.opponent)
         damage = attack["damage"]
         for item in attack["combat_text"]:
             self.update_log(["player", item])
+
+        # add intelligence scaling
+        damage += self.player.stats["Intelligence"] * 1.3
+
+        # Check armor
+        for _, value in self.player.equipment.items():
+            if not value:
+                continue
+            if value.type != "armor":
+                continue
+            else:
+                ret_dict = value.effect(self.player, self.opponent, spell=spell)
+                if ret_dict["success"] != True:
+                    continue
+                if ret_dict["multiplier"]:
+                    damage *= ret_dict["multiplier"]
+                if ret_dict["additive"]:
+                    damage += ret_dict["additive"]
+                if ret_dict["combat_text"]:
+                    for text in ret_dict["combat_text"]:
+                        self.update_log(["player", text])
+
+        
+
+        # Get limb damage
+        if self.opponent.has_limbs:
+            # Limb modifier, t.ex 2x damage against head
+            limb, modifier = self.limb_damage_modifier()
+            damage = int(damage * modifier)
+
+            self.update_log(["player", "It hits {} in the {}, dealing {} ({}) damage.".format(self.opponent.readable_name, limb, damage, spell.damage_type)])
+
+            # Find the limb and deal damage to it and the result of that
+            for opp_limb in self.opponent.limbs:
+                if opp_limb.name == limb:
+                    opp_limb.health -= damage
+                    
+                    # If the limb dies or get chopped off
+                    limb_result = opp_limb.check_limb_weapon(spell)
+                    for item in limb_result["combat_text"]:
+                        self.update_log(["opponent_effect", item])
+        else:
+
+            # Update combat log with attack message and damage
+            self.update_log(["player", "it hits {} for {} ({}) damage.".format(self.opponent.readable_name, damage, weapon.damage_type)])
+
+
+
 
         self.opponent.health -= damage
 

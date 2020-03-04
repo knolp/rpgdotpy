@@ -229,7 +229,7 @@ class NewGame_1():
                 self.state.create_player["max_health"] = self.vocation_max_health[item.text]
                 self.state.create_player["health"] = self.vocation_max_health[item.text]
                 self.state.create_player["spells"] = [False, False, False, False, False]
-                self.state.create_player["spellbook"] = [abilities.Fireball(), abilities.LifeBolt(), abilities.Scorch()]
+                self.state.create_player["spellbook"] = [abilities.Fireball(), abilities.GreatFireball(), abilities.LifeBolt(), abilities.Scorch()]
 
 
 

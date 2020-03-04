@@ -33,7 +33,61 @@ class Limb():
     def check_effects(self):
         pass
 
-    def check_limb(self, weapon):
+    def check_limb_weapon(self, weapon):
+        """
+            Figure out limb current status, chopping of limbs etc
+            When attacking with __MELEE_WEAPON__
+
+            :param weapon: Weapon that attacked (from player)
+
+            :return Dict {
+                "combat_text" : Text to fill combat log of what happened,
+                "dropped_item: if any item fell off
+            }
+        """
+        dropped_item = False
+        combat_text = []
+
+        if weapon.damage_type == "Slash" and random.randint(1,100) > weapon.dismember_chance:
+                combat_text.append(f"The slashing motion of {weapon.readable_name} chops the {self.name} right off.")
+                combat_text.append(f"{self.name} fall to the floor.")
+                self.owner.limbs.remove(self)
+                if self.vital:
+                    combat_text.append(f"Killing the {self.owner.readable_name} instantly.")
+                    self.owner.health = -1
+
+        if not self.alive:
+            combat_text.append(f"{self.owner.readable_name}'s {self.name} is badly damaged already, causing more damage.")
+        if self.health <= 0 and self.alive:
+            self.alive = False
+            combat_text.append(f"{self.owner.readable_name}'s {self.name} has taken too much damage and lost function.")
+            if self.vital:
+                combat_text.append(f"Killing the {self.owner.readable_name} instantly.")
+                self.owner.health = -1
+
+        if not self.alive and self.held_item and self.grabbable:
+            dropped_item = self.held_item
+            self.held_item = False
+
+            combat_text.append(f"{dropped_item.readable_name} falls off {self.owner.readable_name}'s {self.name} onto the floor.")
+        
+        return {
+            "combat_text" : combat_text,
+            "dropped_item" : dropped_item
+        }
+
+    def check_limb_spell(self, weapon):
+        """
+            Figure out limb current status, chopping of limbs etc
+            When attacking with __SPELL__
+
+            :param weapon: Spell that the limb got attacked with
+
+            :return Dict {
+                "combat_text" : Text to fill combat log of what happened,
+                "dropped_item: if any item fell off
+            }
+        """
         dropped_item = False
         combat_text = []
 

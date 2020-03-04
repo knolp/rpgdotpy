@@ -3,6 +3,7 @@ import random
 class Ability():
     def __init__(self, name):
         self.name = name
+        self.aoe = False
     
     def execute(self):
         pass
@@ -16,7 +17,7 @@ class Fireball(Ability):
     def __init__(self):
         super().__init__("Fireball")
         self.readable_name = "Fireball"
-        self.description = "Conjures a great ball of fire, ready to throw at any foe."
+        self.description = "Conjures a ball of fire, ready to throw at any foe."
         self.damage_type = "fire"
 
     def execute(self, player, opponent):
@@ -29,7 +30,30 @@ class Fireball(Ability):
             ]
             damage_done = player.stats["Intelligence"]
             combat_text.append("{} {} {}".format(player.name, random.choice(combat_variables), opponent.readable_name))
-            combat_text.append("It deals {} damage.".format(damage_done))
+    
+            return {
+                "damage" : damage_done,
+                "combat_text" : combat_text
+            }
+
+class GreatFireball(Ability):
+    def __init__(self):
+        super().__init__("GreatFireball")
+        self.readable_name = "Great Fireball"
+        self.description = "Conjures a great ball of fire, damaging a great area."
+        self.damage_type = "fire"
+        self.aoe = 4
+
+    def execute(self, player, opponent):
+        if not opponent.player:
+            combat_text = []
+            combat_variables = [
+                "hurls a big fireball towards",
+                "conjures a great ball of fire and throws it towards",
+                "casts a fireball at"
+            ]
+            damage_done = player.stats["Intelligence"]
+            combat_text.append("{} {} {}".format(player.name, random.choice(combat_variables), opponent.readable_name))
     
             return {
                 "damage" : damage_done,
@@ -52,14 +76,14 @@ class LifeBolt(Ability):
             "shoots a dark bolt towards"
         ]
         damage_done = int(player.stats["Intelligence"] / 2)
-        heal_done = random.randint(0,damage_done)
+        heal_done = random.randint(0, damage_done)
         combat_text.append("{} {} {}".format(player.name, random.choice(combat_variables), opponent.readable_name))
         if player.health + heal_done < player.max_health:
             player.health += heal_done
-            combat_text.append("It deals {} damage and heals you for {}".format(damage_done, heal_done))
+            combat_text.append("You drain {} health from the attack.".format(heal_done))
         else:
             player.health = player.max_health
-            combat_text.append("It deals {} damage and heals you for {}".format(damage_done, player.max_health - player.health))
+            combat_text.append("You drain {} health from the attack.".format(player.max_health - player.health))
 
         return {
             "damage" : damage_done,

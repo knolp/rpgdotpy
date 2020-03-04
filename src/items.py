@@ -6,7 +6,6 @@ import helper
 # Materials
 
 
-
 #items
 class Item():
     def __init__(self,name, usable):
@@ -41,8 +40,19 @@ class Item():
     def modifier(self, player, opponent):
         return False
 
-    def effect(self, player, opponent):
-        return False
+    def effect(self, player, opponent, spell=False, weapon=False, on_damage_taken=False):
+        return {
+            "success" : False
+        }
+
+    def get_base_ret_dict(self):
+        return {
+            "success" : False,
+            "multiplier" : False,
+            "additive" : False,
+            "combat_text" : False,
+            "damage" : False
+        }
 
     def equip(self, state, player):
         translate_slots = {
@@ -388,15 +398,19 @@ class TopazRing(Item):
         self.rarity = "rare"
         self.effect_description = "30% increased fire damage."
 
-    def effect(self, spell=False, Melee=False, on_attack=False):
+    def effect(self, player, opponent, spell=False, Melee=False, on_damage_taken=False):
+        _ret_dict = self.get_base_ret_dict()
         if not spell:
-            return False
+            _ret_dict["success"] = False
         
         else:
             if spell.damage_type == "fire":
-                return 1.3
+                _ret_dict["success"] = True
+                _ret_dict["multiplier"] = 1.3
             else:
-                return False
+                _ret_dict["success"] = False
+
+        return _ret_dict
 
 
 class SilverRing(Item):
@@ -411,9 +425,34 @@ class SilverRing(Item):
         self.rarity = "rare"
         self.effect_description = "Boosts attack."
 
-    def effect(self, spell=False, Melee=False, on_attack=False):
-        return False
+    def effect(self, player, opponent, spell=False, Melee=False, on_damage_taken=False):
+        return {
+            "success" : False
+        }
 
+class RingOfThorns(Item):
+    def __init__(self):
+        super().__init__("RingOfThorns", False)
+        self.readable_name = "Ring of Thorns"
+        self.type = "armor"
+        self.equippable = self.subtype = "ring"
+        self.attack = 0
+        self.defence = 0
+        self.description = "An elven ring of wood sprouting sharp thorns."
+        self.rarity = "rare"
+        self.effect_description = "Reflects damage back to attackers (based on Strength)."
+
+    def effect(self, player, opponent, spell=False, Melee=False, on_damage_taken=False):
+        _ret_dict = self.get_base_ret_dict()
+        if not on_damage_taken:
+            _ret_dict["success"] = False
+        else:
+            _ret_dict["success"] = True
+            reflect_damage = max(int(player.stats["Strength"] / 4), 2)
+            _ret_dict["damage"] = reflect_damage
+            _ret_dict["combat_text"] = [f"{self.readable_name} reflects {reflect_damage} damage back to {opponent.readable_name}"]
+
+        return _ret_dict
 
 
 
