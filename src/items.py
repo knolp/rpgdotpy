@@ -8,6 +8,27 @@ import helper
 
 #items
 class Item():
+    """
+        Base Class for items
+
+        :bool usable                = If item i able to be used (#! Legacy)
+        :string name                = Name of the class itself, used to store in JSON and !!IMPORTANTLY!! to retrieve items when loading character
+        :bool consumable            = if item is consumable
+        :string description         = Description of the item (visually) and/or lore about the item
+        :string damage_type         = for melee weapons, which type of attack they do (slash, blunt, stab) etc
+        :list art                   = list of rows (:string) with art, derived from rpgdotpy/art.py (defaults to 'not implemented')
+        :string rarity              = Rarity of drops, ranging from common -> unique (#! currently no use)
+        :int sell_price             = Vendor price for selling the item
+        :int buy_price              = Vendor price for buying the item from a vendor (#! Legacy)
+        :string effect_description  = Description of the effect of the item, what it does
+        :string material            = Not implemented, probably going to be implemented for dismantling/crafting items #TODO
+        :int dismember_chance       = Chance to chop of limbs, currently used in reverse in 100 - chance (so 95 == 5% chance)
+
+        :bool dryable               = If (alchemy) item is able to be DRIED into other crafting materials
+        :bool juicable              = If (alchemy) item is able to be JUICED into other crafting materials
+        :list result                = list of item_class_names (:string) that is the result of above convertions 
+
+    """
     def __init__(self,name, usable):
         self.name = name
         self.usable = usable
@@ -44,15 +65,43 @@ class Item():
         return self.get_base_ret_dict()
 
     def get_base_ret_dict(self):
+        """
+            Init the base return dictionary for used in battle.py
+
+            If not used, you will get KeyError when checking for armor-effects
+
+            called in effect-function in items
+        """
         return {
             "success" : False,
             "multiplier" : False,
             "additive" : False,
+            "additive-base" : False,
             "combat_text" : False,
             "damage" : False
         }
 
+    def on_equip(self, player):
+        return False
+
+    def on_unequip(self, player):
+        return False
+
     def equip(self, state, player):
+        """
+            Equip items on the player and move currently equipped item to inventory
+            And also update the text with what happened
+
+            Also perform on_equip and on_unequip functions to see if things changed
+
+            :param state: The state object containing everything about the game
+            :param player: The player object containing everything about the player
+
+            :return :tuple(:bool, :list)
+                :bool = Indicates success or not (can't equip that item, etc.)
+                :list = A list of strings to update information in inventory interface
+
+        """
         translate_slots = {
             "right_hand" : "in the right hand",
             "left_hand" : "in the left hand",
@@ -71,10 +120,19 @@ class Item():
             if not player.equipment["ring_1"]:
                 player.equipment["ring_1"] = self
                 text.append(f"[{self.readable_name}] equipped in right hand ring slot.")
+                equip_text = self.on_equip(player)
+                if equip_text:
+                    for info in equip_text:
+                        text.append(info)
+
                 return True, text
             elif not player.equipment["ring_2"]:
                 player.equipment["ring_2"] = self
                 text.append(f"[{self.readable_name}] equipped in left hand ring slot.")
+                equip_text = self.on_equip(player)
+                if equip_text:
+                    for info in equip_text:
+                        text.append(info)
                 return True, text
             else:
                 left = helper.ring_select(state)
@@ -85,13 +143,29 @@ class Item():
                     player.inventory.append(current_item)
                     player.equipment["ring_1"] = self
                     text.append(f"[{current_item.readable_name}] placed back into inventory.")
+                    unequip_text = current_item.on_unequip(player)
+                    if unequip_text:
+                        for info in unequip_text:
+                            text.append(info)
                     text.append(f"[{self.readable_name}] equipped equipped in right hand ring slot.")
+                    equip_text = self.on_equip(player)
+                    if equip_text:
+                        for info in equip_text:
+                            text.append(info)
                 else:
                     current_item = player.equipment["ring_2"]
                     player.inventory.append(current_item)
                     player.equipment["ring_2"] = self
                     text.append(f"[{current_item.readable_name}] placed back into inventory.")
+                    unequip_text = current_item.on_unequip(player)
+                    if unequip_text:
+                        for info in unequip_text:
+                            text.append(info)
                     text.append(f"[{self.readable_name}] equipped equipped in left hand ring slot.")
+                    equip_text = self.on_equip(player)
+                    if equip_text:
+                        for info in equip_text:
+                            text.append(info)
                 return True, text
 
 
@@ -104,9 +178,17 @@ class Item():
         if current_item: # Place the old weapon/armor back into inventory before overwriting the slot with the new one
             player.inventory.append(current_item)
             text.append(f"[{current_item.readable_name}] placed back into inventory.")
+            unequip_text = current_item.on_unequip(player)
+            if unequip_text:
+                for info in unequip_text:
+                    text.append(info)
 
         player.equipment[self.equippable] = self #Add item to player EQ
         text.append(f"[{self.readable_name}] equipped {translate_slots[self.equippable]}.")
+        equip_text = self.on_equip(player)
+        if equip_text:
+            for info in equip_text:
+                text.append(info)
         return True, text
 
 
@@ -152,6 +234,10 @@ class IronMace(Item):
         self.effect_description = "Has a chance to cause stun."
 
     def effect(self, player, opponent):
+        """
+            Stuns the opponent for <stuns> turns
+            Stun meaning it cannot perform actions
+        """
         if opponent.player == True:
             readable_name = opponent.name
         else:
@@ -185,6 +271,11 @@ class Rapier(Item):
         self.art = art.draw_Rapier()
 
     def effect(self, player, opponent):
+        """
+            Inflicts bleed to the opponent
+
+            Bleed is derived from abilities.py
+        """
         if opponent.player == True:
             opponent_readable_name = opponent.name
         else:
@@ -283,6 +374,9 @@ class ChromaticBlade(Item):
                 "combat_text" : False
             }
 
+    def on_unequip(self, player):
+        return ["The world grows [darker]."]
+
 #OFF_HANDS
 class Buckler(Item):
     def __init__(self):
@@ -324,6 +418,50 @@ class ChainHelmet(Item):
         self.art = art.draw_ChainHelmet()
         self.rarity = "common"
         self.material = ""
+        self.strength_increase = 5
+        self.effect_description = f"+{self.strength_increase} Strength"
+
+
+    def on_equip(self, player):
+        player.stats["Strength"] += 5
+    
+    def on_unequip(self, player):
+        player.stats["Strength"] -= 5
+
+
+class WizardHat(Item):
+    def __init__(self):
+        super().__init__("WizardHat", False)
+        self.readable_name = "Wizard Hat"
+        self.type = "armor"
+        self.equippable = self.subtype = "head"
+        self.attack = 0
+        self.defence = 0
+        self.description = "A pointy blue wizard hat, a perfect headwear for a magic apprentice!"
+        #self.art = art.draw_ChainHelmet()
+        self.rarity = "common"
+        self.material = ""
+        self.intelligence_increase = 5
+        self.magic_damage = 3
+        self.effect_description = f"+{self.intelligence_increase} Intelligence, +{self.magic_damage} damage to all spells."
+
+
+    def on_equip(self, player):
+        player.stats["Intelligence"] += 5
+    
+    def on_unequip(self, player):
+        player.stats["Intelligence"] -= 5
+
+    def effect(self, player, opponent, spell=False, Melee=False, on_damage_taken=False):
+        _ret_dict = self.get_base_ret_dict()
+        if not spell:
+            _ret_dict["success"] = False
+        
+        else:
+            _ret_dict["success"] = True
+            _ret_dict["additive"] = self.magic_damage
+
+        return _ret_dict
 
 
 #CHEST
@@ -451,6 +589,10 @@ class RingOfThorns(Item):
             _ret_dict["combat_text"] = [f"{self.readable_name} reflects {reflect_damage} damage back to {opponent.readable_name}"]
 
         return _ret_dict
+
+    def on_equip(self, player):
+        player.health -= 2
+        return ["The ring cuts you as you equip it, dealing [2] damage."]
 
 
 
@@ -667,11 +809,13 @@ class MinorHealthPotion(Item):
         self.subtype = "potion"
         self.equippable = False
         self.description = "A small vial of red fluid."
+        self.healing = 10
+        self.effect_description = f"+{self.healing} HP"
 
     def consume(self, player):
+        healed = self.healing
         if player.health == player.max_health:
             return False, "You are already at full health"
-        healed = 10
         if player.health + healed > player.max_health:
             healed = player.max_health - player.health
         player.health += healed

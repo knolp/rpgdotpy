@@ -589,6 +589,12 @@ def view_inventory_2(state):
 	#Init some variables regarding player inventory and equipment
 	inventory = state.player.inventory
 
+	_orange = curses.color_pair(136)
+	_cyan = curses.color_pair(135)
+	_green = curses.color_pair(134)
+	_red = curses.color_pair(133)
+	_blue = curses.color_pair(137)
+
 	#Static values
 	list_of_types = ["Armor", "Weapons", "Crafting", "Key Items", "Consumables"]
 	dict_of_subtypes = {
@@ -813,15 +819,21 @@ def view_inventory_2(state):
 			# Now for the actual information
 			#Let's make use of the left side column next to the art for some general stats (or maybe no...)
 			#For weapons:
-			if copy_of_item.type == "weapon":
-				screen.addstr(24, item_end + 2, f"Attack: {copy_of_item.attack}")
-				screen.addstr(25, item_end + 2, f"Attack: {copy_of_item.defence}")
-				screen.addstr(26, item_end + 2, f"Damage type: {copy_of_item.damage_type}")
-				if copy_of_item.effect_description:
-					screen.addstr(27, item_end + 2, f"Effect: {copy_of_item.effect_description}")
-				else:
-					screen.addstr(27, item_end + 2, "Effect: None")
-			screen.addstr(29, item_end + 2, f"Description:")
+			if copy_of_item.type == "weapon" or copy_of_item.type == "armor":
+				#screen.addstr(24, item_end + 2, f"Attack: {copy_of_item.attack}")
+				helper.color_first(screen, 24, item_end + 2, "Attack: ", f"{copy_of_item.attack}", _orange)
+				#screen.addstr(25, item_end + 2, f"Defence: {copy_of_item.defence}")
+				helper.color_first(screen, 25, item_end + 2, "Defence: ", f"{copy_of_item.defence}", _orange)
+				if copy_of_item.type == "weapon" and copy_of_item.subtype not in ["shield", "catalyst"]:
+					#screen.addstr(26, item_end + 2, f"Damage type: {copy_of_item.damage_type}")
+					helper.color_both(screen, 26, item_end + 2, "Damage Type: ", f"{copy_of_item.damage_type}", _orange, _blue)
+			if copy_of_item.effect_description:
+				#screen.addstr(27, item_end + 2, f"Effect: {copy_of_item.effect_description}")
+				helper.color_both(screen, 27, item_end + 2, "Effect: ", f"{copy_of_item.effect_description}", _orange, _cyan)
+			else:
+				#screen.addstr(27, item_end + 2, "Effect: None")
+				helper.color_both(screen, 27, item_end + 2, "Effect: ", "No special effect", _orange, _cyan)
+			screen.addstr(29, item_end + 2, f"Description:", _orange)
 			screen.addstr(30, item_end + 2, copy_of_item.description)
 
 		#add info

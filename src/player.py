@@ -90,12 +90,12 @@ class Player():
 		self.player = True
 
 		self.equipment = {
-			"head" : items.ChainHelmet(),
-			"chest" : items.ChainMail(),
-			"legs" : items.StuddedLegs(),
+			"head" : False,
+			"chest" : False,
+			"legs" : False,
 			"left_hand" : False,
-			"right_hand": items.IronMace(),
-			"boots" : items.LeatherBoots(),
+			"right_hand": False,
+			"boots" : False,
 			"ring_1" : False,
 			"ring_2" : False,
 			"neck" : False

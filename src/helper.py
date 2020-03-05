@@ -204,6 +204,18 @@ def ring_select(state):
 	return first_selected
 
 
+def color_first(screen, x, y, first, second, color):
+	screen.addstr(x, y, first, color)
+	screen.addstr(x, y + len(first), second)
+
+def color_second(screen, x, y, first, second, color):
+	screen.addstr(x, y, first)
+	screen.addstr(x, y + len(first), second, color)
+def color_both(screen, x, y, first, second, color_first, color_second):
+	screen.addstr(x, y, first, color_first)
+	screen.addstr(x, y + len(first), second, color_second)
+
+
 def popup(screen, state, text):
 	screen.clear()
 	height, width = screen.getmaxyx()

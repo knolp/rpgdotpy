@@ -400,6 +400,8 @@ class Battle():
                     damage *= ret_dict["multiplier"]
                 if ret_dict["additive"]:
                     damage += ret_dict["additive"]
+                if ret_dict["additive-base"]:
+                    damage += attack["damage"] * ret_dict["additive-base"]
                 if ret_dict["combat_text"]:
                     for text in ret_dict["combat_text"]:
                         self.update_log(["player", text])
