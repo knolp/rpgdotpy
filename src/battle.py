@@ -167,7 +167,7 @@ class Battle():
             if result["damage"] is not False:
                 self.player.health -= result["damage"]
 
-    def limb_damage_modifier(self):
+    def limb_damage_modifier(self, aoe=False):
         """
             Get the modifier from the limb of opponent
 
@@ -176,8 +176,12 @@ class Battle():
 
             :return Tuple
         """
-        limb, modifier = self.opponent.return_limb()
-        return limb, modifier
+        if not aoe:
+            limb, modifier = self.opponent.return_limb()
+            return limb, modifier
+        else:
+            limbs = self.opponent.return_multiple_limbs(aoe)
+            return limbs
 
     def unarmed_attack(self):
         """
@@ -385,7 +389,9 @@ class Battle():
             self.update_log(["player", item])
 
         # add intelligence scaling
-        damage += self.player.stats["Intelligence"] * 1.3
+        self.update_log(["neutral", f"Damage is now (base): {int(damage)}"])
+        damage += int(self.player.get_combined_stats()["Intelligence"] * (damage * 0.1)) #10% additive-base for each intellect-point
+        self.update_log(["neutral", f"Damage is now (int scaling): {int(damage)}"])
 
         list_of_multipliers = []
         list_of_additives = []
@@ -466,21 +472,44 @@ class Battle():
 
         # Get limb damage
         if self.opponent.has_limbs:
-            # Limb modifier, t.ex 2x damage against head
-            limb, modifier = self.limb_damage_modifier()
-            damage = int(damage * modifier)
+            if spell.aoe:
+                # If spell has AoE radius it hits multiple limbs
+                limbs = self.limb_damage_modifier(aoe=spell.aoe)
+                before_limbs_damage = damage
 
-            self.update_log(["player", "It hits {} in the {}, dealing {} ({}) damage.".format(self.opponent.readable_name, limb, damage, damage_type)])
+                for limb in limbs:
+                    if spell.no_direct_damage:
+                        damage = 0
+                    limb_damage = before_limbs_damage * limb[1]
+                    self.update_log(["player", "It hits {} in the {}, dealing {} ({}) damage.".format(self.opponent.readable_name, limb[0], limb_damage, damage_type)])
 
-            # Find the limb and deal damage to it and the result of that
-            for opp_limb in self.opponent.limbs:
-                if opp_limb.name == limb:
-                    opp_limb.health -= damage
-                    
-                    # If the limb dies or get chopped off
-                    limb_result = opp_limb.check_limb_weapon(spell)
-                    for item in limb_result["combat_text"]:
-                        self.update_log(["opponent_effect", item])
+                    for opp_limb in self.opponent.limbs:
+                        if opp_limb.name == limb[0]:
+                            opp_limb.health -= limb_damage
+                            
+                            # If the limb dies or get chopped off
+                            limb_result = opp_limb.check_limb_weapon(spell)
+                            for item in limb_result["combat_text"]:
+                                self.update_log(["opponent_effect", item])
+            else:
+                # Limb modifier, t.ex 2x damage against head
+                limb, modifier = self.limb_damage_modifier()
+                damage = int(damage * modifier)
+
+                if spell.no_direct_damage:
+                    damage = 0
+
+                self.update_log(["player", "It hits {} in the {}, dealing {} ({}) damage.".format(self.opponent.readable_name, limb, damage, damage_type)])
+
+                # Find the limb and deal damage to it and the result of that
+                for opp_limb in self.opponent.limbs:
+                    if opp_limb.name == limb:
+                        opp_limb.health -= damage
+                        
+                        # If the limb dies or get chopped off
+                        limb_result = opp_limb.check_limb_weapon(spell)
+                        for item in limb_result["combat_text"]:
+                            self.update_log(["opponent_effect", item])
         else:
 
             # Update combat log with attack message and damage

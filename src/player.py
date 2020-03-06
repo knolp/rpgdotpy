@@ -16,7 +16,6 @@ def load_player():
 class Dummy():
 	def __init__(self, items):
 		for k,v in items.items():
-			print(k,v)
 			self.k = v
 		self.flags = []
 		self.inventory = []
@@ -80,7 +79,6 @@ class Player():
 		}
 
 		self.last_pos = (3,3)
-		print(self.last_pos)
 		self.last_target = ["TradeDistrict", 0, 0]
 
 		#Minions
@@ -94,8 +92,8 @@ class Player():
 
 		self.status_effects = []
 		self.immune = []
-		self.health = 15
-		self.max_health = 20
+		self.health = 1999
+		self.max_health = 2000
 		self.gold = 10000
 		self.player = True
 
@@ -147,4 +145,3 @@ if __name__ == '__main__':
 
 	dummy = Dummy(items)
 
-	print(dummy.k)

@@ -252,7 +252,7 @@ class IronMace(Item):
             Stun meaning it cannot perform actions
         """
         if opponent.player == True:
-            readable_name = opponent.name
+            readable_name = "you"
         else:
             readable_name = opponent.readable_name
         if random.randint(1,100) > 50:
@@ -290,7 +290,7 @@ class Rapier(Item):
             Bleed is derived from abilities.py
         """
         if opponent.player == True:
-            opponent_readable_name = opponent.name
+            opponent_readable_name = "you"
         else:
             opponent_readable_name = opponent.readable_name
         if "Bleed" in opponent.immune:
@@ -365,7 +365,7 @@ class ChromaticBlade(Item):
 
     def effect(self, player, opponent):
         if opponent.player == True:
-            opponent_readable_name = opponent.name
+            opponent_readable_name = "you"
         else:
             opponent_readable_name = opponent.readable_name
         if random.randint(1,100) > 70:
@@ -449,7 +449,7 @@ class WizardHat(Item):
         self.material = ""
         self.stat_increase = ["Intelligence", 5]
         self.magic_damage = 3
-        self.effect_description = f"+{self.stat_increase[1]} {self.stat_increase[0]}, +{self.magic_damage} damage to all spells."
+        self.effect_description = f"+{self.stat_increase[1]} {self.stat_increase[0]}, +{self.magic_damage} base damage to all spells."
 
     def effect(self, player, opponent, spell=False, Melee=False, on_damage_taken=False):
         _ret_dict = self.get_base_ret_dict()

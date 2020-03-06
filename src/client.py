@@ -849,7 +849,7 @@ def draw_menu(stdscr):
             state_handler.player.hotkeys["2"].execute(state_handler.player)
 
         if k == ord("3"):
-            state_handler.player.max_minions += 1
+            state_handler.player.stats["Intelligence"] += 5
 
         if k == ord("4"):
             state_handler.player.ascii = not state_handler.player.ascii
@@ -858,7 +858,8 @@ def draw_menu(stdscr):
             state_handler.player.status_effects.append(abilities.StatBuff(5,"Intelligence", 13, state_handler.player))
         
         if k == ord("6"):
-            state_handler.timer.tid += 1209600
+            #state_handler.timer.tid += 1209600
+            state_handler.player.stats["Intelligence"] -= 5
     
     state_handler.timer.terminate()
 

@@ -154,6 +154,12 @@ class Monster():
 
         return selected_limb.name, selected_limb.multiplier
 
+    def return_multiple_limbs(self, number):
+        random.shuffle(self.limbs)
+        selected_limbs = [(x.name, x.multiplier) for x in self.limbs[:number]]
+
+        return selected_limbs
+
     def melee_attack(self):
         combat_text = []
         held_item = False
