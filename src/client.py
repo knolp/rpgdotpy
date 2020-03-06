@@ -174,6 +174,8 @@ class StateHandler():
         self.player.turn = load_dict["turn"]
         self.player.ascii = load_dict["ascii"]
 
+        self.player._populate_gear_stats()
+
     def save_player(self, quicksave=False):
         params = {}
 
@@ -437,10 +439,20 @@ def draw_menu(stdscr):
             last_gamemap = state_handler.gamemap.name
             player_first_init = True
             #print("Player initialized")
+            
         if state_handler.player is not False and state_handler.timer_started == False:
             state_handler.start_timer()
 
         if state_handler.map_screen == True:
+            if state_handler.player.health <= 0:
+                helper.popup(stdscr, state_handler, ["You have died"])
+                state_handler.game_state = states.Intro(state_handler)
+                state_handler.command_state = states.main_menu(state_handler)
+                state_handler.map_screen = False
+                state_handler.command_state.commands[0].active = True
+                state_handler.player = False
+                state_handler.first_time = True
+                continue
             state_handler.player.turn += 1
             state_handler.check_overworld_status_effects()
             

@@ -69,6 +69,16 @@ class Player():
 			"Farming" : 13
 		}
 
+		self.gear_stats = {
+			"Intelligence" : 0,
+			"Strength" : 0,
+			"Charisma" : 0,
+			"Agility" : 0,
+			"Attunement" : 0,
+			"Alchemy" : 0,
+			"Farming" : 0
+		}
+
 		self.last_pos = (3,3)
 		print(self.last_pos)
 		self.last_target = ["TradeDistrict", 0, 0]
@@ -112,6 +122,21 @@ class Player():
 			screen.addstr(self.x, self.y, str(self.phaseshift))
 		else:
 			screen.addstr(self.x, self.y, "@")
+
+	def get_combined_stats(self):
+		return {
+			"Intelligence" : self.stats["Intelligence"] + self.gear_stats["Intelligence"],
+			"Strength" : self.stats["Strength"] + self.gear_stats["Strength"],
+			"Charisma" : self.stats["Charisma"] + self.gear_stats["Charisma"],
+			"Agility" : self.stats["Agility"] + self.gear_stats["Agility"],
+			"Attunement" : self.stats["Attunement"] + self.gear_stats["Attunement"],
+			"Alchemy" : self.stats["Alchemy"] + self.gear_stats["Alchemy"],
+		}
+
+	def _populate_gear_stats(self):
+		for slot, item in self.equipment.items():
+			if item and item.stat_increase:
+				self.gear_stats[item.stat_increase[0]] += item.stat_increase[1]
 
 
 if __name__ == '__main__':

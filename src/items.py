@@ -26,7 +26,8 @@ class Item():
 
         :bool dryable               = If (alchemy) item is able to be DRIED into other crafting materials
         :bool juicable              = If (alchemy) item is able to be JUICED into other crafting materials
-        :list result                = list of item_class_names (:string) that is the result of above convertions 
+        :list result                = list of item_class_names (:string) that is the result of above convertions
+        :list stat_increase         = Stat increase on_equip in form of ["stat", <number>] 
 
     """
     def __init__(self,name, usable):
@@ -42,6 +43,7 @@ class Item():
         self.effect_description = False
         self.material = False
         self.dismember_chance = 95
+        self.stat_increase = False
 
         #Alchemy stuff
         self.dryable = False
@@ -78,14 +80,25 @@ class Item():
             "additive" : False,
             "additive-base" : False,
             "combat_text" : False,
-            "damage" : False
+            "damage" : False,
+            "convert" : False,
+            "conditional-multiplier" : False,
+            "conditional-additive" : False
         }
 
     def on_equip(self, player):
-        return False
+        if self.stat_increase:
+            player.gear_stats[f"{self.stat_increase[0]}"] += self.stat_increase[1]
+            return False
+        else:
+            return False
 
     def on_unequip(self, player):
-        return False
+        if self.stat_increase:
+            player.gear_stats[f"{self.stat_increase[0]}"] -= self.stat_increase[1]
+            return False
+        else:
+            return False
 
     def equip(self, state, player):
         """
@@ -418,16 +431,9 @@ class ChainHelmet(Item):
         self.art = art.draw_ChainHelmet()
         self.rarity = "common"
         self.material = ""
-        self.strength_increase = 5
-        self.effect_description = f"+{self.strength_increase} Strength"
-
-
-    def on_equip(self, player):
-        player.stats["Strength"] += 5
-    
-    def on_unequip(self, player):
-        player.stats["Strength"] -= 5
-
+        self.stat_increase = ["Strength", 5]
+        self.magic_damage = 3
+        self.effect_description = f"+{self.stat_increase[1]} {self.stat_increase[0]}"
 
 class WizardHat(Item):
     def __init__(self):
@@ -441,16 +447,9 @@ class WizardHat(Item):
         #self.art = art.draw_ChainHelmet()
         self.rarity = "common"
         self.material = ""
-        self.intelligence_increase = 5
+        self.stat_increase = ["Intelligence", 5]
         self.magic_damage = 3
-        self.effect_description = f"+{self.intelligence_increase} Intelligence, +{self.magic_damage} damage to all spells."
-
-
-    def on_equip(self, player):
-        player.stats["Intelligence"] += 5
-    
-    def on_unequip(self, player):
-        player.stats["Intelligence"] -= 5
+        self.effect_description = f"+{self.stat_increase[1]} {self.stat_increase[0]}, +{self.magic_damage} damage to all spells."
 
     def effect(self, player, opponent, spell=False, Melee=False, on_damage_taken=False):
         _ret_dict = self.get_base_ret_dict()
@@ -532,7 +531,7 @@ class TopazRing(Item):
         self.defence = 0
         self.description = "A small iron ring with a topaz attached to it."
         self.rarity = "rare"
-        self.effect_description = "30% increased fire damage."
+        self.effect_description = "30% increased fire damage and converts all spell damage to Fire."
 
     def effect(self, player, opponent, spell=False, Melee=False, on_damage_taken=False):
         _ret_dict = self.get_base_ret_dict()
@@ -540,11 +539,9 @@ class TopazRing(Item):
             _ret_dict["success"] = False
         
         else:
-            if spell.damage_type == "fire":
                 _ret_dict["success"] = True
-                _ret_dict["multiplier"] = 1.3
-            else:
-                _ret_dict["success"] = False
+                _ret_dict["conditional-multiplier"] = ["fire", 1.3]
+                _ret_dict["convert"] = "fire"
 
         return _ret_dict
 
@@ -593,6 +590,28 @@ class RingOfThorns(Item):
     def on_equip(self, player):
         player.health -= 2
         return ["The ring cuts you as you equip it, dealing [2] damage."]
+
+class BandOfDarkness(Item):
+    def __init__(self):
+        super().__init__("BandOfDarkness", False)
+        self.readable_name = "Band of Darkness"
+        self.type = "armor"
+        self.equippable = self.subtype = "ring"
+        self.attack = 0
+        self.defence = 0
+        self.description = "A dark, polished metal ring."
+        self.rarity = "rare"
+        self.effect_description = "Converts spell damage to [Occult] damage."
+
+    def effect(self, player, opponent, spell=False, Melee=False, on_damage_taken=False):
+        _ret_dict = self.get_base_ret_dict()
+        if not spell:
+            _ret_dict["success"] = False
+        else:
+            _ret_dict["success"] = True
+            _ret_dict["convert"] = "occult"
+
+        return _ret_dict
 
 
 

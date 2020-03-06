@@ -645,6 +645,8 @@ def view_inventory_2(state):
 	k = -1 #Reset key
 
 	while k != ord("q"): #Press Q to exit inventory menu
+		if state.player.health <= 0: #t.ex if Ring of Thorns kills you
+			break
 		screen.clear() # Clear old screen
 
 		#Init some variables regarding player equipment

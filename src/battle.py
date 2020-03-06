@@ -380,11 +380,19 @@ class Battle():
         spell = self.player.spells[spell_index]
         attack = spell.execute(self.player, self.opponent)
         damage = attack["damage"]
+        damage_type = spell.damage_type
         for item in attack["combat_text"]:
             self.update_log(["player", item])
 
         # add intelligence scaling
         damage += self.player.stats["Intelligence"] * 1.3
+
+        list_of_multipliers = []
+        list_of_additives = []
+        list_of_additive_bases = []
+        list_of_converts = []
+        list_of_conditional_multipliers = []
+        list_of_conditional_additives = []
 
         # Check armor
         for _, value in self.player.equipment.items():
@@ -397,14 +405,62 @@ class Battle():
                 if ret_dict["success"] != True:
                     continue
                 if ret_dict["multiplier"]:
-                    damage *= ret_dict["multiplier"]
+                    list_of_multipliers.append(ret_dict["multiplier"])
                 if ret_dict["additive"]:
-                    damage += ret_dict["additive"]
+                    list_of_additives.append(ret_dict["additive"])
                 if ret_dict["additive-base"]:
-                    damage += attack["damage"] * ret_dict["additive-base"]
+                    list_of_additive_bases.append(ret_dict["additive-base"])
+                if ret_dict["convert"]:
+                    list_of_converts.append(ret_dict["convert"])
+                if ret_dict["conditional-multiplier"]:
+                    list_of_conditional_multipliers.append(ret_dict["conditional-multiplier"])
+                if ret_dict["conditional-additive"]:
+                    list_of_conditional_additives.append(ret_dict["conditional-additive"])
                 if ret_dict["combat_text"]:
                     for text in ret_dict["combat_text"]:
                         self.update_log(["player", text])
+
+        #Loop through all gear effects:
+        #Start with convert
+        if list_of_converts:
+            damage_type = random.choice(list_of_converts)
+            self.update_log(["neutral", f"Converted damage type to {damage_type}"])
+
+        self.update_log(["neutral", f"Damage is now: {int(damage)}"])
+        #Then all additives and additive base
+        if list_of_additives:
+            for item in list_of_additives:
+                damage += item
+                self.update_log(["neutral", f"Additive {item}"])
+
+            self.update_log(["neutral", f"Damage is now: {int(damage)}"])
+
+        if list_of_additive_bases:
+            for item in list_of_additive_bases:
+                damage += attack["damage"] + item
+                self.update_log(["neutral", f"Additive-base base: {attack['damage']} add: {item}"])
+            self.update_log(["neutral", f"Damage is now: {int(damage)}"])
+
+        if list_of_conditional_additives:
+            for item in list_of_conditional_additives:
+                if item[0] == damage_type:
+                    damage += item[1]
+                    self.update_log(["neutral", f"Conditional additive, cond: {item[0]} add: {item[1]}"])
+            self.update_log(["neutral", f"Damage is now: {int(damage)}"])
+
+        #Then all multipliers
+        if list_of_multipliers:
+            for item in list_of_multipliers:
+                damage *= item
+                self.update_log(["neutral", f"Multiplier, mult: {item}"])
+            self.update_log(["neutral", f"Damage is now: {int(damage)}"])
+
+        if list_of_conditional_multipliers:
+            for item in list_of_conditional_multipliers:
+                if item[0] == damage_type:
+                    damage *= item[1]
+                    self.update_log(["neutral", f"Conditional mult, cond{item[0]} mult: {item[1]}"])
+            self.update_log(["neutral", f"Damage is now: {int(damage)}"])
 
         
 
@@ -414,7 +470,7 @@ class Battle():
             limb, modifier = self.limb_damage_modifier()
             damage = int(damage * modifier)
 
-            self.update_log(["player", "It hits {} in the {}, dealing {} ({}) damage.".format(self.opponent.readable_name, limb, damage, spell.damage_type)])
+            self.update_log(["player", "It hits {} in the {}, dealing {} ({}) damage.".format(self.opponent.readable_name, limb, damage, damage_type)])
 
             # Find the limb and deal damage to it and the result of that
             for opp_limb in self.opponent.limbs:

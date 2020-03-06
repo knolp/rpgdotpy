@@ -589,21 +589,14 @@ class GameMenu():
         #	self.state.game_box.addstr(start, 2, item)
         #	start += 1
 
-        self.state.game_box.addstr(start, 2, "Spells:")
+        self.state.game_box.addstr(start, 2, "Stats")
         start += 2
-        for item in self.state.player.spells:
-            if item != False:
-                self.state.game_box.addstr(start, 4, item.readable_name)
-            else:
-                self.state.game_box.addstr(start, 4, "None")
+        stats = self.state.player.get_combined_stats()
+        for k, v in self.state.player.get_combined_stats().items():
+            self.state.game_box.addstr(start, 4, f"{k}: {v}")
             start += 1
 
         start += 1
-        self.state.game_box.addstr(start, 2, "Spellbook:")
-        start += 2
-        for item in self.state.player.spellbook:
-            self.state.game_box.addstr(start, 4, item.readable_name)
-            start += 1
 
     def execute(self):
         for item in self.state.command_state.commands:
