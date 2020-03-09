@@ -1,4 +1,5 @@
 import random
+import helper
 
 class Ability():
     def __init__(self, name):
@@ -6,7 +7,7 @@ class Ability():
         self.aoe = False
         self.no_direct_damage = False
     
-    def execute(self):
+    def execute(self, player, opponent, state):
         pass
 
 
@@ -14,6 +15,14 @@ class Ability():
 
 
 #Spells
+
+#  ______ _____ _____  ______ 
+# |  ____|_   _|  __ \|  ____|
+# | |__    | | | |__) | |__   
+# |  __|   | | |  _  /|  __|  
+# | |     _| |_| | \ \| |____ 
+# |_|    |_____|_|  \_\______|
+                             
 class Fireball(Ability):
     def __init__(self):
         super().__init__("Fireball")
@@ -22,7 +31,7 @@ class Fireball(Ability):
         self.damage_type = "fire"
         self.damage = 5
 
-    def execute(self, player, opponent):
+    def execute(self, player, opponent, state):
         if not opponent.player:
             combat_text = []
             combat_variables = [
@@ -47,7 +56,7 @@ class GreatFireball(Ability):
         self.damage = 3
         self.aoe = 3
 
-    def execute(self, player, opponent):
+    def execute(self, player, opponent, state):
         if not opponent.player:
             combat_text = []
             combat_variables = [
@@ -63,36 +72,6 @@ class GreatFireball(Ability):
                 "combat_text" : combat_text
             }
 
-class LifeBolt(Ability):
-    def __init__(self):
-        super().__init__("LifeBolt")
-        self.readable_name = "Lifedraining Bolt"
-        self.description = "Shoots out a bolt that can drain life from your opponent."
-        self.damage_type = "occult"
-        self.damage = 15
-
-    
-    def execute(self, player, opponent):
-        combat_text = []
-        combat_variables = [
-            "summons a bolt from the hands and shoots it towards",
-            "sends a bolt of dark energy towards",
-            "shoots a dark bolt towards"
-        ]
-        damage_done = random.randint(int(0.75 * self.damage), self.damage)
-        heal_done = int(damage_done / 10)
-        combat_text.append("{} {} {}".format(player.name, random.choice(combat_variables), opponent.readable_name))
-        if player.health + heal_done < player.max_health:
-            player.health += heal_done
-            combat_text.append("You drain {} health from the attack.".format(heal_done))
-        else:
-            player.health = player.max_health
-            combat_text.append("You drain {} health from the attack.".format(player.max_health - player.health))
-
-        return {
-            "damage" : damage_done,
-            "combat_text" : combat_text
-        }
 
 class Scorch(Ability):
     def __init__(self):
@@ -102,7 +81,7 @@ class Scorch(Ability):
         self.damage_type = "fire"
         self.no_direct_damage = True
 
-    def execute(self, player, opponent):
+    def execute(self, player, opponent, state):
         combat_text = []
         combat_variables_success = [
             "{} ignites {}, causing {} to burn".format(player.name,opponent.readable_name, opponent.readable_name),
@@ -133,6 +112,132 @@ class Scorch(Ability):
             }
 
 
+
+
+#   ____   _____ _____ _    _ _   _______ 
+#  / __ \ / ____/ ____| |  | | | |__   __|
+# | |  | | |   | |    | |  | | |    | |   
+# | |  | | |   | |    | |  | | |    | |   
+# | |__| | |___| |____| |__| | |____| |   
+#  \____/ \_____\_____|\____/|______|_|   
+                                         
+
+
+
+class LifeBolt(Ability):
+    def __init__(self):
+        super().__init__("LifeBolt")
+        self.readable_name = "Lifedraining Bolt"
+        self.description = "Shoots out a bolt that can drain life from your opponent."
+        self.damage_type = "occult"
+        self.damage = 15
+
+    
+    def execute(self, player, opponent, state):
+        combat_text = []
+        combat_variables = [
+            "summons a bolt from the hands and shoots it towards",
+            "sends a bolt of dark energy towards",
+            "shoots a dark bolt towards"
+        ]
+        damage_done = random.randint(int(0.75 * self.damage), self.damage)
+        heal_done = int(damage_done / 10)
+        combat_text.append("{} {} {}".format(player.name, random.choice(combat_variables), opponent.readable_name))
+        if player.health + heal_done < player.max_health:
+            player.health += heal_done
+            combat_text.append("You drain {} health from the attack.".format(heal_done))
+        else:
+            player.health = player.max_health
+            combat_text.append("You drain {} health from the attack.".format(player.max_health - player.health))
+
+        return {
+            "damage" : damage_done,
+            "combat_text" : combat_text
+        }
+
+
+#           _____   _____          _   _ ______ 
+#     /\   |  __ \ / ____|   /\   | \ | |  ____|
+#    /  \  | |__) | |       /  \  |  \| | |__   
+#   / /\ \ |  _  /| |      / /\ \ | . ` |  __|  
+#  / ____ \| | \ \| |____ / ____ \| |\  | |____ 
+# /_/    \_\_|  \_\\_____/_/    \_\_| \_|______|
+
+
+
+ # ______ _____   ____   _____ _______ 
+ #|  ____|  __ \ / __ \ / ____|__   __|
+ #| |__  | |__) | |  | | (___    | |   
+ #|  __| |  _  /| |  | |\___ \   | |   
+ #| |    | | \ \| |__| |____) |  | |   
+ #|_|    |_|  \_\\____/|_____/   |_| 
+ 
+
+ 
+ #  _   _       _______ _    _ _____  ______ 
+ #| \ | |   /\|__   __| |  | |  __ \|  ____|
+ #|  \| |  /  \  | |  | |  | | |__) | |__   
+ #| . ` | / /\ \ | |  | |  | |  _  /|  __|  
+ #| |\  |/ ____ \| |  | |__| | | \ \| |____ 
+ #|_| \_/_/    \_\_|   \____/|_|  \_\______|
+ 
+
+class Infest(Ability):
+    def __init__(self):
+        super().__init__("Infest")
+        self.readable_name = "Infest"
+        self.description = "Plants a seed in the target, which burst out after a few turns dealing damage."
+        self.damage_type = "nature"
+        self.damage = 15
+
+    
+    def execute(self, player, opponent, state):
+        seed = helper.pick_seed(state)
+        combat_text = []
+        combat_variables = [
+            f"{player.name} plants a seed in {opponent.readable_name}",
+            f"{player.name} infests {opponent.name} with a {seed}",
+        ]
+        combat_text.append(random.choice(combat_variables))
+        if seed == "Barbura Seed":
+            damage_done = random.randint(int(0.75 * self.damage), self.damage)
+            combat_text.append("It ruptures immediately")
+        
+        if seed == "Ariam Seed":
+            combat_variables_failure = [f"{opponent.readable_name} is already infested."]
+            list_of_effects = [effect.type for effect in opponent.status_effects]
+
+            if "infested" in list_of_effects:
+                combat_text.append(random.choice(combat_variables_failure))
+
+                return {
+                    "damage" : 0,
+                    "combat_text" : combat_text
+                }
+            
+            else:
+                opponent.status_effects.append(InfestAriamSeed(5,1,opponent.name))
+
+                return {
+                    "damage" : 0,
+                    "combat_text" : combat_text
+                }
+
+        return {
+            "damage" : damage_done,
+            "combat_text" : combat_text
+        }
+
+    def pick_seed(self, state):
+        helper.pick_seed(state)
+
+
+#   ______ _______ _    _ ______ _____  ______          _      
+# |  ____|__   __| |  | |  ____|  __ \|  ____|   /\   | |     
+# | |__     | |  | |__| | |__  | |__) | |__     /  \  | |     
+# |  __|    | |  |  __  |  __| |  _  /|  __|   / /\ \ | |     
+# | |____   | |  | |  | | |____| | \ \| |____ / ____ \| |____ 
+# |______|  |_|  |_|  |_|______|_|  \_\______/_/    \_\______
 
 
 
@@ -245,8 +350,32 @@ class Chill():
 
 
 
+# Infest Debuffs
+class InfestAriamSeed():
+    def __init__(self, turns, damage, opponent_name):
+        self.type = "Infested"
+        self.color = 133
+        self.max_turn = turns + 1
+        self.turns_left = turns + 1
+        self.damage = damage
+        self.opponent_name = opponent_name
+        self.combat_text = "{} is still infested with a seed.".format(self.opponent_name)
+        self.combat_text_over = "{}'s infestation bursts, dealing {} (Nature) damage".format(self.opponent_name, self.damage)
 
-
+    def execute(self):
+        self.turns_left -= 1
+        if self.turns_left == 0:
+            return {
+                "combat_text" : self.combat_text_over,
+                "done" : True,
+                "damage" : self.damage
+            }
+        else:
+            return {
+                "combat_text" : False,
+                "done" : False,
+                "damage" : 0
+            }
 
 
 

@@ -382,7 +382,7 @@ class Battle():
 
         # Execute spell, get base damage
         spell = self.player.spells[spell_index]
-        attack = spell.execute(self.player, self.opponent)
+        attack = spell.execute(self.player, self.opponent, self.state)
         damage = attack["damage"]
         damage_type = spell.damage_type
         for item in attack["combat_text"]:
