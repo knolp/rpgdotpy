@@ -18,7 +18,7 @@ import cavegen
 # HELPERS #
 
 def explain_text(text, explain_text, cols):
-    return_text = text + "-" * (cols - (len(text) + len(explain_text))) + explain_text
+    return_text = text + " " * (cols - (len(text) + len(explain_text))) + explain_text
     return return_text
 
 def center(max_w, text):
@@ -235,32 +235,32 @@ class NewGame_1():
 
     def draw_warrior(self):
         self.game_box.addstr(19,46, "Warrior:")
-        self.game_box.addstr(21,10, explain_text("Strength: 6 ", self.explain_text_strength, 80))
-        self.game_box.addstr(22,10, explain_text("Agility: 2 ", self.explain_text_agility, 80))
-        self.game_box.addstr(23,10, explain_text("Charisma: 0 ", self.explain_text_charisma, 80))
-        self.game_box.addstr(24,10, explain_text("Intellect: 0 ", self.explain_text_intellect, 80))
-        self.game_box.addstr(25,10, explain_text("Alchemy: 2 ", self.explain_text_alchemy, 80))
-        self.game_box.addstr(26,10, explain_text("Attunement: 0 ", self.explain_text_attunement, 80))
+        self.game_box.addstr(21,10, explain_text("Strength: 6 ", self.explain_text_strength, 80), curses.color_pair(133))
+        self.game_box.addstr(22,10, explain_text("Agility: 2 ", self.explain_text_agility, 80), curses.color_pair(134))
+        self.game_box.addstr(23,10, explain_text("Charisma: 0 ", self.explain_text_charisma, 80), curses.color_pair(136))
+        self.game_box.addstr(24,10, explain_text("Intellect: 0 ", self.explain_text_intellect, 80), curses.color_pair(135))
+        self.game_box.addstr(25,10, explain_text("Alchemy: 2 ", self.explain_text_alchemy, 80), curses.color_pair(137))
+        self.game_box.addstr(26,10, explain_text("Attunement: 0 ", self.explain_text_attunement, 80), curses.color_pair(147))
         art.draw_shield(self.game_box,2,35)
 
     def draw_mage(self):
         self.game_box.addstr(19,47, "Mage:")
-        self.game_box.addstr(21,10, explain_text("Strength: 1 ", self.explain_text_strength, 80))
-        self.game_box.addstr(22,10, explain_text("Agility: 1 ", self.explain_text_agility, 80))
-        self.game_box.addstr(23,10, explain_text("Charisma: 3 ", self.explain_text_charisma, 80))
-        self.game_box.addstr(24,10, explain_text("Intellect: 4 ", self.explain_text_intellect, 80))
-        self.game_box.addstr(25,10, explain_text("Alchemy: 3 ", self.explain_text_alchemy, 80))
-        self.game_box.addstr(26,10, explain_text("Attunement: 3 ", self.explain_text_attunement, 80))
+        self.game_box.addstr(21,10, explain_text("Strength: 1 ", self.explain_text_strength, 80), curses.color_pair(133))
+        self.game_box.addstr(22,10, explain_text("Agility: 1 ", self.explain_text_agility, 80), curses.color_pair(134))
+        self.game_box.addstr(23,10, explain_text("Charisma: 3 ", self.explain_text_charisma, 80), curses.color_pair(136))
+        self.game_box.addstr(24,10, explain_text("Intellect: 4 ", self.explain_text_intellect, 80), curses.color_pair(135))
+        self.game_box.addstr(25,10, explain_text("Alchemy: 3 ", self.explain_text_alchemy, 80), curses.color_pair(137))
+        self.game_box.addstr(26,10, explain_text("Attunement: 3 ", self.explain_text_attunement, 80), curses.color_pair(147))
         art.draw_fire(self.game_box, 2, 45)
 
     def draw_rogue(self):
         self.game_box.addstr(19,46, "Rogue:")
-        self.game_box.addstr(21,10, explain_text("Strength: 3 ", self.explain_text_strength, 80))
-        self.game_box.addstr(22,10, explain_text("Agility: 4 ", self.explain_text_agility, 80))
-        self.game_box.addstr(23,10, explain_text("Charisma: 2 ", self.explain_text_charisma, 80))
-        self.game_box.addstr(24,10, explain_text("Intellect: 0 ", self.explain_text_intellect, 80))
-        self.game_box.addstr(25,10, explain_text("Alchemy: 4 ", self.explain_text_alchemy, 80))
-        self.game_box.addstr(26,10, explain_text("Attunement: 0 ", self.explain_text_attunement, 80))
+        self.game_box.addstr(21,10, explain_text("Strength: 3 ", self.explain_text_strength, 80), curses.color_pair(133))
+        self.game_box.addstr(22,10, explain_text("Agility: 4 ", self.explain_text_agility, 80), curses.color_pair(134))
+        self.game_box.addstr(23,10, explain_text("Charisma: 2 ", self.explain_text_charisma, 80), curses.color_pair(136))
+        self.game_box.addstr(24,10, explain_text("Intellect: 0 ", self.explain_text_intellect, 80), curses.color_pair(135))
+        self.game_box.addstr(25,10, explain_text("Alchemy: 4 ", self.explain_text_alchemy, 80), curses.color_pair(137))
+        self.game_box.addstr(26,10, explain_text("Attunement: 0 ", self.explain_text_attunement, 80), curses.color_pair(147))
         art.draw_dagger(self.game_box, 2, 44)
 
     def draw_back(self):
@@ -342,6 +342,7 @@ class NewGame_2():
                     self.game_box.addstr(20, center(width, text),text)
                     text = "Notable features:"
                     self.game_box.addstr(22, center(width, text),text)
+                    self.game_box.attron(curses.color_pair(136))
                     text = "* Osk'Ghar the Blacksmith"
                     self.game_box.addstr(24, center(width, text),text)
                     text = "* The Grand Arena"
@@ -350,6 +351,7 @@ class NewGame_2():
                     self.game_box.addstr(26, center(width, text),text)
                     text = "* The temple of Mux'Ton, the god of death"
                     self.game_box.addstr(27, center(width, text), text)
+                    self.game_box.attroff(curses.color_pair(136))
 
                 if item.text == "Orc'Theral":
                     for idx, text in enumerate(self.orctheral_art):
@@ -358,12 +360,14 @@ class NewGame_2():
                     self.game_box.addstr(20, center(width, text),text)
                     text = "Notable features:"
                     self.game_box.addstr(22, center(width, text),text)
+                    self.game_box.attron(curses.color_pair(136))
                     text = "* The Desert of Orchai"
                     self.game_box.addstr(24, center(width, text),text)
                     text = "* The Temple of Stone"
                     self.game_box.addstr(25, center(width, text),text)
                     text = "* Hiltir Mining Corporation"
                     self.game_box.addstr(26, center(width, text),text)
+                    self.game_box.attroff(curses.color_pair(136))
 
                 if item.text == "Blackcliff":
                     for idx, text in enumerate(self.blackcliff_art):
@@ -372,12 +376,14 @@ class NewGame_2():
                     self.game_box.addstr(20, center(width, text),text)
                     text = "Notable features:"
                     self.game_box.addstr(22, center(width, text),text)
+                    self.game_box.attron(curses.color_pair(136))
                     text = "* The Mage Tower"
                     self.game_box.addstr(24, center(width, text),text)
                     text = "* Blackcliff Port"
                     self.game_box.addstr(25, center(width, text),text)
                     text = "* The White Forest"
                     self.game_box.addstr(26, center(width, text),text)
+                    self.game_box.attroff(curses.color_pair(136))
 
                 if item.text == "Back":
                     text = "BACK"
@@ -408,8 +414,10 @@ class NewGame_3():
         for item in self.command_state.commands:
             if item.active:
                 if item.text == "Human":
+                    self.game_box.attron(curses.color_pair(136))
                     text = "HUMAN"
                     self.game_box.addstr(6, center(width, text),text)
+                    self.game_box.attroff(curses.color_pair(136))
                     text = "A recent addition to the many races of Beladir"
                     self.game_box.addstr(10, center(width, text),text)
                     text = "Once being freed from the grips of the elves"
@@ -424,16 +432,20 @@ class NewGame_3():
                     self.game_box.addstr(18, center(width, text),text)
                     text = "Racial Profiencies:"
                     self.game_box.addstr(20, center(width, text),text)
+                    self.game_box.attron(curses.color_pair(136))
                     text = "* Sneaky Tounge: Increased chance to trick people"
                     self.game_box.addstr(22, center(width, text),text)
                     text = "* Eagle Eyes: Increased perception of surroundings"
                     self.game_box.addstr(23, center(width, text),text)
                     text = "* Weak-bodied: Weakness to flesh wounds"
                     self.game_box.addstr(24, center(width, text),text)
+                    self.game_box.attroff(curses.color_pair(136))
 
                 if item.text == "Orc":
+                    self.game_box.attron(curses.color_pair(136))
                     text = "ORC"
                     self.game_box.addstr(6, center(width, text),text)
+                    self.game_box.attroff(curses.color_pair(136))
                     text = "The native race of the eastern parts of Beladir"
                     self.game_box.addstr(10, center(width, text),text)
                     text = "Due to extreme deforestation, the Orcs reside in a large desert"
@@ -448,6 +460,7 @@ class NewGame_3():
                     self.game_box.addstr(18, center(width, text),text)
                     text = "Racial Profiencies:"
                     self.game_box.addstr(20, center(width, text),text)
+                    self.game_box.attron(curses.color_pair(136))
                     text = "* Tough Skin: Resilient to many status effects"
                     self.game_box.addstr(22, center(width, text),text)
                     text = "* Ravager: Melee combat effiency on open plains"
@@ -458,10 +471,13 @@ class NewGame_3():
                     self.game_box.addstr(25, center(width, text),text)
                     text = "* Dry Throat: Weakness to water"
                     self.game_box.addstr(26, center(width, text),text)
+                    self.game_box.attroff(curses.color_pair(136))
 
                 if item.text == "Elf":
+                    self.game_box.attron(curses.color_pair(136))
                     text = "ELF"
                     self.game_box.addstr(6, center(width, text),text)
+                    self.game_box.attroff(curses.color_pair(136))
                     text = "The oldest native race in Beladir"
                     self.game_box.addstr(10, center(width, text),text)
                     text = "They have some sense of individuality, but are yet all connected"
@@ -476,6 +492,7 @@ class NewGame_3():
                     self.game_box.addstr(18, center(width, text),text)
                     text = "Racial Profiencies:"
                     self.game_box.addstr(20, center(width, text),text)
+                    self.game_box.attron(curses.color_pair(136))
                     text = "* Nature Bond: Attuned to all gods of the land"
                     self.game_box.addstr(22, center(width, text),text)
                     text = "* Large Mind: Efficient at learning new strategies"
@@ -484,10 +501,13 @@ class NewGame_3():
                     self.game_box.addstr(24, center(width, text),text)
                     text = "* Arcane Deficiency: Weakness to the Arcane arts"
                     self.game_box.addstr(25, center(width, text),text)
+                    self.game_box.attroff(curses.color_pair(136))
 
                 if item.text == "Dwarf":
+                    self.game_box.attron(curses.color_pair(136))
                     text = "DWARF"
                     self.game_box.addstr(6, center(width, text),text)
+                    self.game_box.attroff(curses.color_pair(136))
                     text = "Another recent refugee in the lands of Beladir"
                     self.game_box.addstr(10, center(width, text),text)
                     text = "This race of deep cave dwellers came to these lands"
@@ -500,6 +520,7 @@ class NewGame_3():
                     self.game_box.addstr(16, center(width, text),text)
                     text = "Racial Profiencies:"
                     self.game_box.addstr(20, center(width, text),text)
+                    self.game_box.attron(curses.color_pair(136))
                     text = "* Pale Skin: Immune to some diseases"
                     self.game_box.addstr(22, center(width, text),text)
                     text = "* Abandoned: Has no obligation to any native gods"
@@ -510,6 +531,7 @@ class NewGame_3():
                     self.game_box.addstr(25, center(width, text),text)
                     text = "* Vertically Handicapped: Surface Travel takes longer"
                     self.game_box.addstr(26, center(width, text),text)
+                    self.game_box.attroff(curses.color_pair(136))
 
                 if item.text == "Back":
                     text = "BACK"
