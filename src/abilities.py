@@ -204,6 +204,7 @@ class Infest(Ability):
             combat_text.append("It ruptures immediately")
         
         if seed == "Ariam Seed":
+            damage = player.stats["Intelligence"] * 2
             combat_variables_failure = [f"{opponent.readable_name} is already infested."]
             list_of_effects = [effect.type for effect in opponent.status_effects]
 
@@ -216,7 +217,29 @@ class Infest(Ability):
                 }
             
             else:
-                opponent.status_effects.append(InfestAriamSeed(5,1,opponent.name))
+                opponent.status_effects.append(InfestAriamSeed(5,damage,opponent.name))
+
+                return {
+                    "damage" : 0,
+                    "combat_text" : combat_text
+                }
+        
+        if seed == "Dever Seed":
+            damage = int(player.stats["Intelligence"] / 2)
+            combat_variables_failure = [f"{opponent.readable_name} is already infested."]
+            list_of_effects = [effect.type for effect in opponent.status_effects]
+            self.no_direct_damage = True
+
+            if "infested" in list_of_effects:
+                combat_text.append(random.choice(combat_variables_failure))
+
+                return {
+                    "damage" : 0,
+                    "combat_text" : combat_text
+                }
+            
+            else:
+                opponent.status_effects.append(InfestDeverSeed(5,damage,opponent.name))
 
                 return {
                     "damage" : 0,
@@ -227,9 +250,6 @@ class Infest(Ability):
             "damage" : damage_done,
             "combat_text" : combat_text
         }
-
-    def pick_seed(self, state):
-        helper.pick_seed(state)
 
 
 #   ______ _______ _    _ ______ _____  ______          _      
@@ -376,6 +396,33 @@ class InfestAriamSeed():
                 "done" : False,
                 "damage" : 0
             }
+
+class InfestDeverSeed():
+    def __init__(self, turns, damage, opponent_name):
+        self.type = "Infested"
+        self.color = 133
+        self.max_turn = turns + 1
+        self.turns_left = turns + 1
+        self.damage = damage
+        self.opponent_name = opponent_name
+        self.combat_text = "The infestation rots {} from the inside, dealing {} (Occult) damage.".format(self.opponent_name, self.damage)
+        self.combat_text_over = "{}'s infestation has withered away.".format(self.opponent_name, self.damage)
+
+    def execute(self):
+        self.turns_left -= 1
+        if self.turns_left == 0:
+            return {
+                "combat_text" : self.combat_text_over,
+                "done" : True,
+                "damage" : False
+            }
+        else:
+            return {
+                "combat_text" : self.combat_text,
+                "done" : False,
+                "damage": self.damage
+            }
+                
 
 
 

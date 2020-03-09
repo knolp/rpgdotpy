@@ -10,6 +10,7 @@ import states
 
 class Battle():
     def __init__(self, state, opponent, battlefield, run=True):
+        self.debug = False
         self.state = state
         self.game_screen = state.game_box
         self.info_screen = state.command_box
@@ -389,9 +390,11 @@ class Battle():
             self.update_log(["player", item])
 
         # add intelligence scaling
-        self.update_log(["neutral", f"Damage is now (base): {int(damage)}"])
+        if self.debug:
+            self.update_log(["neutral", f"Damage is now (base): {int(damage)}"])
         damage += int(self.player.get_combined_stats()["Intelligence"] * (damage * 0.1)) #10% additive-base for each intellect-point
-        self.update_log(["neutral", f"Damage is now (int scaling): {int(damage)}"])
+        if self.debug:
+            self.update_log(["neutral", f"Damage is now (int scaling): {int(damage)}"])
 
         list_of_multipliers = []
         list_of_additives = []
@@ -432,41 +435,47 @@ class Battle():
             damage_type = random.choice(list_of_converts)
             self.update_log(["neutral", f"Converted damage type to {damage_type}"])
 
-        self.update_log(["neutral", f"Damage is now: {int(damage)}"])
+        if self.debug:
+            self.update_log(["neutral", f"Damage is now: {int(damage)}"])
         #Then all additives and additive base
         if list_of_additives:
             for item in list_of_additives:
                 damage += item
                 self.update_log(["neutral", f"Additive {item}"])
 
-            self.update_log(["neutral", f"Damage is now: {int(damage)}"])
+            if self.debug:
+                self.update_log(["neutral", f"Damage is now: {int(damage)}"])
 
         if list_of_additive_bases:
             for item in list_of_additive_bases:
                 damage += attack["damage"] + item
                 self.update_log(["neutral", f"Additive-base base: {attack['damage']} add: {item}"])
-            self.update_log(["neutral", f"Damage is now: {int(damage)}"])
+            if self.debug:
+                self.update_log(["neutral", f"Damage is now: {int(damage)}"])
 
         if list_of_conditional_additives:
             for item in list_of_conditional_additives:
                 if item[0] == damage_type:
                     damage += item[1]
                     self.update_log(["neutral", f"Conditional additive, cond: {item[0]} add: {item[1]}"])
-            self.update_log(["neutral", f"Damage is now: {int(damage)}"])
+            if self.debug:
+                self.update_log(["neutral", f"Damage is now: {int(damage)}"])
 
         #Then all multipliers
         if list_of_multipliers:
             for item in list_of_multipliers:
                 damage *= item
                 self.update_log(["neutral", f"Multiplier, mult: {item}"])
-            self.update_log(["neutral", f"Damage is now: {int(damage)}"])
+            if self.debug:
+                self.update_log(["neutral", f"Damage is now: {int(damage)}"])
 
         if list_of_conditional_multipliers:
             for item in list_of_conditional_multipliers:
                 if item[0] == damage_type:
                     damage *= item[1]
                     self.update_log(["neutral", f"Conditional mult, cond{item[0]} mult: {item[1]}"])
-            self.update_log(["neutral", f"Damage is now: {int(damage)}"])
+            if self.debug:
+                self.update_log(["neutral", f"Damage is now: {int(damage)}"])
 
         
 
@@ -480,6 +489,7 @@ class Battle():
                 for limb in limbs:
                     if spell.no_direct_damage:
                         damage = 0
+                        break
                     limb_damage = before_limbs_damage * limb[1]
                     self.update_log(["player", "It hits {} in the {}, dealing {} ({}) damage.".format(self.opponent.readable_name, limb[0], limb_damage, damage_type)])
 
@@ -498,8 +508,9 @@ class Battle():
 
                 if spell.no_direct_damage:
                     damage = 0
-
-                self.update_log(["player", "It hits {} in the {}, dealing {} ({}) damage.".format(self.opponent.readable_name, limb, damage, damage_type)])
+                    
+                else:
+                    self.update_log(["player", "It hits {} in the {}, dealing {} ({}) damage.".format(self.opponent.readable_name, limb, damage, damage_type)])
 
                 # Find the limb and deal damage to it and the result of that
                 for opp_limb in self.opponent.limbs:
@@ -532,7 +543,7 @@ class Battle():
 
             1. Add encounter start info to the update_log so it doesn't appear empty at start
             2. Loop begins
-            3. Check if dead.
+            3. Check if player dead.
             4. Check if opponent dead.
                 4.1. If so, handle loot, and loot interface
 

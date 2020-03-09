@@ -804,7 +804,7 @@ class BarburaSeed(Item):
         self.description = "A small green seed."
         self.result = ["BarburaLeaf"]
         self.level = 1
-        self.harvest_time = 1209600 #2 weeks
+        self.harvest_time = 1209600 # 2 weeks
 
 class AriamSeed(Item):
     def __init__(self):
@@ -816,7 +816,19 @@ class AriamSeed(Item):
         self.description = "A brown seed from an Ariam Flower"
         self.result = ["AriamLeaf"]
         self.level = 2
-        self.harvest_time = 2629746 #1 month
+        self.harvest_time = 2629746 # 1 month
+
+class DeverSeed(Item):
+    def __init__(self):
+        super().__init__("DeverSeed", False)
+        self.readable_name = "Dever Seed"
+        self.type = "farming"
+        self.subtype = "seed"
+        self.equippable = False
+        self.description = "A dark black seed from a deverberry bush"
+        self.result = ["DeverBerry"]
+        self.level = 2
+        self.harvest_time = 2629746 * 3 # 3 months
 
 #Consumable
 # Can only affect players themselves, consume-function will be passed the state.player parameter
