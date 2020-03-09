@@ -255,7 +255,8 @@ def pick_seed(state):
 	effect = {
 		"Ariam Seed": "Heals you for the damage done (Nature damage)",
 		"Dever Seed": "Instead of exploding, it rots the target from the inside over time (Occult damage)",
-		"Barbura Seed": "Ruptures immediately for less damage (Nature Damage)"
+		"Barbura Seed": "Ruptures immediately for less damage (Nature Damage)",
+		"Firebloom Seed": "Causes burn after rupture (Fire damage)"
 	}
 
 	real_seeds = {}

@@ -830,6 +830,18 @@ class DeverSeed(Item):
         self.level = 2
         self.harvest_time = 2629746 * 3 # 3 months
 
+class FirebloomSeed(Item):
+    def __init__(self):
+        super().__init__("FirebloomSeed", False)
+        self.readable_name = "Firebloom Seed"
+        self.type = "farming"
+        self.subtype = "seed"
+        self.equippable = False
+        self.description = "A glowing, bright orange seed."
+        self.result = ["DeverBerry"]
+        self.level = 2
+        self.harvest_time = 2629746 / 2 # 2 weeks
+
 #Consumable
 # Can only affect players themselves, consume-function will be passed the state.player parameter
 class MinorHealthPotion(Item):

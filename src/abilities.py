@@ -192,7 +192,13 @@ class Infest(Ability):
 
     
     def execute(self, player, opponent, state):
-        seed = helper.pick_seed(state)
+        if len([x for x in player.inventory if x.subtype == "seed"]):
+            seed = helper.pick_seed(state)
+        else:
+            helper.popup(state.stdscr, state, ["No seeds available"])
+            return {
+                "damage" : "back"
+            }
         combat_text = []
         combat_variables = [
             f"{player.name} plants a seed in {opponent.readable_name}",
@@ -200,15 +206,28 @@ class Infest(Ability):
         ]
         combat_text.append(random.choice(combat_variables))
         if seed == "Barbura Seed":
-            damage_done = random.randint(int(0.75 * self.damage), self.damage)
-            combat_text.append("It ruptures immediately")
+            combat_variables_failure = [f"{opponent.readable_name} is already infested."]
+            list_of_effects = [effect.type for effect in opponent.status_effects]
+            if "Infested" in list_of_effects:
+                combat_text.append(random.choice(combat_variables_failure))
+
+                return {
+                    "damage" : 0,
+                    "combat_text" : combat_text
+                }
+            else:
+                damage_done = random.randint(int(0.75 * self.damage), self.damage)
+                combat_text.append("It ruptures immediately")
+                for item in player.inventory:
+                    if item.readable_name == seed:
+                        player.inventory.pop(player.inventory.index(item))
         
         if seed == "Ariam Seed":
             damage = player.stats["Intelligence"] * 2
             combat_variables_failure = [f"{opponent.readable_name} is already infested."]
             list_of_effects = [effect.type for effect in opponent.status_effects]
 
-            if "infested" in list_of_effects:
+            if "Infested" in list_of_effects:
                 combat_text.append(random.choice(combat_variables_failure))
 
                 return {
@@ -217,7 +236,10 @@ class Infest(Ability):
                 }
             
             else:
-                opponent.status_effects.append(InfestAriamSeed(5,damage,opponent.name))
+                opponent.status_effects.append(InfestAriamSeed(5,damage,opponent))
+                for item in player.inventory:
+                    if item.readable_name == seed:
+                        player.inventory.pop(player.inventory.index(item))
 
                 return {
                     "damage" : 0,
@@ -230,7 +252,7 @@ class Infest(Ability):
             list_of_effects = [effect.type for effect in opponent.status_effects]
             self.no_direct_damage = True
 
-            if "infested" in list_of_effects:
+            if "Infested" in list_of_effects:
                 combat_text.append(random.choice(combat_variables_failure))
 
                 return {
@@ -239,18 +261,71 @@ class Infest(Ability):
                 }
             
             else:
-                opponent.status_effects.append(InfestDeverSeed(5,damage,opponent.name))
+                opponent.status_effects.append(InfestDeverSeed(5,damage,opponent))
+                for item in player.inventory:
+                    if item.readable_name == seed:
+                        player.inventory.pop(player.inventory.index(item))
+
 
                 return {
                     "damage" : 0,
                     "combat_text" : combat_text
                 }
 
+        if seed == "Firebloom Seed":
+            damage = int(player.stats["Intelligence"] / 2)
+            combat_variables_failure = [f"{opponent.readable_name} is already infested."]
+            list_of_effects = [effect.type for effect in opponent.status_effects]
+            self.no_direct_damage = True
+
+            if "Infested" in list_of_effects:
+                combat_text.append(random.choice(combat_variables_failure))
+
+                return {
+                    "damage" : 0,
+                    "combat_text" : combat_text
+                }
+            
+            else:
+                opponent.status_effects.append(InfestFirebloomSeed(5,damage,opponent))
+                for item in player.inventory:
+                    if item.readable_name == seed:
+                        player.inventory.pop(player.inventory.index(item))
+
+
+                return {
+                    "damage" : 0,
+                    "combat_text" : combat_text
+                }
+        
         return {
             "damage" : damage_done,
             "combat_text" : combat_text
         }
 
+class WoodlandCharm(Ability):
+    def __init__(self):
+        super().__init__("WoodlandCharm")
+        self.readable_name = "Woodland Charm"
+        self.description = "Offer a sacrificial item to the woodland gods and gain power."
+        self.damage_type = "Nature"
+        self.damage = 0
+        self.no_direct_damage = True
+
+    
+    def execute(self, player, opponent, state):
+        combat_text = []
+        combat_variables = [
+            "summons a bolt from the hands and shoots it towards",
+            "sends a bolt of dark energy towards",
+            "shoots a dark bolt towards"
+        ]
+        combat_text.append("{} {} {}".format(player.name, random.choice(combat_variables), opponent.readable_name))
+
+        return {
+            "damage" : damage_done,
+            "combat_text" : combat_text
+        }
 
 #   ______ _______ _    _ ______ _____  ______          _      
 # |  ____|__   __| |  | |  ____|  __ \|  ____|   /\   | |     
@@ -372,13 +447,14 @@ class Chill():
 
 # Infest Debuffs
 class InfestAriamSeed():
-    def __init__(self, turns, damage, opponent_name):
+    def __init__(self, turns, damage, opponent):
         self.type = "Infested"
         self.color = 133
         self.max_turn = turns + 1
         self.turns_left = turns + 1
         self.damage = damage
-        self.opponent_name = opponent_name
+        self.opponent = opponent
+        self.opponent_name = opponent.name
         self.combat_text = "{} is still infested with a seed.".format(self.opponent_name)
         self.combat_text_over = "{}'s infestation bursts, dealing {} (Nature) damage".format(self.opponent_name, self.damage)
 
@@ -398,13 +474,14 @@ class InfestAriamSeed():
             }
 
 class InfestDeverSeed():
-    def __init__(self, turns, damage, opponent_name):
+    def __init__(self, turns, damage, opponent):
         self.type = "Infested"
         self.color = 133
         self.max_turn = turns + 1
         self.turns_left = turns + 1
         self.damage = damage
-        self.opponent_name = opponent_name
+        self.opponent = opponent
+        self.opponent_name = opponent.name
         self.combat_text = "The infestation rots {} from the inside, dealing {} (Occult) damage.".format(self.opponent_name, self.damage)
         self.combat_text_over = "{}'s infestation has withered away.".format(self.opponent_name, self.damage)
 
@@ -421,6 +498,34 @@ class InfestDeverSeed():
                 "combat_text" : self.combat_text,
                 "done" : False,
                 "damage": self.damage
+            }
+
+class InfestFirebloomSeed():
+    def __init__(self, turns, damage, opponent):
+        self.type = "Infested"
+        self.color = 133
+        self.max_turn = turns + 1
+        self.turns_left = turns + 1
+        self.damage = damage
+        self.opponent = opponent
+        self.opponent_name = opponent.name
+        self.combat_text = "{} is still infested with a seed.".format(self.opponent_name)
+        self.combat_text_over = "{}'s infestation bursts, dealing {} (Fire) damage and causing Burn".format(self.opponent_name, self.damage)
+
+    def execute(self):
+        self.turns_left -= 1
+        if self.turns_left == 0:
+            self.opponent.status_effects.append(Burn(5,1,self.opponent_name))
+            return {
+                "combat_text" : self.combat_text_over,
+                "done" : True,
+                "damage" : self.damage,
+            }
+        else:
+            return {
+                "combat_text" : False,
+                "done" : False,
+                "damage" : 0
             }
                 
 

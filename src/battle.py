@@ -385,6 +385,8 @@ class Battle():
         spell = self.player.spells[spell_index]
         attack = spell.execute(self.player, self.opponent, self.state)
         damage = attack["damage"]
+        if damage == "back":
+            return False
         damage_type = spell.damage_type
         for item in attack["combat_text"]:
             self.update_log(["player", item])
@@ -530,6 +532,7 @@ class Battle():
 
 
         self.opponent.health -= damage
+        return True
 
     def check_player(self):
         pass
@@ -708,7 +711,9 @@ class Battle():
                 if self.commands[selected_command] == "Spell":
                     spell = self.select_spell()
                     if spell != "False":
-                        self.player_spell(spell)
+                        res = self.player_spell(spell)
+                        if not res:
+                            continue
                     else:
                         continue
                 if self.commands[selected_command] == "Loot and Exit":
