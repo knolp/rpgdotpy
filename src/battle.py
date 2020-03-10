@@ -540,6 +540,18 @@ class Battle():
     def check_turn_events(self):
         pass
 
+    def remove_temp_debuffs(self):
+        """
+            removes temporary combat debuffs and restores stuff
+        """
+        self.player.in_control = True
+        debuffs_to_remove = [
+            "WoodlandDeverberrySkin"
+        ]
+        for item in self.player.status_effects:
+            if item.name in debuffs_to_remove:
+                self.player.status_effects.pop(self.player.status_effects.index(item))
+
     def play(self):
         """
             Main combat loop interface
@@ -568,6 +580,7 @@ class Battle():
         opponent_art_offset = 2
 
         while k != ord("q"):
+            self.screen.clear()
             if self.player.health <= 0:
                 helper.popup(self.screen, self.state, ["You have died"])
                 self.state.game_state = states.Intro(self.state)
@@ -599,7 +612,19 @@ class Battle():
                 selected_command = 0
                 self.opponent_killed = True
                 # return True
-            self.screen.clear()
+            elif not self.opponent_killed:
+                if self.player.in_control:
+                    self.commands = [
+                        "Attack",
+                        "Block",
+                        "Spell",
+                        "Item",
+                    ]
+                else:
+                    self.commands = [
+                        "You are not in control"
+                    ]
+                    selected_command = 0
 
             combat_log_start = 0
             self.used_turns = []
@@ -696,6 +721,8 @@ class Battle():
 
             elif k == ord(" "):
                 self.turn += 1
+                if self.commands[selected_command] == "You are not in control":
+                    self.player_attack()
                 if self.commands[selected_command] == "Attack":
                     self.player_attack()
 
@@ -706,6 +733,7 @@ class Battle():
                     self.update_log(["neutral", "Attempting to run away."])
                     run_successful = self.player_run()
                     if run_successful:
+                        self.remove_temp_debuffs()
                         return False
 
                 if self.commands[selected_command] == "Spell":
@@ -718,10 +746,12 @@ class Battle():
                         continue
                 if self.commands[selected_command] == "Loot and Exit":
                     self.loot(random_loot)
+                    self.remove_temp_debuffs()
                     return True
 
                 if self.commands[selected_command] == "Exit":
                     curses.ungetch(curses.KEY_F0)
+                    self.remove_temp_debuffs()
                     return True
 
                 if not self.opponent_killed:
@@ -730,6 +760,7 @@ class Battle():
                     self.check_opponent()
                     self.update_log(["neutral", ""])
                 curses.ungetch(curses.KEY_F0)
+        self.remove_temp_debuffs()
 
     def loot(self, random_loot):
         """

@@ -294,6 +294,55 @@ def pick_seed(state):
 			if selected_item > len(real_seeds.keys()) - 1:
 				selected_item = len(real_seeds.keys()) - 1
 
+def select_charm(state):
+	screen = state.stdscr
+	selected_item = 0
+	k = -1
+	splice_start = 0
+	splice_end = 10
+
+	effect = {
+		"Desert Salt": "Saltspikes grow on your skin, reflecting damage",
+		"Deverberry Skin": "Increases your strength GREATLY, but not without side-effects."
+	}
+	charms = [x for x in state.player.inventory if x.readable_name in effect.keys()]
+	if not len(charms):
+		return False
+
+	real_charms = {}
+
+	for item in charms:
+		if item.readable_name not in real_charms.keys():
+			real_charms[item.readable_name] = 1
+		else:
+			real_charms[item.readable_name] += 1
+
+	while k != ord("q"):
+		screen.clear()
+		x_pos = 5
+		pos_counter = 0
+		for seed, counter in real_charms.items():
+			if pos_counter == selected_item:
+				screen.addstr(x_pos, 5, f"{seed}: {counter}		-		{effect[seed]}", curses.color_pair(136))
+				currently_selected = seed
+			else:
+				screen.addstr(x_pos, 5, f"{seed}: {counter}		-		{effect[seed]}")
+			x_pos += 1
+			pos_counter += 1
+		screen.addstr(25,25, f"pos = {selected_item}")
+
+		k = screen.getch()
+		if k == ord(" "):
+			#TODO Also remove seed from invent here
+			return currently_selected
+		elif k == curses.KEY_UP:
+			selected_item -= 1
+			if selected_item < 0:
+				selected_item = 0
+		elif k == curses.KEY_DOWN:
+			selected_item += 1
+			if selected_item > len(real_charms.keys()) - 1:
+				selected_item = len(real_charms.keys()) - 1
 
 def get_item(item):
 	for var in dir(items):

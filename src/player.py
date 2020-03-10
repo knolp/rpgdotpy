@@ -75,6 +75,15 @@ class Player():
 			"Farming" : 0
 		}
 
+		self.resistances = {
+			"fire": 0,
+			"frost": 0,
+			"occult": 0,
+			"arcane": 0,
+			"nature": 0,
+			"physical": 0
+		}
+
 		self.last_pos = (3,3)
 		self.last_target = ["TradeDistrict", 0, 0]
 
@@ -91,6 +100,9 @@ class Player():
 		self.immune = []
 		self.health = 1999
 		self.max_health = 2000
+		self.in_control = True
+
+
 		self.gold = 10000
 		self.player = True
 

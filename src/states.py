@@ -229,7 +229,7 @@ class NewGame_1():
                 self.state.create_player["max_health"] = self.vocation_max_health[item.text]
                 self.state.create_player["health"] = self.vocation_max_health[item.text]
                 self.state.create_player["spells"] = [False, False, False, False, False]
-                self.state.create_player["spellbook"] = [abilities.Fireball(), abilities.GreatFireball(), abilities.LifeBolt(), abilities.Infest()]
+                self.state.create_player["spellbook"] = [abilities.Fireball(), abilities.GreatFireball(), abilities.WoodlandCharm(), abilities.Infest()]
 
 
 
@@ -611,11 +611,10 @@ class GameMenu():
         #	self.state.game_box.addstr(start, 2, item)
         #	start += 1
 
-        self.state.game_box.addstr(start, 2, "Stats")
+        self.state.game_box.addstr(start, 2, "Status Effects")
         start += 2
-        stats = self.state.player.get_combined_stats()
-        for k, v in self.state.player.get_combined_stats().items():
-            self.state.game_box.addstr(start, 4, f"{k}: {v}")
+        for item in self.state.player.status_effects:
+            self.state.game_box.addstr(start, 4, f"{item.readable_name}: {item.description}")
             start += 1
 
         start += 1
