@@ -1713,6 +1713,8 @@ class StarterTownLeftWall(MapState):
 
         if self.state.player.x == 3 and self.state.player.y == 33:
             events.GrandPalace_interior_entrance_enter(self.state)
+        if self.state.player.x == 23 and self.state.player.y == 48:
+            events.LeftWall_library_enter(self.state)
 
 class StarterTownLeftSeaWall(MapState):
     name = "Left Sea Wall"
@@ -1784,3 +1786,59 @@ class GrandPalace_interior_entrance(MapState):
     def check_events(self):
         if self.state.player.x == 35 and self.state.player.y == 48:
             events.GrandPalace_interior_entrance_exit(self.state)
+
+
+class LeftWallLibrary(MapState):
+    name = "Startertown Library"
+    raw_name = "LeftWallLibrary"
+    menu_commands = GameCommands
+    objects = []
+    game_map = mapper.GameMap("LeftWall_library.txt", objects)
+
+
+    def __init__(self, state):
+        super().__init__(state)
+        if state.first_time == True:
+            state.change_map_screen()
+            state.first_time = False
+        objects = [
+        ]
+        for i in range(17,32 + 1):
+            objects.append(npc.EmptyBookCase(21,i,state,[
+                "You do not see any interesting books here."
+            ]))
+            objects.append(npc.EmptyBookCase(17,i,state,[
+                "You do not see any interesting books here."
+            ]))
+            objects.append(npc.EmptyBookCase(13,i,state,[
+                "You do not see any interesting books here."
+            ]))
+        for i in range(52,67 + 1):
+            objects.append(npc.EmptyBookCase(21,i,state,[
+                "You do not see any interesting books here."
+            ]))
+            objects.append(npc.EmptyBookCase(17,i,state,[
+                "You do not see any interesting books here."
+            ]))
+            objects.append(npc.EmptyBookCase(13,i,state,[
+                "You do not see any interesting books here."
+            ]))
+        self.first_time = True
+        self.game_map = mapper.GameMap("LeftWall_library.txt", objects)
+        self.menu = GameMenu
+        self.menu_commands = GameCommands
+        self.ingame_menu = IngameMenu
+
+
+    def draw(self):
+        if self.state.player.phaseshift:
+            self.game_map.draw_map(self.state, inverted=True)    
+        else:
+            self.game_map.draw_map(self.state)
+
+    def execute(self):
+        pass
+
+    def check_events(self):
+        if self.state.player.x == 24 and self.state.player.y == 47:
+            events.LeftWall_library_exit(self.state)

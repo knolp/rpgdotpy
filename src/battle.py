@@ -144,6 +144,12 @@ class Battle():
                 self.opponent.status_effects.remove(item)
             if result["damage"] is not False:
                 self.opponent.health -= result["damage"]
+            
+            try:
+                if result["heal-player"] is not False:
+                    self.player.health += result["heal"]
+            except:
+                pass
 
     def check_player_effects(self):
         """

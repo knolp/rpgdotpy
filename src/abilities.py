@@ -299,7 +299,7 @@ class Infest(Ability):
                 }
         
         return {
-            "damage" : damage_done,
+            "damage" : 0,
             "combat_text" : combat_text
         }
 
@@ -469,10 +469,11 @@ class InfestAriamSeed():
         self.max_turn = turns + 1
         self.turns_left = turns + 1
         self.damage = damage
+        self.healing = int(damage / 2)
         self.opponent = opponent
         self.opponent_name = opponent.name
         self.combat_text = "{} is still infested with a seed.".format(self.opponent_name)
-        self.combat_text_over = "{}'s infestation bursts, dealing {} (Nature) damage".format(self.opponent_name, self.damage)
+        self.combat_text_over = "{}'s infestation bursts, dealing {} (Nature) damage and healing for {}.".format(self.opponent_name, self.damage, self.healing)
 
     def execute(self):
         self.turns_left -= 1
@@ -480,7 +481,8 @@ class InfestAriamSeed():
             return {
                 "combat_text" : self.combat_text_over,
                 "done" : True,
-                "damage" : self.damage
+                "damage" : self.damage,
+                "heal-player" : 3
             }
         else:
             return {
@@ -582,7 +584,6 @@ class WoodlandDeverberrySkin():
                 "done" : False,
                 "damage" : 0
             }
-
 
 
 
