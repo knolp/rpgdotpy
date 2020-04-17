@@ -137,3 +137,27 @@ class BasicAlchemy(Book):
         ]
 
         self.pages = [page_1, page_2, page_3, page_4, page_5]
+
+
+class FallOfBrym(Book):
+    def __init__(self):
+        super().__init__("FallOfBrym")
+        self.readable_name = "The Fall of Brym"
+        self.author = "Bhator and Historian Tril Kaner"
+
+
+        self.page_1 = [
+            "The Fall of Brym",
+            "",
+            "[Prewords]:",
+            "",
+            "This is a collection of letters sent to the mainland senate regarding the first hand",
+            "witness of the fall of Brym from a nobleman named Bhator",
+            "",
+            "To get the complete picture we need to to first know that the [ruins] as we know it today",
+            "was once the the capital for all the [southern isles], and had been for centuries before it's demise.",
+            "",
+            "Located south of todays [Blackcliff] this was a major tradingpoint and cultural epicenter for the different tribes."
+        ]
+
+        self.pages = [self.page_1]

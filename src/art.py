@@ -291,12 +291,12 @@ def draw_portrait_dwarf():
 	return_list = []
 
 	return_list.append("###########")
-	return_list.append("### #### ##")
 	return_list.append("###########")
 	return_list.append("###########")
-	return_list.append("# ####### #")
-	return_list.append("##   ##  ##")
-	return_list.append("#####  ####")
+	return_list.append("###########")
+	return_list.append("###########")
+	return_list.append("###########")
+	return_list.append("###########")
 	return_list.append("###########")
 
 	return return_list

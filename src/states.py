@@ -1804,9 +1804,12 @@ class LeftWallLibrary(MapState):
         objects = [
         ]
         for i in range(17,32 + 1):
-            objects.append(npc.EmptyBookCase(21,i,state,[
-                "You do not see any interesting books here."
-            ]))
+            if i != 22:
+                objects.append(npc.EmptyBookCase(21,i,state,[
+                    "You do not see any interesting books here."
+                ]))
+            else:
+                objects.append(npc.SingleBookCase(21,i,state,books.FallOfBrym()))
             objects.append(npc.EmptyBookCase(17,i,state,[
                 "You do not see any interesting books here."
             ]))
@@ -1842,3 +1845,8 @@ class LeftWallLibrary(MapState):
     def check_events(self):
         if self.state.player.x == 24 and self.state.player.y == 47:
             events.LeftWall_library_exit(self.state)
+
+        if self.state.check_action:
+            for item in self.game_map.objects:
+                if item.y == self.state.player.y and item.x == self.state.player.x - 1:
+                    item.action(self.state.stdscr, self.state)
