@@ -806,7 +806,7 @@ def draw_menu(stdscr):
                 state_handler.player.minions.append("W")
 
         if k == ord("c") and state_handler.player != False:
-            battlemode = battle.Battle(state_handler, monster.SkeletonGrunt(state_handler), "3")
+            battlemode = battle.Battle(state_handler, monster.CaveTroll(state_handler), "3")
             battlemode.play()
 
         if k == ord("k") and state_handler.player != False:

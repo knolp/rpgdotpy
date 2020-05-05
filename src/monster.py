@@ -390,6 +390,47 @@ class SkeletonGrunt(Monster):
         return self.melee_attack()
 
 
+class CaveTroll(Monster):
+    def __init__(self, state):
+        super().__init__("CaveTroll")
+        self.state = state
+        self.race = "Troll"
+        self.description = [
+            "A large Troll."
+        ]
+        self.before_name = "a"
+        self.readable_name = "Cave Troll"
+        self.damage = 2
+        self.immune = []
+        self.art = "N/A"
+        self.attack_styles = ["bashes at", "swings"]
+        self.buffed_turn = 0
+        self.loot = ["LeatherBoots"]
+        self.special_loot = {
+            "Longsword" : 3
+        }
+        self.limbs = [
+            Limb(self,"head",True,False,10,2),
+            Limb(self,"chest",False,False,10,1),
+            Limb(self,"right arm",False,True,5,1, held_item=items.IronMace()),
+            Limb(self,"left arm",False,True,5,1),
+            Limb(self,"right leg",False,False,5,1),
+            Limb(self,"left leg",False,False,5,1),
+        ]
+
+        self.max_health = sum([x.max_health for x in self.limbs])
+        self.health = self.max_health
+
+    def __str__(self):
+        return self.name
+
+    def special_attack(self):
+        pass
+
+    def attack(self):
+        return self.melee_attack()
+
+
 if __name__ == "__main__":
     opp = Rat()
 

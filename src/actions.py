@@ -986,7 +986,7 @@ class SpeakEdwardGryll(Action):
 					text = [
 						"Great, we set sail for [Port Avery] right away!"
 					]
-					helper.popup(self.state.stdscr,self.state,["You arrive at [Port Avery]"])
+					helper.popup(self.state.stdscr,self.state,["You arrive at [Port Avery, Blackcliff]"])
 					events.StarterTown_door(self.state)
 					return
 
