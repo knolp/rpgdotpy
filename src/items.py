@@ -5,6 +5,15 @@ import helper
 
 # Materials
 
+class __Sets():
+    def hasCompleteBharoks(player):
+        list_of_equipped_item_names = [v.name for k,v in player.equipment.items() if v != False]
+        nr_of_bharok_items = len(list(filter(lambda x: "Bharok" in x, list_of_equipped_item_names)))
+        return nr_of_bharok_items == 4
+
+    def getSetComponents(setname):
+        if setname == "Bharok":
+            return ["BharokHammer", "BharokLegs", "BharokChest", "BharokHelm"]
 
 #items
 class Item():
@@ -23,6 +32,7 @@ class Item():
         :string effect_description  = Description of the effect of the item, what it does
         :string material            = Not implemented, probably going to be implemented for dismantling/crafting items #TODO
         :int dismember_chance       = Chance to chop of limbs, currently used in reverse in 100 - chance (so 95 == 5% chance)
+        :string setname             = String of set item belongs to
 
         :bool dryable               = If (alchemy) item is able to be DRIED into other crafting materials
         :bool juicable              = If (alchemy) item is able to be JUICED into other crafting materials
@@ -43,6 +53,7 @@ class Item():
         self.effect_description = False
         self.material = False
         self.dismember_chance = 95
+        self.setname = False
         self.stat_increase = False
 
         #Alchemy stuff
@@ -903,3 +914,45 @@ class AdralBrew(Item):
 #     "StuddedLegs" : StuddedLegs,
 #     "LeatherBoots" : LeatherBoots
 # }
+
+# Special items (for debug etc)
+
+#Dharoks armor and weapon for testing set items
+
+class BharokHammer(Item):
+    def __init__(self):
+        super().__init__("BharokHammer", False)
+        self.readable_name = "Bharok's Greathammer"
+        self.type = "weapon"
+        self.subtype = "mace"
+        self.equippable = "right_hand"
+        self.attack = 2
+        self.defence = 0
+        self.description = "A hammer from a swampy land."
+        self.damage_type = "Blunt"
+        self.effect_description = "todo."
+        self.setname = "Bharok"
+
+    def effect(self, player, opponent):
+        """
+            Part of Bharok set, while all four items are equipped, damage is based on percent HP lost
+
+            Will never be on opponent
+        """
+        if opponent.player == True:
+            readable_name = "you"
+        
+        if __Sets.hasCompleteBharoks(player):
+            print("yay")
+
+
+class BharokHelm(Item):
+    def __init__(self):
+        super().__init__("BharokHelm", False)
+        self.readable_name = "Bharok's helmet"
+        self.type = "armor"
+        self.equippable = self.subtype = "head"
+        self.attack = 0
+        self.defence = 1
+        self.description = "Boots made out of cheap leather."
+        self.setname = "Bharok"

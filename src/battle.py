@@ -592,7 +592,6 @@ class Battle():
         opponent_art_offset = 2
 
         while k != ord("q"):
-            print(self.battlefield.ground_items)
             self.screen.clear()
             if self.player.health <= 0:
                 helper.popup(self.screen, self.state, ["You have died"])

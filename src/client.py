@@ -850,7 +850,8 @@ def draw_menu(stdscr):
             state_handler.player.hotkeys["2"].execute(state_handler.player)
 
         if k == ord("3"):
-            state_handler.player.stats["Intelligence"] += 5
+            #state_handler.player.stats["Intelligence"] += 5
+            print(items.__Sets.hasCompleteBharoks(state_handler.player))
 
         if k == ord("4"):
             state_handler.player.ascii = not state_handler.player.ascii

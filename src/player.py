@@ -22,17 +22,6 @@ class Dummy():
 
 class Player():
 	def __init__(self, create_dict):
-		"""self.name = create_dict["name"]
-								self.x = create_dict["x"]
-								self.y = create_dict["y"]
-								self.location = create_dict["location"]
-						
-								self.turn = create_dict["turn"]
-						
-								self.gold = create_dict["gold"]
-								self.inventory = create_dict["inventory"]
-						
-								self.equipped = create_dict["equipped"]"""
 
 		for key in create_dict:
 			setattr(self, key, create_dict[key])
@@ -131,6 +120,9 @@ class Player():
 			screen.addstr(self.x, self.y, "@")
 
 	def get_combined_stats(self):
+		"""
+			Returns :dict: of base stats + stats from equipped gear
+		"""
 		return {
 			"Intelligence" : self.stats["Intelligence"] + self.gear_stats["Intelligence"],
 			"Strength" : self.stats["Strength"] + self.gear_stats["Strength"],
@@ -141,6 +133,9 @@ class Player():
 		}
 
 	def _populate_gear_stats(self):
+		"""
+			Used in client.py when loading save to populate self.gear_stats
+		"""
 		for slot, item in self.equipment.items():
 			if item and item.stat_increase:
 				self.gear_stats[item.stat_increase[0]] += item.stat_increase[1]
