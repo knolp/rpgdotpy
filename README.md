@@ -19,8 +19,9 @@ RPG.py takes place in a persistent world known as Beladir, it's a simple fantasy
       - [ ] Ork'Theral
       - [ ] Arkthal
       - [ ] Ruins of Brym
+      - [ ] Berum
       
-    - [ ] Flora (for Alchemy)
+    - [x] Flora (for Alchemy)
     - [x] Alchemy
     - [x] Farming
     - [ ] Wilderness
@@ -33,11 +34,25 @@ RPG.py takes place in a persistent world known as Beladir, it's a simple fantasy
       - Different weapon types
         - Stab (better armor penetration)
         - Crush (more limb damage)
+        - Slash (Chance to chop off limbs)
       - Spells
         - Direct damage spells (Fireball, Lifebolts)
         - Damage over time and debuff spells (scorch, chill)
+        - Hybrid spells (Woodland Charm, Infest)
       - Weapon effects
         - Stuns, chills, bleeds, poison
+      - Equipment
+        - ARPG-Like stats
+          - Spelldamage conversion (ex. Fire -> Occult)
+          - Multipliers
+            - Conditional (ex. +4 firedamage to spells, 30% increased arcane damage)
+            - General (ex. +3 damage to all spells, 10% increased spelldamage)
+          - On hit / On getting hit (ex. 0-2 damage reflected to attacker)
+          - Unique stats examples:
+            - Unarmed attacks are now kicks, scaling with Strength.
+            - While Equipped: Gain access to Tempest spell.
+            - Gain the ability to Dodge.
+            - Gain Magic Barrier buff while blocking.
     
 2. World
       - Player Housing
@@ -52,6 +67,8 @@ RPG.py takes place in a persistent world known as Beladir, it's a simple fantasy
         - Changing dialogue options depending on stats
         - Unique dialogue system with secret alternatives
         - Puzzles
+      - Randomly Generated Dungeons
+        - Random cave layout
     
 3. Races
       - Elves
