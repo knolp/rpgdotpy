@@ -575,7 +575,13 @@ class Battle():
 
             :return bool (if succesful or not)
         """
+        #Give opponent knowledge of battlefield
+        self.opponent.battlefield = self.battlefield
         self.update_log(["opponent", "{} encounters {} {}".format(self.player.name, self.opponent.before_name, self.opponent.readable_name)])
+        opener = self.opponent.opener()
+        if opener:
+            for item in opener["combat_text"]:
+                self.update_log(["opponent", item])
         self.update_log(["neutral", ""])
         k = -1
         selected_command = 0
@@ -586,6 +592,7 @@ class Battle():
         opponent_art_offset = 2
 
         while k != ord("q"):
+            print(self.battlefield.ground_items)
             self.screen.clear()
             if self.player.health <= 0:
                 helper.popup(self.screen, self.state, ["You have died"])
@@ -619,18 +626,19 @@ class Battle():
                 self.opponent_killed = True
                 # return True
             elif not self.opponent_killed:
-                if self.player.in_control:
+                if not self.player.in_control:
+                    self.commands = [
+                        "You are not in control"
+                    ]
+                    selected_command = 0
+                else:
                     self.commands = [
                         "Attack",
                         "Block",
                         "Spell",
                         "Item",
                     ]
-                else:
-                    self.commands = [
-                        "You are not in control"
-                    ]
-                    selected_command = 0
+                    
 
             combat_log_start = 0
             self.used_turns = []

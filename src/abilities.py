@@ -332,9 +332,9 @@ class WoodlandCharm(Ability):
                     if item.origin == "WoodlandDeverberrySkin":
                         return {
                             "damage" : self.damage,
-                            "combat_text" : "This buff is already applied"
+                            "combat_text" : ["This buff is already applied"]
                         }
-            player.status_effects.append(WoodlandDeverberrySkin(5,player))
+            player.status_effects.append(WoodlandDeverberrySkin(5, player))
             player.status_effects.append(StatBuff(5, "Strength", player.stats["Strength"], player, origin="WoodlandDeverberrySkin"))
 
         return {

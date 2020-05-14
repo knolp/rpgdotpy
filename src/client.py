@@ -20,6 +20,7 @@ import actions
 import inventory
 import items
 import battle
+import battlefields
 import monster
 import pathfinding
 import pathfinding2
@@ -806,7 +807,7 @@ def draw_menu(stdscr):
                 state_handler.player.minions.append("W")
 
         if k == ord("c") and state_handler.player != False:
-            battlemode = battle.Battle(state_handler, monster.CaveTroll(state_handler), "3")
+            battlemode = battle.Battle(state_handler, monster.CaveTroll(state_handler), battlefields.Battlefield("Dungeon"))
             battlemode.play()
 
         if k == ord("k") and state_handler.player != False:

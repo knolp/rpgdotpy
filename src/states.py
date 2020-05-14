@@ -209,8 +209,10 @@ class NewGame_1():
         }
 
     def draw(self):
+        height, width = self.game_box.getmaxyx()
         #self.game_box.addstr(5,40, "STARTING A NEW GAME")
-        #self.game_box.addstr(7,40, "PLEASE CHOOSE A CLASS")
+        choose_text = "Choose a class"
+        self.game_box.addstr(37, center(width, choose_text) , choose_text)
         for item in self.command_state.commands:
             if item.active:
                 if item.text == "Rogue":
@@ -235,32 +237,32 @@ class NewGame_1():
 
     def draw_warrior(self):
         self.game_box.addstr(19,46, "Warrior:")
-        self.game_box.addstr(21,10, explain_text("Strength: 6 ", self.explain_text_strength, 80), curses.color_pair(133))
-        self.game_box.addstr(22,10, explain_text("Agility: 2 ", self.explain_text_agility, 80), curses.color_pair(134))
+        self.game_box.addstr(21,10, explain_text("Strength: 6 ", self.explain_text_strength, 80), curses.color_pair(136))
+        self.game_box.addstr(22,10, explain_text("Agility: 2 ", self.explain_text_agility, 80))
         self.game_box.addstr(23,10, explain_text("Charisma: 0 ", self.explain_text_charisma, 80), curses.color_pair(136))
-        self.game_box.addstr(24,10, explain_text("Intellect: 0 ", self.explain_text_intellect, 80), curses.color_pair(135))
-        self.game_box.addstr(25,10, explain_text("Alchemy: 2 ", self.explain_text_alchemy, 80), curses.color_pair(137))
-        self.game_box.addstr(26,10, explain_text("Attunement: 0 ", self.explain_text_attunement, 80), curses.color_pair(147))
+        self.game_box.addstr(24,10, explain_text("Intellect: 0 ", self.explain_text_intellect, 80))
+        self.game_box.addstr(25,10, explain_text("Alchemy: 2 ", self.explain_text_alchemy, 80), curses.color_pair(136))
+        self.game_box.addstr(26,10, explain_text("Attunement: 0 ", self.explain_text_attunement, 80))
         art.draw_shield(self.game_box,2,35)
 
     def draw_mage(self):
         self.game_box.addstr(19,47, "Mage:")
-        self.game_box.addstr(21,10, explain_text("Strength: 1 ", self.explain_text_strength, 80), curses.color_pair(133))
-        self.game_box.addstr(22,10, explain_text("Agility: 1 ", self.explain_text_agility, 80), curses.color_pair(134))
+        self.game_box.addstr(21,10, explain_text("Strength: 1 ", self.explain_text_strength, 80), curses.color_pair(136))
+        self.game_box.addstr(22,10, explain_text("Agility: 1 ", self.explain_text_agility, 80))
         self.game_box.addstr(23,10, explain_text("Charisma: 3 ", self.explain_text_charisma, 80), curses.color_pair(136))
-        self.game_box.addstr(24,10, explain_text("Intellect: 4 ", self.explain_text_intellect, 80), curses.color_pair(135))
-        self.game_box.addstr(25,10, explain_text("Alchemy: 3 ", self.explain_text_alchemy, 80), curses.color_pair(137))
-        self.game_box.addstr(26,10, explain_text("Attunement: 3 ", self.explain_text_attunement, 80), curses.color_pair(147))
+        self.game_box.addstr(24,10, explain_text("Intellect: 4 ", self.explain_text_intellect, 80))
+        self.game_box.addstr(25,10, explain_text("Alchemy: 3 ", self.explain_text_alchemy, 80), curses.color_pair(136))
+        self.game_box.addstr(26,10, explain_text("Attunement: 3 ", self.explain_text_attunement, 80))
         art.draw_fire(self.game_box, 2, 45)
 
     def draw_rogue(self):
         self.game_box.addstr(19,46, "Rogue:")
-        self.game_box.addstr(21,10, explain_text("Strength: 3 ", self.explain_text_strength, 80), curses.color_pair(133))
-        self.game_box.addstr(22,10, explain_text("Agility: 4 ", self.explain_text_agility, 80), curses.color_pair(134))
+        self.game_box.addstr(21,10, explain_text("Strength: 3 ", self.explain_text_strength, 80), curses.color_pair(136))
+        self.game_box.addstr(22,10, explain_text("Agility: 4 ", self.explain_text_agility, 80))
         self.game_box.addstr(23,10, explain_text("Charisma: 2 ", self.explain_text_charisma, 80), curses.color_pair(136))
-        self.game_box.addstr(24,10, explain_text("Intellect: 0 ", self.explain_text_intellect, 80), curses.color_pair(135))
-        self.game_box.addstr(25,10, explain_text("Alchemy: 4 ", self.explain_text_alchemy, 80), curses.color_pair(137))
-        self.game_box.addstr(26,10, explain_text("Attunement: 0 ", self.explain_text_attunement, 80), curses.color_pair(147))
+        self.game_box.addstr(24,10, explain_text("Intellect: 0 ", self.explain_text_intellect, 80))
+        self.game_box.addstr(25,10, explain_text("Alchemy: 4 ", self.explain_text_alchemy, 80), curses.color_pair(136))
+        self.game_box.addstr(26,10, explain_text("Attunement: 0 ", self.explain_text_attunement, 80))
         art.draw_dagger(self.game_box, 2, 44)
 
     def draw_back(self):
@@ -332,12 +334,12 @@ class NewGame_2():
     def draw(self):
         height, width = self.game_box.getmaxyx()
         text = "Choose a starting area"
-        self.game_box.addstr(2, center(width, text), text)
+        self.game_box.addstr(37, center(width, text), text)
         for item in self.command_state.commands:
             if item.active:
                 if item.text == "Starter Town":
                     for idx, text in enumerate(self.starter_town_art):
-                        self.game_box.addstr(2 + idx, center(width, text),text)
+                        self.game_box.addstr(3 + idx, center(width, text),text)
                     text = "A basic town in the southern part of the realm"
                     self.game_box.addstr(20, center(width, text),text)
                     text = "Notable features:"
@@ -355,7 +357,7 @@ class NewGame_2():
 
                 if item.text == "Orc'Theral":
                     for idx, text in enumerate(self.orctheral_art):
-                        self.game_box.addstr(2 + idx, center(width, text),text)
+                        self.game_box.addstr(3 + idx, center(width, text),text)
                     text = "The Orc hometown in the east"
                     self.game_box.addstr(20, center(width, text),text)
                     text = "Notable features:"
@@ -371,7 +373,7 @@ class NewGame_2():
 
                 if item.text == "Blackcliff":
                     for idx, text in enumerate(self.blackcliff_art):
-                        self.game_box.addstr(2 + idx, center(width, text),text)
+                        self.game_box.addstr(3 + idx, center(width, text),text)
                     text = "The largest fishing colony in the west"
                     self.game_box.addstr(20, center(width, text),text)
                     text = "Notable features:"

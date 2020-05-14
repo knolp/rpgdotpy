@@ -70,6 +70,7 @@ class Limb():
             self.held_item = False
 
             combat_text.append(f"{dropped_item.readable_name} falls off {self.owner.readable_name}'s {self.name} onto the floor.")
+            self.owner.battlefield.ground_items.append(dropped_item)
         
         return {
             "combat_text" : combat_text,
@@ -130,6 +131,10 @@ class Monster():
         self.status_effects = []
         self.immune = []
         self.player = False
+        self.battlefield = False
+
+    def opener(self):
+        return False
 
     
     def generate_loot(self):
@@ -423,6 +428,12 @@ class CaveTroll(Monster):
 
     def __str__(self):
         return self.name
+
+    def opener(self):
+        return {
+            "combat_text" : ["The Cave Troll roars at the sight of you, increasing it's strength",
+                            f"He knows this is a {self.battlefield.name}."]
+        }
 
     def special_attack(self):
         pass
