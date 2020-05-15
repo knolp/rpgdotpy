@@ -350,6 +350,8 @@ def get_item(item):
 			continue
 		if var == "Item":
 			continue
+		if var == "Sets":
+			continue
 		if var == item:
 			return getattr(items, var)
 

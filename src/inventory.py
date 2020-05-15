@@ -1,6 +1,7 @@
 import time
 import helper
 import curses
+from items import Sets
 from curses.textpad import Textbox, rectangle
 
 color_dict = {
@@ -837,6 +838,17 @@ def view_inventory_2(state):
 				helper.color_both(screen, 27, item_end + 2, "Effect: ", "No special effect", _orange, _cyan)
 			screen.addstr(29, item_end + 2, f"Description:", _orange)
 			screen.addstr(30, item_end + 2, copy_of_item.description)
+
+			if copy_of_item.setname:
+				list_of_set_items = Sets.getSetComponents(copy_of_item.setname)
+				list_of_equipped_item_names = [v.name for k,v in state.player.equipment.items() if v != False]
+				nr_of_equipped_set_items = sum([1 if x in list_of_equipped_item_names else 0 for x in list_of_set_items])
+				if nr_of_equipped_set_items == len(list_of_set_items):
+					set_display_color = _green
+				else:
+					set_display_color = _red
+				helper.color_both(screen, 41, item_end + 2, "Set Effect: ", f"{Sets.getSetDescription(copy_of_item.setname)}", _orange, _cyan)
+				helper.color_both(screen, 42, item_end + 2, "Set: ", f"{copy_of_item.setname} {nr_of_equipped_set_items}/{len(list_of_set_items)} equipped.", _orange, set_display_color)
 
 		#add info
 		for idx, item in enumerate(info_list[-5:]): #The last 5 items of info_list

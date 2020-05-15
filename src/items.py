@@ -5,7 +5,7 @@ import helper
 
 # Materials
 
-class __Sets():
+class Sets():
     def hasCompleteBharoks(player):
         list_of_equipped_item_names = [v.name for k,v in player.equipment.items() if v != False]
         nr_of_bharok_items = len(list(filter(lambda x: "Bharok" in x, list_of_equipped_item_names)))
@@ -14,6 +14,10 @@ class __Sets():
     def getSetComponents(setname):
         if setname == "Bharok":
             return ["BharokHammer", "BharokLegs", "BharokChest", "BharokHelm"]
+
+    def getSetDescription(setname):
+        if setname == "Bharok":
+            return "Your attacks scale with lost health."
 
 #items
 class Item():
@@ -933,7 +937,7 @@ class BharokHammer(Item):
         self.effect_description = "todo."
         self.setname = "Bharok"
 
-    def effect(self, player, opponent):
+    def modifier(self, player, opponent):
         """
             Part of Bharok set, while all four items are equipped, damage is based on percent HP lost
 
@@ -942,8 +946,9 @@ class BharokHammer(Item):
         if opponent.player == True:
             readable_name = "you"
         
-        if __Sets.hasCompleteBharoks(player):
-            print("yay")
+        if Sets.hasCompleteBharoks(player):
+            percent_hp_lost = round(1 - (player.health / player.max_health), 2)
+            return round(1 + (percent_hp_lost * 2),2)
 
 
 class BharokHelm(Item):
@@ -953,6 +958,28 @@ class BharokHelm(Item):
         self.type = "armor"
         self.equippable = self.subtype = "head"
         self.attack = 0
-        self.defence = 1
-        self.description = "Boots made out of cheap leather."
+        self.defence = 3
+        self.description = "A spiky helmet from a swampy land."
+        self.setname = "Bharok"
+
+class BharokChest(Item):
+    def __init__(self):
+        super().__init__("BharokChest", False)
+        self.readable_name = "Bharok's Chestplate"
+        self.type = "armor"
+        self.equippable = self.subtype = "chest"
+        self.attack = 0
+        self.defence = 3
+        self.description = "A dark green chestplate from a swampy land."
+        self.setname = "Bharok"
+
+class BharokLegs(Item):
+    def __init__(self):
+        super().__init__("BharokLegs", False)
+        self.readable_name = "Bharok's Platelegs"
+        self.type = "armor"
+        self.equippable = self.subtype = "legs"
+        self.attack = 0
+        self.defence = 3
+        self.description = "Heavy platelegs from a swampy land."
         self.setname = "Bharok"
