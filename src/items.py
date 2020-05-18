@@ -922,6 +922,7 @@ class AdralBrew(Item):
 # Special items (for debug etc)
 
 #Dharoks armor and weapon for testing set items
+#These items will not make the final game (maybe, who knows)
 
 class BharokHammer(Item):
     def __init__(self):

@@ -101,6 +101,8 @@ class Battle():
         for item in attack["combat_text"]:
             self.update_log(["opponent", item])
         damage = attack["damage"]
+        
+        #Check for player on_damage_taken items
         for _, value in self.player.equipment.items():
             if not value:
                 continue
@@ -119,6 +121,19 @@ class Battle():
                 if ret_dict["combat_text"]:
                     for text in ret_dict["combat_text"]:
                         self.update_log(["player", text])
+
+        #Check player for thorns-like buffs
+        if len(self.player.status_effects) != 0:
+            for item in self.player.status_effects:
+                if item.damage_type != "recoil":
+                    continue
+                result = item.execute()
+                if result["combat_text"] is not False:
+                    self.update_log(["player_effect", result["combat_text"]])
+                if result["done"] is True:
+                    self.player.status_effects.remove(item)
+                if result["damage"] is not False:
+                    self.opponent.health -= result["damage"]
 
         self.player.health -= damage
 
@@ -162,6 +177,8 @@ class Battle():
         if len(self.player.status_effects) == 0:
             return
         for item in self.player.status_effects:
+            if item.damage_type != "normal":
+                continue
             if item.type == "Stun":
                 self.player_effects["stunned"] = True
             result = item.execute()

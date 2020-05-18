@@ -350,11 +350,14 @@ class WoodlandCharm(Ability):
 # |______|  |_|  |_|  |_|______|_|  \_\______/_/    \_\______
 
 
-
+class StatusEffect():
+    def __init__(self):
+        self.damage_type = "normal"
 
 #DEBUFFS
-class Bleed():
+class Bleed(StatusEffect):
     def __init__(self, turns, damage, opponent_name):
+        super().__init__()
         self.type = self.name = "Bleed"
         self.color = 133
         self.max_turn = turns + 1
@@ -379,8 +382,9 @@ class Bleed():
                 "damage" : self.damage
             }
 
-class Stun():
+class Stun(StatusEffect):
     def __init__(self, turns, opponent_name):
+        super().__init__()
         self.type = self.name = "Stun"
         self.color = 133
         self.max_turn = turns + 1
@@ -405,8 +409,9 @@ class Stun():
             }
 
 
-class Burn():
+class Burn(StatusEffect):
     def __init__(self, turns, damage, opponent_name):
+        super().__init__()
         self.type = self.name = "Burn"
         self.color = 133
         self.max_turn = turns + 1
@@ -432,8 +437,9 @@ class Burn():
             }
 
 
-class Chill():
+class Chill(StatusEffect):
     def __init__(self, turns, damage, opponent_name):
+        super().__init__()
         self.type = self.name = "Chill"
         self.color = 133
         self.max_turn = turns + 1
@@ -458,11 +464,10 @@ class Chill():
                 "damage" : 0
             }
 
-
-
 # Infest Debuffs
-class InfestAriamSeed():
+class InfestAriamSeed(StatusEffect):
     def __init__(self, turns, damage, opponent):
+        super().__init__()
         self.type = "Infested"
         self.name = "InfestAriamSeed"
         self.color = 133
@@ -491,8 +496,9 @@ class InfestAriamSeed():
                 "damage" : 0
             }
 
-class InfestDeverSeed():
+class InfestDeverSeed(StatusEffect):
     def __init__(self, turns, damage, opponent):
+        super().__init__()
         self.type = "Infested"
         self.name = "InfestDeverSeed"
         self.color = 133
@@ -519,8 +525,9 @@ class InfestDeverSeed():
                 "damage": self.damage
             }
 
-class InfestFirebloomSeed():
+class InfestFirebloomSeed(StatusEffect):
     def __init__(self, turns, damage, opponent):
+        super().__init__()
         self.type = "Infested"
         self.name = "InfestFirebloomSeed"
         self.color = 133
@@ -549,8 +556,9 @@ class InfestFirebloomSeed():
             }
                 
 #WoodlandCharm Buffs
-class WoodlandDeverberrySkin():
+class WoodlandDeverberrySkin(StatusEffect):
     def __init__(self, turns, opponent):
+        super().__init__()
         self.type = "Woodland"
         self.name = "WoodlandDeverberrySkin"
         self.color = 133
@@ -585,9 +593,100 @@ class WoodlandDeverberrySkin():
                 "damage" : 0
             }
 
+class WoodlandDesertSalt(StatusEffect):
+    def __init__(self, turns, opponent):
+        super().__init__()
+        self.type = "Woodland"
+        self.name = "WoodlandDesertSalt"
+        self.color = 133
+        self.max_turn = turns + 1
+        self.turns_left = turns + 1
+        self.opponent = opponent
+        self.opponent_name = opponent.name
+        self.combat_text_begin = "{}'s skin grows sharp spikes of salt.".format(self.opponent_name)
+        self.combat_text = "takes some damage in recoil."
+        self.combat_text_over = "{}'s saltspikes shatter.'".format(self.opponent_name)
+
+        self.damage_type = "recoil"
+
+    def execute(self):
+        self.turns_left -= 1
+        if self.max_turn == self.turns_left -1:
+            return {
+                "combat_text" : combat_text_begin,
+                "done" : False,
+                "damage" : 0
+            }
+        if self.turns_left == 0:
+            return {
+                "combat_text" : self.combat_text_over,
+                "done" : True,
+                "damage" : 0,
+            }
+        else:
+            return {
+                "combat_text" : self.combat_text,
+                "done" : False,
+                "damage" : 40
+            }
 
 
 
+class StatBuff(StatusEffect):
+    def __init__(self, turns, stat, increase, player, origin=False):
+        """
+            Increases <stat> by <increase> for <turn> turns.
+            
+            :string name =                  Name of the class
+            :string readable_name =         Readable syntax of buff name
+            :string description =           Description of what it does
+            :string combat_text =           Currently unused #!
+            :string combat_text_over =      Message when it ends
+            :string type =                  What type it belongs to: t.ex Buff, Debuff
+            :int color =                    Color of the message in interface
+            :string origin =                Where the buff came from, to make sure we are not applying multiple
+
+            :int max_turn =                 Max turns this effect has
+            :int turns_left =               Current turns left until expired
+
+            :string stat =                  name of stat in player.stats t.ex "Strength", "Intelligence", "Agility"
+            :int increase =                 The amount of increase, t.ex Adral Brew is +4 Strength
+            :Player player =                The player object
+        """
+        super().__init__()
+        self.name = "StatBuff"
+        self.readable_name = f"Increased {stat}"
+        self.description = "Increase stat"
+        self.combat_text = False
+        self.combat_text_over = f"{player.name}'s {self.readable_name} has worn off."
+        self.type = "Buff"
+        self.color = 134
+        self.origin = origin
+
+        self.max_turn = turns + 1
+        self.turns_left = turns + 1
+
+        self.stat = stat
+        self.increase = increase
+        self.player = player
+        self.player.stats[stat] += increase
+
+
+    def execute(self):
+        self.turns_left -= 1
+        if self.turns_left == 0:
+            self.player.stats[self.stat] -= self.increase
+            return {
+                "combat_text" : self.combat_text_over,
+                "done" : True,
+                "damage" : False
+            }
+        else:
+            return {
+                "combat_text" : self.combat_text,
+                "done" : False,
+                "damage" : 0
+            }
 
 
 
@@ -635,58 +734,5 @@ class HomeTeleport():
         self.description = "Teleport to your home."
 
 
-class StatBuff():
-    def __init__(self, turns, stat, increase, player, origin=False):
-        """
-            Increases <stat> by <increase> for <turn> turns.
-            
-            :string name =                  Name of the class
-            :string readable_name =         Readable syntax of buff name
-            :string description =           Description of what it does
-            :string combat_text =           Currently unused #!
-            :string combat_text_over =      Message when it ends
-            :string type =                  What type it belongs to: t.ex Buff, Debuff
-            :int color =                    Color of the message in interface
-            :string origin =                Where the buff came from, to make sure we are not applying multiple
 
-            :int max_turn =                 Max turns this effect has
-            :int turns_left =               Current turns left until expired
-
-            :string stat =                  name of stat in player.stats t.ex "Strength", "Intelligence", "Agility"
-            :int increase =                 The amount of increase, t.ex Adral Brew +4 Strength
-            :Player player =                The player object
-        """
-        self.name = "StatBuff"
-        self.readable_name = f"Increased {stat}"
-        self.description = "Increase stat"
-        self.combat_text = False
-        self.combat_text_over = f"{player.name}'s {self.readable_name} has worn off."
-        self.type = "Buff"
-        self.color = 134
-        self.origin = origin
-
-        self.max_turn = turns + 1
-        self.turns_left = turns + 1
-
-        self.stat = stat
-        self.increase = increase
-        self.player = player
-        self.player.stats[stat] += increase
-
-
-    def execute(self):
-        self.turns_left -= 1
-        if self.turns_left == 0:
-            self.player.stats[self.stat] -= self.increase
-            return {
-                "combat_text" : self.combat_text_over,
-                "done" : True,
-                "damage" : False
-            }
-        else:
-            return {
-                "combat_text" : self.combat_text,
-                "done" : False,
-                "damage" : 0
-            }
 
