@@ -852,7 +852,6 @@ def draw_menu(stdscr):
             state_handler.player.hotkeys["2"].execute(state_handler.player)
 
         if k == ord("3"):
-            #state_handler.player.stats["Intelligence"] += 5
             print(items.Sets.hasCompleteBharoks(state_handler.player))
 
         if k == ord("4"):
@@ -863,7 +862,8 @@ def draw_menu(stdscr):
         
         if k == ord("6"):
             #state_handler.timer.tid += 1209600
-            state_handler.player.stats["Intelligence"] -= 5
+            anim = animation.test_animation()
+            animation.play(anim, state_handler)
     
     state_handler.timer.terminate()
 

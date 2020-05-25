@@ -129,7 +129,10 @@ class Battle():
                     continue
                 result = item.execute()
                 if result["combat_text"] is not False:
-                    self.update_log(["player_effect", result["combat_text"]])
+                    combat_text_recoil = result["combat_text"].replace("OPPONENT", self.opponent.readable_name)
+                    combat_text_recoil = combat_text_recoil.replace("DAMAGE", str(result["damage"]))
+                    self.update_log(["player", combat_text_recoil])
+                    self.update_log(["neutral", ""])
                 if result["done"] is True:
                     self.player.status_effects.remove(item)
                 if result["damage"] is not False:
@@ -281,6 +284,16 @@ class Battle():
         weapon_unique_modifier = weapon.modifier(self.player, self.opponent)
         if weapon_unique_modifier:
             damage = damage * weapon_unique_modifier
+
+        #Add status_effect ex. temporary stuff like Molten Strike
+        for item in self.player.status_effects:
+            if item.damage_type == "enhance_melee_hit":
+                if result["combat_text"] is not False:
+                    self.update_log(["player_effect", result["combat_text"]])
+                if result["done"] is True:
+                    self.player.status_effects.remove(item)
+                if result["damage"] is not False:
+                    damage += result["damage"]
 
         # Add limb damage
         if self.opponent.has_limbs:
@@ -569,7 +582,8 @@ class Battle():
         """
         self.player.in_control = True
         debuffs_to_remove = [
-            "WoodlandDeverberrySkin"
+            "WoodlandDeverberrySkin",
+            "WoodlandDesertSalt"
         ]
         for item in self.player.status_effects:
             if item.name in debuffs_to_remove:

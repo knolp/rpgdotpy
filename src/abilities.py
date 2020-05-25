@@ -221,6 +221,7 @@ class Infest(Ability):
                 for item in player.inventory:
                     if item.readable_name == seed:
                         player.inventory.pop(player.inventory.index(item))
+                        break
         
         if seed == "Ariam Seed":
             damage = player.stats["Intelligence"] * 2
@@ -240,6 +241,7 @@ class Infest(Ability):
                 for item in player.inventory:
                     if item.readable_name == seed:
                         player.inventory.pop(player.inventory.index(item))
+                        break
 
                 return {
                     "damage" : 0,
@@ -265,6 +267,7 @@ class Infest(Ability):
                 for item in player.inventory:
                     if item.readable_name == seed:
                         player.inventory.pop(player.inventory.index(item))
+                        break
 
 
                 return {
@@ -291,6 +294,7 @@ class Infest(Ability):
                 for item in player.inventory:
                     if item.readable_name == seed:
                         player.inventory.pop(player.inventory.index(item))
+                        break
 
 
                 return {
@@ -336,6 +340,15 @@ class WoodlandCharm(Ability):
                         }
             player.status_effects.append(WoodlandDeverberrySkin(5, player))
             player.status_effects.append(StatBuff(5, "Strength", player.stats["Strength"], player, origin="WoodlandDeverberrySkin"))
+
+        if charm == "Desert Salt":
+            for item in player.status_effects:
+                if item.name == "WoodlandDesertSalt":
+                    return {
+                        "damage" : self.damage,
+                        "combat_text" : ["This buff is already applied"]
+                    }
+            player.status_effects.append(WoodlandDesertSalt(5, player))
 
         return {
             "damage" : self.damage,
@@ -390,8 +403,12 @@ class Stun(StatusEffect):
         self.max_turn = turns + 1
         self.turns_left = turns + 1
         self.opponent_name = opponent_name
-        self.combat_text = "{} is stunned and unable to respond.".format(self.opponent_name)
-        self.combat_text_over = "{} is no longer stunned.".format(self.opponent_name)
+        if opponent_name == "you":
+            self.combat_text = "{} are stunned and unable to respond.".format(self.opponent_name).capitalize()
+            self.combat_text_over = "{} are no longer stunned.".format(self.opponent_name).capitalize()
+        else:
+            self.combat_text = "{} is stunned and unable to respond.".format(self.opponent_name).capitalize()
+            self.combat_text_over = "{} is no longer stunned.".format(self.opponent_name).capitalize()
 
     def execute(self):
         self.turns_left -= 1
@@ -604,10 +621,11 @@ class WoodlandDesertSalt(StatusEffect):
         self.opponent = opponent
         self.opponent_name = opponent.name
         self.combat_text_begin = "{}'s skin grows sharp spikes of salt.".format(self.opponent_name)
-        self.combat_text = "takes some damage in recoil."
+        self.combat_text = "OPPONENT takes DAMAGE damage in recoil."
         self.combat_text_over = "{}'s saltspikes shatter.'".format(self.opponent_name)
 
         self.damage_type = "recoil"
+        self.damage = opponent.stats["Strength"]
 
     def execute(self):
         self.turns_left -= 1
@@ -627,10 +645,40 @@ class WoodlandDesertSalt(StatusEffect):
             return {
                 "combat_text" : self.combat_text,
                 "done" : False,
-                "damage" : 40
+                "damage" : random.randint(1, self.damage)
             }
 
+#Molten Strike Buff
+class MoltenStrikeBuff(StatusEffect):
+    def __init__(self, turns, opponent_name):
+        super().__init__()
+        self.type = self.name = "MoltenStrikeBuff"
+        self.damage_type = "enhance_melee_hit"
+        self.color = 133
+        self.max_turn = turns + 1
+        self.turns_left = turns + 1
+        self.opponent_name = opponent_name
+        if opponent_name == "you":
+            self.combat_text = "{}r hands glow red, enhancing your melee hits.".format(self.opponent_name).capitalize()
+            self.combat_text_over = "{}r hands are no longer glowing.".format(self.opponent_name).capitalize()
+        else:
+            self.combat_text = "{}'s hands glow red.".format(self.opponent_name).capitalize()
+            self.combat_text_over = "{}'s hands are no longer glowing red".format(self.opponent_name).capitalize()
 
+    def execute(self, opponent):
+        self.turns_left -= 1
+        if self.turns_left == 0:
+            return {
+                "combat_text" : self.combat_text_over,
+                "done" : True,
+                "damage" : False
+            }
+        else:
+            return {
+                "combat_text" : self.combat_text,
+                "done" : False,
+                "damage" : random.randint(1, 4)
+            }
 
 class StatBuff(StatusEffect):
     def __init__(self, turns, stat, increase, player, origin=False):

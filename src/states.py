@@ -1587,7 +1587,7 @@ class RandomCave(MapState):
             for y in range(len(self.cave_dict["raw_map"][0])):
                 if self.cave_dict["raw_map"][x][y] == 0:
                     self.free_squares.append((y,x))
-        for i in range(5):
+        for i in range(4):
             pos = random.choice(self.free_squares)
             objects.append(npc.Rat(pos[1] + 1, pos[0] + 1, self.state, radar=True))
 
