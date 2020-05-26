@@ -1,6 +1,8 @@
 # A STAR
 
 import math
+from heapq import heappush, heappop
+import sys
 
 
 class MapObject():
@@ -19,10 +21,12 @@ class Node():
 		self.h = 0
 		self.f = 0
 
-	def __hash__(self):
-		return self.g + self.h + self.f
+
 	def __eq__(self, other):
 		return self.position == other.position
+
+	def __lt__(self, other):
+		return self.f < other.f
 
 def astar(gamemap, start, end, state=False, cavegen=True):
 	counter = 0
@@ -34,7 +38,7 @@ def astar(gamemap, start, end, state=False, cavegen=True):
 	start_node = Node(position=start)
 	end_node = Node(position=end)
 
-	if gamemap[end_node.position[0]][end_node.position[1]].walkable == False:
+	if gamemap[end_node.position[0]][end_node.position[1]] == True:
 		return []
 
 	closed_list = []
@@ -44,8 +48,8 @@ def astar(gamemap, start, end, state=False, cavegen=True):
 	if start == end:
 		return []
 
-	open_list.append(start_node)
-
+	#open_list.append(start_node)
+	heappush(open_list, start_node)
 	while len(open_list) > 0: #Medan det finns noder att kolla
 		if counter > 2000:
 			print("max")
@@ -53,10 +57,11 @@ def astar(gamemap, start, end, state=False, cavegen=True):
 				#print("Open List: f", item.f, "position: ", item.position)
 			return []
 
-		open_list.sort(key=lambda x: x.f)
+		#open_list.sort(key=lambda x: x.f)
 		#print(open_list)
 		current_index = 0
-		current_node = open_list.pop(current_index)
+		#current_node = open_list.pop(current_index)
+		current_node = heappop(open_list)
 
 		#for index, item in enumerate(open_list):
 		#	if item.f < current_node.f:
@@ -66,8 +71,11 @@ def astar(gamemap, start, end, state=False, cavegen=True):
 
 
 		
-		closed_list.append(current_node)
-		closed_list2.append(current_node.position)
+		#closed_list.append(current_node)
+		#heappush(closed_list, current_node)
+		
+		#closed_list2.append(current_node.position)
+		heappush(closed_list2, current_node.position)
 
 		#print("Current node = ", current_node.position, current_node.f)
 
@@ -85,7 +93,7 @@ def astar(gamemap, start, end, state=False, cavegen=True):
 
 			#if state:
 				#path[-1] = (path[-1][0] - 1, path[-1][0] - 1)
-			#print(counter)
+			print(counter)
 			return path[::-1]
 
 
@@ -107,7 +115,7 @@ def astar(gamemap, start, end, state=False, cavegen=True):
 				#print("under 0")
 				continue
 			try:
-				if gamemap[node_position[0]][node_position[1]].walkable == False:
+				if gamemap[node_position[0]][node_position[1]] == True:
 					#print("Not walkable")
 					continue
 
@@ -121,7 +129,8 @@ def astar(gamemap, start, end, state=False, cavegen=True):
 
 
 			new_node = Node(parent=current_node, position=node_position)
-			children.append(new_node)
+			#children.append(new_node)
+			heappush(children, new_node)
 
 		#Calculate g,h,f for each child
 		for child in children:
@@ -139,7 +148,8 @@ def astar(gamemap, start, end, state=False, cavegen=True):
 			if child in open_list:
 				continue
 
-			open_list.append(child)
+			#open_list.append(child)
+			heappush(open_list, child)
 
 		#for item in children:
 		#	#print("ChildList",item.position, item.f)

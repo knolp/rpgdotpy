@@ -1,5 +1,6 @@
 import random
-import pathfinding
+import pathfinding_heap
+import sys
 
 WIDTH = 96
 HEIGHT = 37
@@ -13,16 +14,15 @@ NUMBER_OF_STEPS = 4
 def pathfind(grid, door, player):
     d_x,d_y = door[0], door[1]
     p_x,p_y = player[1], player[0]
-    grid_map = [[0 for _x in range(96)] for _y in range(37)]
+    #grid_map = [[0 for _x in range(96)] for _y in range(37)]
 
-    for x in range(len(grid)):
-        for y in range(len(grid[x])):
-            if grid[x][y] == 0:
-                grid_map[x][y] = pathfinding.MapObject(x,y)
-            else:
-                grid_map[x][y] = pathfinding.MapObject(x,y, walkable=False)
-
-    path = pathfinding.astar(grid_map,(d_x,d_y),(p_x,p_y))
+    #for x in range(len(grid)):
+    #    for y in range(len(grid[x])):
+    #        if grid[x][y] == 0:
+    #            grid_map[x][y] = pathfinding_heap.MapObject(x,y)
+    #        else:
+    #            grid_map[x][y] = pathfinding_heap.MapObject(x,y, walkable=False)
+    path = pathfinding_heap.astar(grid,(d_x,d_y),(p_x,p_y))
     return path
 
 

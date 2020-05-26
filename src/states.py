@@ -15,6 +15,7 @@ import curses
 import books
 import cavegen
 
+DEBUG = False
 # HELPERS #
 
 def explain_text(text, explain_text, cols):
@@ -1604,14 +1605,19 @@ class RandomCave(MapState):
 
     def check_events(self):
         monsters = [x for x in self.game_map.objects if x.type == "monster"]
+        if DEBUG:
+            start_time = time.time()
         for monster in monsters:
-            if monster.visible:
+            if monster.visible: #If we can see the monster
                 monster.path = []
                 path = cavegen.pathfind(self.cave_dict["raw_map"], (monster.x - 1, monster.y - 1), (self.state.player.y - 1, self.state.player.x - 1))
                 monster.path_to_target = path[1:]
-            else:
+            else: #If we cannot see the monster
                 monster.path_to_target = []
-            if not monster.path:
+                monster.x += random.randint(-1, 1)
+                monster.y += random.randint(-1, 1)
+                continue
+            if not monster.path: #If the monster does not have a full path
                 path = cavegen.pathfind(self.cave_dict["raw_map"], (monster.x - 1, monster.y - 1), (random.choice(self.free_squares)))
                 monster.path = path.copy()
             if monster.path and not monster.path_to_target:
@@ -1622,6 +1628,8 @@ class RandomCave(MapState):
                     break
                 monster.x, monster.y = monster.path_to_target[0][0] + 1, monster.path_to_target[0][1] + 1
                 monster.path_to_target.pop(0)
+        if DEBUG:
+            print(f"Time elapsed for monster-loop = {time.time() - start_time}")
 
         if (self.state.player.x, self.state.player.y) == self.door_pos:
             if not type(self.target) == type([]):
