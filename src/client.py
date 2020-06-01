@@ -26,6 +26,7 @@ import pathfinding
 import pathfinding2
 import abilities
 import books
+import events
 import animation
 import abilities
 
@@ -104,6 +105,11 @@ class StateHandler():
         if self.command_state:
             self.command_state.commands[0].active = True
 
+    def get_event(self, event):
+        for var in dir(events):
+            if var == event:
+                return getattr(events, var)
+
 
     def check_collision(self, next_tile, player_control = True):
         if player_control:
@@ -175,6 +181,13 @@ class StateHandler():
         self.player.turn = load_dict["turn"]
         self.player.ascii = load_dict["ascii"]
 
+        if self.player.location.__name__ == "RandomCave":
+            print(self.player.last_target)
+            second_target = [self.get_event(x) for x in self.player.last_target[1:]]
+            full_target = [self.get_event(self.player.last_target[0]), second_target]
+
+            self.player.last_target = full_target
+
         self.player._populate_gear_stats()
 
     def save_player(self, quicksave=False):
@@ -225,6 +238,18 @@ class StateHandler():
             if k == "status_effects":
                 for i in range(len(params[k])):
                     params[k][i] = [params[k][i].__dict__["type"], params[k][i].__dict__["turns_left"], params[k][i].__dict__["damage"], params[k][i].__dict__["opponent_name"]]
+
+            # Dungeon
+
+            if k == "last_target":
+                save_targets = []
+                for item in params[k]:
+                    if type(item) == type([]):
+                        for subitem in item:
+                            save_targets.append(subitem.__name__)
+                    else:
+                        save_targets.append(item.__name__)
+                params[k] = save_targets
         
         params["time"] = self.timer.tid
 
@@ -852,7 +877,7 @@ def draw_menu(stdscr):
             state_handler.player.hotkeys["2"].execute(state_handler.player)
 
         if k == ord("3"):
-            print(items.Sets.hasCompleteBharoks(state_handler.player))
+            pass
 
         if k == ord("4"):
             state_handler.player.ascii = not state_handler.player.ascii

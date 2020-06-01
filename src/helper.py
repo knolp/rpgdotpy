@@ -2,6 +2,7 @@ import curses
 import items
 import abilities
 import recipes
+import states
 from curses.textpad import Textbox, rectangle
 import time
 
@@ -220,7 +221,7 @@ def color_first(screen, x, y, first, second, color):
 def color_second(screen, x, y, first, second, color):
 	screen.addstr(x, y, first)
 	screen.addstr(x, y + len(first), second, color)
-	
+
 def color_both(screen, x, y, first, second, color_first, color_second):
 	screen.addstr(x, y, first, color_first)
 	screen.addstr(x, y + len(first), second, color_second)
@@ -391,3 +392,12 @@ def get_status_effects(effect):
 			continue
 		if var == effect:
 			return getattr(abilities, var)
+
+def get_state(state):
+	for var in dir(states):
+		if var == state:
+			return getattr(states, var)
+
+
+if __name__ == "__main__":
+	pass
