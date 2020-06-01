@@ -181,10 +181,17 @@ class StateHandler():
         self.player.turn = load_dict["turn"]
         self.player.ascii = load_dict["ascii"]
 
+
+        # If the player saves in a RandomCave
+        # We need to update player.last_target to get the exits of the cave
+
         if self.player.location.__name__ == "RandomCave":
             print(self.player.last_target)
-            second_target = [self.get_event(x) for x in self.player.last_target[1:]]
-            full_target = [self.get_event(self.player.last_target[0]), second_target]
+            if len(self.player.last_target) > 1:
+                second_target = [self.get_event(x) for x in self.player.last_target[1:]]
+                full_target = [self.get_event(self.player.last_target[0]), second_target]
+            else:
+                full_target = [self.get_event(self.player.last_target[0])]
 
             self.player.last_target = full_target
 
