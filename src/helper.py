@@ -3,7 +3,16 @@ import items
 import abilities
 import recipes
 from curses.textpad import Textbox, rectangle
+import time
 
+
+def time_print(f):
+	def return_func(self, *args, **kwargs):
+		start_time = time.time()
+		res = f(self, *args, **kwargs)
+		print(f"{f.__name__} took {time.time() - start_time} to complete")
+		return res
+	return return_func
 
 def add_ungetch(f):
 	def return_func(self, *args, **kwargs):
@@ -211,11 +220,12 @@ def color_first(screen, x, y, first, second, color):
 def color_second(screen, x, y, first, second, color):
 	screen.addstr(x, y, first)
 	screen.addstr(x, y + len(first), second, color)
+	
 def color_both(screen, x, y, first, second, color_first, color_second):
 	screen.addstr(x, y, first, color_first)
 	screen.addstr(x, y + len(first), second, color_second)
 
-
+#! Todo rework popup #!
 def popup(screen, state, text):
 	screen.clear()
 	height, width = screen.getmaxyx()

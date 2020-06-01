@@ -1315,6 +1315,11 @@ class HallOfJustice(MapState):
             for item in self.game_map.objects:
                 if item.name == "Becca Lithe":
                     item.action(self.state.game_box, self.state)
+        if self.state.player.x == 26 and self.state.player.y == 10 and self.state.check_action:
+            helper.popup(self.state.stdscr, self.state, [
+                "Office of [Becca Lite]",
+                "Head of Starter Town real-estate."
+            ])
 
 class StarterTownPlayerHouse(MapState):
     name = "Starter Town Player House"

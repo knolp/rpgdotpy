@@ -93,7 +93,6 @@ def astar(gamemap, start, end, state=False, cavegen=True):
 
 			#if state:
 				#path[-1] = (path[-1][0] - 1, path[-1][0] - 1)
-			print(counter)
 			return path[::-1]
 
 
