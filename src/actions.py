@@ -131,7 +131,9 @@ class SpeakErolKipman(Action):
 				text = [
 					"Hmm, I haven't heard much.",
 					"People are not to keen to share gossip with the",
-					"strong arm of the law."
+					"strong arm of the law.",
+					"",
+					"But I can advise you to talk to the blacksmith [Osk'Ghar]."
 					]
 				continue
 			elif answer.lower() in ["quests", "quest"]:

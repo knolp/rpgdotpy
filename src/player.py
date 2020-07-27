@@ -1,6 +1,7 @@
 import json
 import states
 import items
+import events
 import helper
 import random
 import abilities
@@ -74,7 +75,7 @@ class Player():
 		}
 
 		self.last_pos = (3,3)
-		self.last_target = ["TradeDistrict", 0, 0]
+		self.last_target = [events.StarterTown_north]
 
 		#Minions
 		self.max_minions = 3

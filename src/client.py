@@ -201,6 +201,7 @@ class StateHandler():
         params = {}
 
         for k,v in self.player.__dict__.items()	:
+            print(k, v)
             params[k] = v
             if k == "location":
                 params[k] = v.raw_name
@@ -251,6 +252,7 @@ class StateHandler():
             if k == "last_target":
                 save_targets = []
                 for item in params[k]:
+                    print(item)
                     if type(item) == type([]):
                         for subitem in item:
                             save_targets.append(subitem.__name__)

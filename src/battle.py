@@ -608,6 +608,7 @@ class Battle():
         """
         #Give opponent knowledge of battlefield
         self.opponent.battlefield = self.battlefield
+        
         self.update_log(["opponent", "{} encounters {} {}".format(self.player.name, self.opponent.before_name, self.opponent.readable_name)])
         opener = self.opponent.opener()
         if opener:
