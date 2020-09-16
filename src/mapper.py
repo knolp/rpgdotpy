@@ -242,7 +242,7 @@ class MapObject():
 class GameMap():
 	def __init__(self, map_file, objects, events=False, file=True):
 		if file:
-			map_file = "{}\maps\{}".format(os.getcwd(),map_file)
+			map_file = "{}/maps/{}".format(os.getcwd(),map_file)
 			with open(map_file, "r") as f:
 				self.raw_map = f.readlines()
 				for i in range(len(self.raw_map)):

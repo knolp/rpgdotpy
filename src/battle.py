@@ -229,6 +229,13 @@ class Battle():
             self.update_log(["player", "It hits {} in the {}, dealing {} damage.".format(self.opponent.readable_name, limb, damage)])
         else:
             self.update_log(["player", "It hits {} for {} damage.".format(self.opponent.readable_name, limb, damage)])
+        for opp_limb in self.opponent.limbs:
+            if opp_limb.name == limb:
+                opp_limb.health -= damage        
+                # If the limb dies or get chopped off
+                limb_result = opp_limb.check_limb_weapon(False)
+                for item in limb_result["combat_text"]:
+                   self.update_log(["opponent_effect", item])
         self.opponent.health -= damage
         recoil = random.randint(0, self.player.stats["Strength"])
         self.update_log(["player", "The attack bruises {}'s knuckles, dealing {} damage in recoil.".format(self.player.name, recoil)])

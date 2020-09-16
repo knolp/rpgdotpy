@@ -47,8 +47,10 @@ class Limb():
         """
         dropped_item = False
         combat_text = []
+        if not weapon:
+                combat_text.append(f"")
 
-        if weapon.damage_type == "Slash" and random.randint(1,100) > weapon.dismember_chance:
+        elif weapon.damage_type == "Slash" and random.randint(1,100) > weapon.dismember_chance:
                 combat_text.append(f"The slashing motion of {weapon.readable_name} chops the {self.name} right off.")
                 combat_text.append(f"{self.name} fall to the floor.")
                 self.owner.limbs.remove(self)
@@ -430,6 +432,11 @@ class CaveTroll(Monster):
         return self.name
 
     def opener(self):
+        if random.randint(1, 100) < 90:
+                self.limbs.append(Limb(self, "other head",True,False,10,2))
+                return {
+                "combat_text" : ["The Cave Troll roars at the sight of you, growing an extra head."]}
+ 
         return {
             "combat_text" : ["The Cave Troll roars at the sight of you, increasing it's strength",
                             f"He knows this is a {self.battlefield.name}."]

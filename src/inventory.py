@@ -883,7 +883,15 @@ def view_inventory_2(state):
 			screen.addstr(45, 1 + len("Space: "), f"{dict_of_uses[list_of_types[selected_tab[0]]]}", curses.color_pair(134))
 		else:
 			screen.addstr(45, 1 + len("Space: "), "No item selected", curses.color_pair(133))
+		
 
+		sort_translate = {
+				"alph" : "Alphabetical",
+				"alph-reversed" : "Reverse Alphabetical",
+				"rarity" : "Rarity",
+			}
+		screen.addstr(46, 1, f"Change sort: A, S, D")
+		screen.addstr(47, 1, f"Sort Mode = {sort_translate[sort]}")
 
 		k = screen.getch() #Get the player input
 
@@ -969,10 +977,14 @@ def view_inventory_2(state):
 					elif type(result_text) == type(["list", "of", "strings"]):
 						for text in result_text:
 							info_list.append((text, True))
+					if selected_tab[2] >= len(full_dynamic_print_inventory[splice_start:splice_stop]) -1:
+						selected_tab[2] -= 1
 					for thing in inventory:
 						if item.name == thing.name:
 							inventory.pop(inventory.index(thing))
 							break
+
+
 				else:
 					if type(result_text) == type("stringgoeshere"):
 						info_list.append((result_text, False))
@@ -981,8 +993,8 @@ def view_inventory_2(state):
 							info_list.append((text, False))
 				
 				#! FIX FOR OFFSYNC WHEN EQUIPPING LAST ITEM IN LIST OF WHICH THERE ARE EXACTLY ONE ITEM
-				if selected_tab[2] >= len(full_dynamic_print_inventory[splice_start:splice_stop]) - 1:
-						selected_tab[2] -= 1
+				#if selected_tab[2] >= len(full_dynamic_print_inventory[splice_start:splice_stop]) - 1:
+						#selected_tab[2] -= 1
 
 		if k == ord("a"):
 			sort = "alph"
