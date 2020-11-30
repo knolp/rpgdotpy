@@ -105,7 +105,7 @@ class MapObject():
 
 	@classmethod
 	def tree_top(cls, x, y):
-		return cls(x, y, curses.ACS_BLOCK, walkable=True, color=143, name="Tree Top", over=True)
+		return cls(x, y, curses.ACS_CKBOARD, walkable=True, color=143, name="Tree Top", over=True)
 
 	@classmethod
 	def wooden_chair(cls, x, y):

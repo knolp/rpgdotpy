@@ -446,7 +446,7 @@ def draw_menu(stdscr):
     curses.init_pair(140, 237, 242) #Fence
     curses.init_pair(141, 240, 40) #Grass Fence
     curses.init_pair(142, 136, 40) #Tree Bot
-    curses.init_pair(143, 22, 40) #Tree Top
+    curses.init_pair(143, 40, 22) #Tree Top
     curses.init_pair(144, 220, 94) #Beer
     curses.init_pair(145, 94, 52) #Wooden Chair
     curses.init_pair(146, 237, 52) #floor fence
@@ -454,7 +454,7 @@ def draw_menu(stdscr):
     curses.init_pair(148, curses.COLOR_YELLOW, 238) #Wall torch
     curses.init_pair(149,94,-1) #brown fg, black bg
     curses.init_pair(150,242,-1) #grey fg, black bg
-    curses.init_pair(151,curses.COLOR_WHITE,247)
+    curses.init_pair(151,curses.COLOR_BLACK,247)
     curses.init_pair(152, curses.COLOR_WHITE, curses.COLOR_RED)
     curses.init_pair(153,curses.COLOR_RED, 52) #Farming patch not planted
     curses.init_pair(154,curses.COLOR_YELLOW,52) #Farming patch planted
