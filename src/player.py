@@ -75,7 +75,7 @@ class Player():
 		}
 
 		self.last_pos = (3,3)
-		self.last_target = [events.StarterTown_north]
+		self.last_target = [events.StarterTown_north.__name__]
 
 		#Minions
 		self.max_minions = 3

@@ -235,11 +235,6 @@ def make_potion(state):
     screen.clear()
     curses.halfdelay(3)
     
-    ingredient_1 = "Empty"
-    ingredient_2 = "Empty"
-    ingredient_3 = "Empty"
-    ingredient_4 = "Empty"
-
     ingredients = ["Empty","Empty","Empty","Empty"]
 
     ingredient_y = int(width/2) - 15

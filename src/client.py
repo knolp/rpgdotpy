@@ -2,7 +2,6 @@ import sys, os, time, fileinput
 import curses
 import curses.textpad as textpad
 import curses.ascii as asc
-from pprint import pprint
 import json
 import math
 import random
@@ -30,6 +29,10 @@ import events
 import animation
 import abilities
 
+import logging
+
+logging.basicConfig(filename="log.log", level=logging.DEBUG)
+logging.debug("Info here")
 class Timer():
     def __init__(self, tid):
         self.tid = tid
@@ -145,7 +148,6 @@ class StateHandler():
 
         temp_spell_list = []
         for _, item in enumerate(load_dict["spells"]):
-            #print("Index: {}         Item: {}".format(index, item))
             if item != False:
                 temp_spell_list.append(helper.get_spell(item)())
             else:
@@ -154,7 +156,6 @@ class StateHandler():
 
         temp_spellbook_list = []
         for item in load_dict["spellbook"]:
-            #print("                               " + item["name"])
             temp_spellbook_list.append(helper.get_spell(item)())
         self.player.spellbook = temp_spellbook_list
 
@@ -186,7 +187,6 @@ class StateHandler():
         # We need to update player.last_target to get the exits of the cave
 
         if self.player.location.__name__ == "RandomCave":
-            print(self.player.last_target)
             if len(self.player.last_target) > 1:
                 second_target = [self.get_event(x) for x in self.player.last_target[1:]]
                 full_target = [self.get_event(self.player.last_target[0]), second_target]
@@ -198,10 +198,9 @@ class StateHandler():
         self.player._populate_gear_stats()
 
     def save_player(self, quicksave=False):
+        logging.debug("Starting save")
         params = {}
-
         for k,v in self.player.__dict__.items()	:
-            print(k, v)
             params[k] = v
             if k == "location":
                 params[k] = v.raw_name
@@ -251,13 +250,22 @@ class StateHandler():
 
             if k == "last_target":
                 save_targets = []
+                logging.debug(f"last_target = {params[k]}")
+                logging.debug(f"type = {type(print)}{type(is_tab_enabled)}")
+                if type(params[k] != type([])):
+                    params[k] = [params[k]]
                 for item in params[k]:
-                    print(item)
+                    if type(item) == type(is_tab_enabled):
+                        item = item.__name__
                     if type(item) == type([]):
                         for subitem in item:
-                            save_targets.append(subitem.__name__)
+                            logging.debug(f"subitem = {subitem}")
+                            if type(subitem) == type(is_tab_enabled):
+                                subitem = subitem.__name__
+                            save_targets.append(subitem)
                     else:
-                        save_targets.append(item.__name__)
+                        save_targets.append(item)
+                logging.debug(f"save_targets = {save_targets}")
                 params[k] = save_targets
         
         params["time"] = self.timer.tid
@@ -886,7 +894,7 @@ def draw_menu(stdscr):
             state_handler.player.hotkeys["2"].execute(state_handler.player)
 
         if k == ord("3"):
-            pass
+            print(state_handler.player.last_target)
 
         if k == ord("4"):
             state_handler.player.ascii = not state_handler.player.ascii

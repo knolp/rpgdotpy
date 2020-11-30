@@ -1599,11 +1599,11 @@ class RandomCave(MapState):
 
 
     def draw(self):
-        #if self.state.player.phaseshift:
-        #    self.game_map.draw_map(self.state, inverted=True)    
-        #else:
-        #    self.game_map.draw_map(self.state)
-        self.game_map.draw_vision(self.state, self.state.game_box, draw_seen=False)
+        if self.state.player.phaseshift:
+            self.game_map.draw_map(self.state, inverted=True)    
+        else:
+            self.game_map.draw_map(self.state)
+        #self.game_map.draw_vision(self.state, self.state.game_box, draw_seen=False)
 
     def execute(self):
         pass
