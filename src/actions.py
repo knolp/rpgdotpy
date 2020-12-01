@@ -10,7 +10,7 @@ from curses.textpad import Textbox, rectangle
 # Actions the player can do, such as read signs and interact with NPC:s, should either do stuff or open dialog box etc
 
 
-def input_text(name, vocation, screen, text, state):
+def input_text(name, vocation, screen, text, state, terminal=False):
     screen.clear()
     start = 10
     screen.attron(curses.color_pair(135))
@@ -32,7 +32,10 @@ def input_text(name, vocation, screen, text, state):
     screen.addstr(33, 34, "Enter message:")
     screen.addstr(36, 34, "-----------------------------")
     screen.addstr(37, 34, "[Enter] to send. 'bye' or 'exit' to quit.")
-    window = curses.newwin(1, 30, 35, 34)
+    if terminal:
+        window = curses.newwin(1, 70, 35, 34)
+    else:
+        window = curses.newwin(1, 30, 35, 34)
     screen.refresh()
 
     tbox = Textbox(window)
@@ -108,6 +111,71 @@ class SpeakBluePrint(Action):
                     "I do not know what that means."
                 ]
 
+class SpeakTerminal(Action):
+    def __init__(self, screen, state):
+        super().__init__(screen, state, "Speak")
+        self.name = "Blue Print"
+        self.vocation = "Python Class"
+
+    @add_ungetch
+    def execute(self):
+        #text_state = 0  # Text_state for keeping track of states for specific dialogue-trees
+        if "Terminal_met" not in self.state.player.flags:  # Inital meet flag, on most NPCs
+            text = [
+                "Hello there, my name is [Mr Terminal]!",
+                "",
+                "Please input command below",
+                "",
+                "[exec <command>]",
+                "",
+                "[give item <item> <count>]"
+            ]  # Text is always a list of sentences, add empty string to <br>/linebreak
+            self.state.player.flags.append(
+                "Terminal_met")  # Append flag after
+        else:  # Normal text after initial meet
+            text = [
+                "Hello again!",
+                "",
+                "Nice to meet again"
+            ]
+
+        while True:
+            answer = input_text(
+                self.name, self.vocation, self.screen, text, self.state, terminal=True)  # Get input
+
+            if answer in ["e", "exit", "bye", "q", "quit"]:  # Always be here
+                return False  # False return to exit
+
+            elif answer.startswith("exec"):  # Quest should be a standard, as well as trade
+                exec(answer.replace("exec ", ""))
+                text = [
+                    "Maybe another time."
+                ]
+                text_state = 0  # Set state to inital state after generic dialogues
+            elif answer.startswith("give"):
+                try:
+                    lista = answer.split(" ")
+                except:
+                    return
+                self.state.log_info(lista)
+                if lista[1] == "item":
+                    if lista[2] == "gold":
+                        self.state.player.gold += int(lista[3])
+                    else:
+                        if len(lista) == 4:
+                            for i in range(int(lista[3])):
+                                self.state.player.inventory.append(helper.get_item(lista[2])())
+                        else:
+                            self.state.player.inventory.append(helper.get_item(lista[2])())
+                text = [
+                    "I am not a salesman, sadly."
+                ]
+            else:  # Generic catch-all for non-keywords
+                text = [
+                    "Huh?",
+                    "",
+                    "I do not know what that means."
+                ]
 # STARTER TOWN
 
 
@@ -278,8 +346,7 @@ class SpeakOskGhar(Action):
                 text = [
                     "Anything else I can do for you?"
                 ]
-                if inventory.trade(npc.OskGhar, self.screen, self.state):
-                    return
+                inventory.view_inventory_2(self.state, inv=npc.OskGhar.inventory)
 
             elif answer.lower() in ["door", "locked"]:
                 text = [

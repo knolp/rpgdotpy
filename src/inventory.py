@@ -616,13 +616,22 @@ def view_inventory_2(state, inv="player"):
 		"Key Items" : ["quest", "key", "book", "tool"],
 		"Consumables" : ["potion", "elixir", "brew", "scroll", "food"]
 	}
-	dict_of_uses = {
-		"Armor" : "Equip",
-		"Weapons" : "Equip",
-		"Crafting" : "Use",
-		"Key Items" : "Use",
-		"Consumables" : "Consume"
-	}
+	if inv == "player":
+		dict_of_uses = {
+			"Armor" : "Equip",
+			"Weapons" : "Equip",
+			"Crafting" : "Use",
+			"Key Items" : "Use",
+			"Consumables" : "Consume"
+		}
+	else:
+		dict_of_uses = {
+			"Armor" : "Buy",
+			"Weapons" : "Buy",
+			"Crafting" : "Buy",
+			"Key Items" : "Buy",
+			"Consumables" : "Buy"
+		}
 	
 	#Distance for each column
 	type_end = 14
@@ -776,15 +785,21 @@ def view_inventory_2(state, inv="player"):
 
 		already_printed = {} #This dict holds just the name and number of that item we have, so we can print it easily
 		real_name_translation = {}
-		for item in dynamic_inventory:
-			if item.readable_name not in already_printed.keys():
-				already_printed[item.readable_name] = 1
-			else:
-				already_printed[item.readable_name] += 1
+		if inv == "player":
+			for item in dynamic_inventory:
+				if item.readable_name not in already_printed.keys():
+					already_printed[item.readable_name] = 1
+				else:
+					already_printed[item.readable_name] += 1
 
-			if item.name not in real_name_translation.items():
-				real_name_translation[item.readable_name] = item.name
-
+				if item.name not in real_name_translation.items():
+					real_name_translation[item.readable_name] = item.name
+		else:
+			for item in dynamic_inventory:
+				if item.readable_name not in already_printed.keys():
+					already_printed[item.readable_name] = f"{item.sell_price}G"
+				if item.name not in real_name_translation.items():
+					real_name_translation[item.readable_name] = item.name
 		full_dynamic_print_inventory = [(item_name, count) for item_name, count in already_printed.items()] #! Here is the full list of unique items
 		dynamic_print_inventory = full_dynamic_print_inventory[splice_start : splice_stop] 
 
@@ -896,6 +911,7 @@ def view_inventory_2(state, inv="player"):
 			}
 		screen.addstr(46, 1, f"Change sort: A, S, D")
 		screen.addstr(47, 1, f"Sort Mode = {sort_translate[sort]}")
+		screen.addstr(48, 1, f"Gold = {state.player.gold}", curses.color_pair(136))
 
 		k = screen.getch() #Get the player input
 		if k == curses.KEY_DOWN:

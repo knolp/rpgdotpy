@@ -899,7 +899,7 @@ def draw_menu(stdscr):
             state_handler.player.hotkeys["2"].execute(state_handler.player)
 
         if k == ord("3"):
-            print(state_handler.player.last_target)
+            actions.SpeakTerminal(state_handler.stdscr, state_handler).execute()
 
         if k == ord("4"):
             state_handler.player.ascii = not state_handler.player.ascii
