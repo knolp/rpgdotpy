@@ -220,6 +220,15 @@ class Item():
         return True, text
 
 
+    def buy(self, state):
+        if state.player.gold >= self.sell_price:
+            state.player.gold -= self.sell_price
+            state.player.inventory.append(self)
+            return True, f"{state.player.name} bought {self.readable_name} for {self.sell_price} gold."
+        else:
+            return False, f"{state.player.name} cannot afford that."
+
+
 
 #WEAPONS
 

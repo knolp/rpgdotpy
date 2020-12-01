@@ -15,7 +15,7 @@ import curses
 import books
 import cavegen
 
-DEBUG = False
+DEBUG = True
 # HELPERS #
 
 def explain_text(text, explain_text, cols):
@@ -1491,7 +1491,7 @@ class TradeDistrictAlchemist(MapState):
             state.change_map_screen()
             state.first_time = False
         objects = [
-            npc.EmpaLinka(19,35),
+            npc.EmpaLinka(19,32),
             npc.SingleBookCase(14,45, state, books.BasicAlchemy()),
             npc.EmptyBookCase(14,46,state,[
                 "You do not see any interesting books here."
@@ -1520,6 +1520,11 @@ class TradeDistrictAlchemist(MapState):
             for item in self.game_map.objects:
                 if item.x == 14 and item.y == self.state.player.y:
                     item.action(self.state.stdscr, self.state)
+        if (self.state.player.x, self.state.player.y) in [(18,35),(19,35),(20,35)] and self.state.check_action:
+            for item in self.game_map.objects:
+                if item.name == "Empa Linka":
+                    item.action(self.state.game_box, self.state)
+            
 
 class HuntersCamp(MapState):
     name = "Forest (Hunters Camp)"
@@ -1634,7 +1639,7 @@ class RandomCave(MapState):
                 monster.x, monster.y = monster.path_to_target[0][0] + 1, monster.path_to_target[0][1] + 1
                 monster.path_to_target.pop(0)
         if DEBUG:
-            print(f"Time elapsed for monster-loop = {time.time() - start_time}")
+            self.state.log_info(f"Time elapsed for monster-loop = {time.time() - start_time}")
 
         if (self.state.player.x, self.state.player.y) == self.door_pos:
             if not type(self.target) == type([]):

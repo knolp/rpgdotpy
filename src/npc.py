@@ -442,7 +442,7 @@ class WoodenChest(Usable):
 		pass
 
 	def action(self, screen, state):
-		if self.requirement and self.requirement in state.player.flags:
+		if (self.requirement and self.requirement in state.player.flags) or self.requirement == False:
 			actions.WoodenChestOpen(screen, state, self).execute()
 		else:
 			helper.popup(screen,state,[
@@ -471,7 +471,7 @@ class SingleBookCase(Usable):
 		name = "SingleBookCase"
 		self.readable_name = "Bookcase (single)"
 		self.book = book
-		super().__init__(name,x,y,"=",color=148)
+		super().__init__(name,x,y,curses.ACS_CKBOARD,color=148)
 		
 
 	def turn_action(self):
@@ -499,7 +499,7 @@ class EmptyBookCase(Usable):
 		name = "EmptyBookCase"
 		self.readable_name = "Bookcase (Empty)"
 		self.text = text
-		super().__init__(name,x,y,"=",color=148)
+		super().__init__(name,x,y,curses.ACS_CKBOARD,color=161)
 		
 
 	def turn_action(self):
@@ -553,7 +553,7 @@ class Juicer(Usable):
 #StarterTown_house_4 = ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 class FarmingPatch(Usable):
-	def __init__(self, x, y, state, identity,color=153):
+	def __init__(self, x, y, state, identity, color=153):
 		name = "FarmingPatch"
 		self.identity = identity
 		self.readable_name = "Farming Patch"

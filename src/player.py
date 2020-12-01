@@ -93,7 +93,7 @@ class Player():
 		self.in_control = True
 
 
-		self.gold = 10000
+		self.gold = 100
 		self.player = True
 
 		self.equipment = {

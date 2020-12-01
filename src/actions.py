@@ -971,8 +971,7 @@ class SpeakEmpaLinka(Action):
                 text = [
                     "Is there anything else I can do for you?"
                 ]
-                if inventory.trade(npc.EmpaLinka, self.screen, self.state):
-                    return
+                inventory.view_inventory_2(self.state, inv=npc.EmpaLinka.inventory)
 
             else:  # Generic catch-all for non-keywords
                 text = [

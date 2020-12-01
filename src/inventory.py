@@ -570,7 +570,7 @@ def trade(npc, screen, state):
 
 	return True
 
-def view_inventory_2(state):
+def view_inventory_2(state, inv="player"):
 	#Initial thoughs
 	#Go for a skyrim-esque inventory management composed of "tabs" going deeper and a marker for equipped items (automatically at the top)
 	#Try to go for alphabetical order
@@ -588,7 +588,11 @@ def view_inventory_2(state):
 	###############################################################################
 
 	#Init some variables regarding player inventory and equipment
-	inventory = state.player.inventory
+	#inventory = state.player.inventory
+	if inv == "player":
+		inventory = state.player.inventory
+	else:
+		inventory = inv
 
 	_orange = curses.color_pair(136)
 	_cyan = curses.color_pair(135)
@@ -894,7 +898,6 @@ def view_inventory_2(state):
 		screen.addstr(47, 1, f"Sort Mode = {sort_translate[sort]}")
 
 		k = screen.getch() #Get the player input
-
 		if k == curses.KEY_DOWN:
 			if currently_selected_tab < 2: #Hardcoded number of tabs (0 = types, 1 = subtypes 2 = items)
 				splice_start = 0 #! Reset splice 
@@ -950,51 +953,75 @@ def view_inventory_2(state):
 			if currently_selected_tab < 0: #Check if we go under 0
 				currently_selected_tab = 0 #If so, reset it to 0
 
+		if inv == "player":
 		#If we press space to do stuff
-		if k == ord(" "):
-			result = False
-			result_text = "You cannot use that item here."
-			if currently_selected_tab == 2  and len(full_dynamic_print_inventory) != 0:
-				item = helper.get_item(real_name_translation[full_dynamic_print_inventory[splice_start : splice_stop][selected_tab[2]][0]])()
+			if k == ord(" "):
+				result = False
+				result_text = "You cannot use that item here."
+				if currently_selected_tab == 2  and len(full_dynamic_print_inventory) != 0:
+					item = helper.get_item(real_name_translation[full_dynamic_print_inventory[splice_start : splice_stop][selected_tab[2]][0]])()
 
-				if list_of_types[selected_tab[0]] == "Consumables":
-					result, result_text = item.consume(state.player)
-				if list_of_types[selected_tab[0]] in ["Armor", "Weapons"]:
-					result, result_text = item.equip(state, state.player)
-					#if item.subtype == "ring":
-					#	#TODO Rework
-					#	#TODO Issue: Opening ring interface with 2x 2 rings and equipping 2 of the same (leaving 2 of the other in inventory)
-					#	#TODO then equipping the other crashes
-					#	selected_tab[currently_selected_tab] = 0 #! Quick fix for rings, find real issue later 
-					#	#TODO REWORK_END
-					
+					if list_of_types[selected_tab[0]] == "Consumables":
+						result, result_text = item.consume(state.player)
+					if list_of_types[selected_tab[0]] in ["Armor", "Weapons"]:
+						result, result_text = item.equip(state, state.player)
+						#if item.subtype == "ring":
+						#	#TODO Rework
+						#	#TODO Issue: Opening ring interface with 2x 2 rings and equipping 2 of the same (leaving 2 of the other in inventory)
+						#	#TODO then equipping the other crashes
+						#	selected_tab[currently_selected_tab] = 0 #! Quick fix for rings, find real issue later 
+						#	#TODO REWORK_END
 						
+							
+						
+					#Delete the item and append info_list to print output to the inventory console
+					if result:
+						if type(result_text) == type("stringgoeshere"):
+							info_list.append((result_text, True))
+						elif type(result_text) == type(["list", "of", "strings"]):
+							for text in result_text:
+								info_list.append((text, True))
+						if selected_tab[2] >= len(full_dynamic_print_inventory[splice_start:splice_stop]) -1:
+							selected_tab[2] -= 1
+						for thing in inventory:
+							if item.name == thing.name:
+								inventory.pop(inventory.index(thing))
+								break
+
+
+					else:
+						if type(result_text) == type("stringgoeshere"):
+							info_list.append((result_text, False))
+						elif type(result_text) == type(["list", "of", "strings"]):
+							for text in result_text:
+								info_list.append((text, False))
 					
-				#Delete the item and append info_list to print output to the inventory console
-				if result:
-					if type(result_text) == type("stringgoeshere"):
-						info_list.append((result_text, True))
-					elif type(result_text) == type(["list", "of", "strings"]):
-						for text in result_text:
-							info_list.append((text, True))
-					if selected_tab[2] >= len(full_dynamic_print_inventory[splice_start:splice_stop]) -1:
-						selected_tab[2] -= 1
-					for thing in inventory:
-						if item.name == thing.name:
-							inventory.pop(inventory.index(thing))
-							break
-
-
-				else:
-					if type(result_text) == type("stringgoeshere"):
-						info_list.append((result_text, False))
-					elif type(result_text) == type(["list", "of", "strings"]):
-						for text in result_text:
-							info_list.append((text, False))
-				
-				#! FIX FOR OFFSYNC WHEN EQUIPPING LAST ITEM IN LIST OF WHICH THERE ARE EXACTLY ONE ITEM
-				#if selected_tab[2] >= len(full_dynamic_print_inventory[splice_start:splice_stop]) - 1:
-						#selected_tab[2] -= 1
+					#! FIX FOR OFFSYNC WHEN EQUIPPING LAST ITEM IN LIST OF WHICH THERE ARE EXACTLY ONE ITEM
+					#if selected_tab[2] >= len(full_dynamic_print_inventory[splice_start:splice_stop]) - 1:
+							#selected_tab[2] -= 1
+		else:
+			if k == ord(" "):
+				result = False
+				result_text = "You cannot use that item here."
+				if currently_selected_tab == 2  and len(full_dynamic_print_inventory) != 0:
+					item = helper.get_item(real_name_translation[full_dynamic_print_inventory[splice_start : splice_stop][selected_tab[2]][0]])()
+					result, result_text = item.buy(state)
+						
+					#Delete the item and append info_list to print output to the inventory console
+					if result:
+						if type(result_text) == type("stringgoeshere"):
+							info_list.append((result_text, True))
+						elif type(result_text) == type(["list", "of", "strings"]):
+							for text in result_text:
+								info_list.append((text, True))
+						if selected_tab[2] >= len(full_dynamic_print_inventory[splice_start:splice_stop]) -1:
+							selected_tab[2] -= 1
+					else:
+						if type(result_text) == type("stringgoeshere"):
+							info_list.append((result_text, False))
+						elif type(result_text) == type(["list", "of", "strings"]):
+							for text in result_text:
+								info_list.append((text, False))
 
 		if k == ord("a"):
 			sort = "alph"

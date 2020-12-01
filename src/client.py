@@ -33,6 +33,7 @@ import logging
 
 logging.basicConfig(filename="log.log", level=logging.DEBUG)
 logging.debug("Info here")
+
 class Timer():
     def __init__(self, tid):
         self.tid = tid
@@ -107,6 +108,9 @@ class StateHandler():
 
         if self.command_state:
             self.command_state.commands[0].active = True
+
+    def log_info(self, information):
+        logging.debug(information)
 
     def get_event(self, event):
         for var in dir(events):
@@ -464,6 +468,7 @@ def draw_menu(stdscr):
     curses.init_pair(158, 208,208) # Fire?
     curses.init_pair(159, curses.COLOR_CYAN, curses.COLOR_CYAN) #Window?
     curses.init_pair(160, 130, curses.COLOR_RED)
+    curses.init_pair(161, curses.COLOR_WHITE, 238) # Empty Bookcase
 
 
     height, width = state_handler.stdscr.getmaxyx()
@@ -668,7 +673,7 @@ def draw_menu(stdscr):
 
             #Rendering to screen
             state_handler.gamemap.draw()
-            draw_commands(state_handler.ingame_menu, state_handler.command_box)
+            #draw_commands(state_handler.ingame_menu, state_handler.command_box)
             if last_gamemap != state_handler.gamemap.name: #If we went to a new screen
                 last_gamemap = state_handler.gamemap.name
                 if state_handler.player:
