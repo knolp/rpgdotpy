@@ -1040,6 +1040,12 @@ class SpeakEmpaLinka(Action):
                 ]
                 inventory.view_inventory_2(self.state, inv=npc.EmpaLinka.inventory)
 
+            elif answer in ["sell"]:
+                text = [
+                    "Is there anything else I can do for you?"
+                ]
+                inventory.view_inventory_2(self.state, sell=True)
+
             else:  # Generic catch-all for non-keywords
                 text = [
                     "Sorry, what did you say?",

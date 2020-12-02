@@ -3,6 +3,7 @@ import art
 import random
 import helper
 
+
 # Materials
 
 class Sets():
@@ -59,6 +60,7 @@ class Item():
         self.dismember_chance = 95
         self.setname = False
         self.stat_increase = False
+        self.sellable = True
 
         #Alchemy stuff
         self.dryable = False
@@ -221,14 +223,20 @@ class Item():
 
 
     def buy(self, state):
-        if state.player.gold >= self.sell_price:
-            state.player.gold -= self.sell_price
+        if state.player.gold >= self.buy_price:
+            state.player.gold -= self.buy_price
             state.player.inventory.append(self)
-            return True, f"{state.player.name} bought {self.readable_name} for {self.sell_price} gold."
+            return True, f"{state.player.name} bought {self.readable_name} for {self.buy_price} gold."
         else:
             return False, f"{state.player.name} cannot afford that."
 
-
+    def sell(self, state):
+        if self.sellable:
+            state.log_info(f"sell_price = {self.sell_price}")
+            state.player.gold += self.sell_price
+            return True, f"{state.player.name} sold {self.readable_name} for {self.sell_price} gold."
+        else:
+            return False, f"{state.player.name} cannot sell that."
 
 #WEAPONS
 
@@ -438,6 +446,38 @@ class CeramicDoll(Item):
         self.defence = 0
         self.description = "A ceramic doll with fiery red eyes."
         self.block_chance = 0
+
+class SearingTorch(Item):
+    def __init__(self):
+        super().__init__("SearingTorch", False)
+        self.readable_name = "Searing Torch"
+        self.type = "weapon"
+        self.subtype = "catalyst"
+        self.equippable = "left_hand"
+        self.attack = 0
+        self.defence = 0
+        self.description = "An everlasting, lit torch."
+        self.block_chance = 0
+        self.turns = 5
+        self.effect_chance = 30
+        self.effect_description = f"{self.effect_chance}% chance to infuse your attacks with fire."
+
+    def effect(self, player, opponent):
+        if opponent.player == True:
+            opponent_readable_name = "you"
+        else:
+            opponent_readable_name = opponent.readable_name
+        if random.randint(1,100) < self.effect_chance and "MoltenStrikeBuff" not in [x.name for x in player.status_effects]:
+            player.status_effects.append(abilities.MoltenStrikeBuff(self.turns, "you"))
+            return {
+                "combat_text" : [
+                    "{} infuses with you.".format(self.readable_name)
+                ]
+            }
+        else:
+            return {
+                "combat_text" : False
+            }
 
 
 
@@ -900,7 +940,7 @@ class AdralBrew(Item):
         self.stat = "Strength"
         self.turns = 600
         self.description = "A vial of brown fluid, created by the elves."
-        self.effect_description = f"+{self.increase} {self.stat}"
+        self.effect_description = f"+{self.increase} {self.stat} for {self.turns} turns"
 
     def consume(self, player):
         for item in player.status_effects:
@@ -912,6 +952,32 @@ class AdralBrew(Item):
                         player.status_effects.append(abilities.StatBuff(self.turns, self.stat, self.increase, player, origin="AdralBrew"))
                         return True, f"You refreshed your [{self.readable_name}], reseting it to {self.turns} turns."
         player.status_effects.append(abilities.StatBuff(self.turns, self.stat, self.increase, player, origin="AdralBrew"))
+        return True, f"You consumed an [{self.readable_name}], it increases your {self.stat} by {self.increase} for {self.turns} turns."
+
+
+class BrawlersElixir(Item):
+    def __init__(self):
+        super().__init__("BrawlersElixir", False)
+        self.readable_name = "Brawlers Elixir"
+        self.type = "consumable"
+        self.subtype = "elixir"
+        self.equippable = False
+        self.increase = 8
+        self.stat = "Strength"
+        self.turns = 100
+        self.description = "A yellow concoction with a foul smell."
+        self.effect_description = f"+{self.increase} {self.stat} for {self.turns} turns."
+
+    def consume(self, player):
+        for item in player.status_effects:
+            if item.name == "StatBuff":
+                if item.origin == "BrawlersElixir":
+                    if item.turns_left > 50:
+                        return False, "You are already affected by this brew."
+                    else:
+                        player.status_effects.append(abilities.StatBuff(self.turns, self.stat, self.increase, player, origin="BrawlersElixir"))
+                        return True, f"You refreshed your [{self.readable_name}], reseting it to {self.turns} turns."
+        player.status_effects.append(abilities.StatBuff(self.turns, self.stat, self.increase, player, origin="BrawlersElixir"))
         return True, f"You consumed an [{self.readable_name}], it increases your {self.stat} by {self.increase} for {self.turns} turns."
 
 

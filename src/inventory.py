@@ -570,7 +570,7 @@ def trade(npc, screen, state):
 
 	return True
 
-def view_inventory_2(state, inv="player"):
+def view_inventory_2(state, inv="player", sell=False):
 	#Initial thoughs
 	#Go for a skyrim-esque inventory management composed of "tabs" going deeper and a marker for equipped items (automatically at the top)
 	#Try to go for alphabetical order
@@ -616,13 +616,21 @@ def view_inventory_2(state, inv="player"):
 		"Key Items" : ["quest", "key", "book", "tool"],
 		"Consumables" : ["potion", "elixir", "brew", "scroll", "food"]
 	}
-	if inv == "player":
+	if inv == "player" and not sell:
 		dict_of_uses = {
 			"Armor" : "Equip",
 			"Weapons" : "Equip",
 			"Crafting" : "Use",
 			"Key Items" : "Use",
 			"Consumables" : "Consume"
+		}
+	elif sell:
+		dict_of_uses = {
+			"Armor" : "Sell",
+			"Weapons" : "Sell",
+			"Crafting" : "Sell",
+			"Key Items" : "Sell",
+			"Consumables" : "Sell"
 		}
 	else:
 		dict_of_uses = {
@@ -738,13 +746,13 @@ def view_inventory_2(state, inv="player"):
 					screen.attron(curses.color_pair(5)) #Add a green color
 				else: #Else if we are on another tab, but the selected type is the last one we chose
 					screen.attron(curses.color_pair(138)) #Add a nice orange color (Our favourite)
-				screen.addstr(idx + 2, 1, item)
+				screen.addstr(idx + 1, 1, item)
 				if currently_selected_tab == 0: #Deactivate it all
 					screen.attroff(curses.color_pair(5))
 				else:
 					screen.attroff(curses.color_pair(138))
 			else:
-				screen.addstr(idx + 2, 1, item)
+				screen.addstr(idx + 1, 1, item)
 
 		temp_subtypes = dict_of_subtypes[list_of_types[selected_tab[0]]] #To make it easier to type
 		for idx, item in enumerate(temp_subtypes): #For each in temp subtype we made earlier
@@ -753,13 +761,13 @@ def view_inventory_2(state, inv="player"):
 					screen.attron(curses.color_pair(5))
 				else:
 					screen.attron(curses.color_pair(138)) #Else if we are on another tab, make it a nice orange color (our favorite)
-				screen.addstr(idx + 2, type_end + 1, item)
+				screen.addstr(idx + 1, type_end + 1, item)
 				if currently_selected_tab == 1:
 					screen.attroff(curses.color_pair(5))
 				else:
 					screen.attroff(curses.color_pair(138))
 			else:
-				screen.addstr(idx + 2, type_end + 1, item)
+				screen.addstr(idx + 1, type_end + 1, item)
 
 
 		#Dynamic content (ex. items and item information)
@@ -797,7 +805,7 @@ def view_inventory_2(state, inv="player"):
 		else:
 			for item in dynamic_inventory:
 				if item.readable_name not in already_printed.keys():
-					already_printed[item.readable_name] = f"{item.sell_price}G"
+					already_printed[item.readable_name] = f"{item.buy_price}G"
 				if item.name not in real_name_translation.items():
 					real_name_translation[item.readable_name] = item.name
 		full_dynamic_print_inventory = [(item_name, count) for item_name, count in already_printed.items()] #! Here is the full list of unique items
@@ -969,7 +977,7 @@ def view_inventory_2(state, inv="player"):
 			if currently_selected_tab < 0: #Check if we go under 0
 				currently_selected_tab = 0 #If so, reset it to 0
 
-		if inv == "player":
+		if inv == "player" and not sell:
 		#If we press space to do stuff
 			if k == ord(" "):
 				result = False
@@ -1002,6 +1010,47 @@ def view_inventory_2(state, inv="player"):
 						for thing in inventory:
 							if item.name == thing.name:
 								inventory.pop(inventory.index(thing))
+								if len(full_dynamic_print_inventory[splice_start:splice_stop]) == 1:
+									if full_dynamic_print_inventory[splice_start:splice_stop][0][1] == 1:
+										currently_selected_tab = 1
+								break
+
+
+					else:
+						if type(result_text) == type("stringgoeshere"):
+							info_list.append((result_text, False))
+						elif type(result_text) == type(["list", "of", "strings"]):
+							for text in result_text:
+								info_list.append((text, False))
+					
+					#! FIX FOR OFFSYNC WHEN EQUIPPING LAST ITEM IN LIST OF WHICH THERE ARE EXACTLY ONE ITEM
+					#if selected_tab[2] >= len(full_dynamic_print_inventory[splice_start:splice_stop]) - 1:
+							#selected_tab[2] -= 1
+		elif sell:
+			if k == ord(" "):
+				result = False
+				result_text = "You cannot use that item here."
+				if currently_selected_tab == 2  and len(full_dynamic_print_inventory) != 0:
+					item = helper.get_item(real_name_translation[full_dynamic_print_inventory[splice_start : splice_stop][selected_tab[2]][0]])()
+					result, result_text = item.sell(state)
+						
+							
+						
+					#Delete the item and append info_list to print output to the inventory console
+					if result:
+						if type(result_text) == type("stringgoeshere"):
+							info_list.append((result_text, True))
+						elif type(result_text) == type(["list", "of", "strings"]):
+							for text in result_text:
+								info_list.append((text, True))
+						if selected_tab[2] >= len(full_dynamic_print_inventory[splice_start:splice_stop]) -1:
+							selected_tab[2] -= 1
+						for thing in inventory:
+							if item.name == thing.name:
+								inventory.pop(inventory.index(thing))
+								if len(full_dynamic_print_inventory[splice_start:splice_stop]) == 1:
+									if full_dynamic_print_inventory[splice_start:splice_stop][0][1] == 1:
+										currently_selected_tab = 1
 								break
 
 

@@ -433,7 +433,7 @@ class CaveTroll(Monster):
 
     def opener(self):
         if random.randint(1, 100) < 90:
-                self.limbs.append(Limb(self, "other head",True,False,10,2))
+                self.limbs.append(Limb(self, "extra head",True,False,10,2))
                 return {
                 "combat_text" : ["The Cave Troll roars at the sight of you, growing an extra head."]}
  

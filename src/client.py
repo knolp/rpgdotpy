@@ -8,6 +8,7 @@ import random
 import time
 import threading
 import locale
+import logging
 
 import art
 import states
@@ -29,7 +30,7 @@ import events
 import animation
 import abilities
 
-import logging
+
 
 logging.basicConfig(filename="log.log", level=logging.DEBUG)
 logging.debug("Info here")
@@ -742,7 +743,7 @@ def draw_menu(stdscr):
             if state_handler.player.mindvision:
                 state_handler.player.mindvision -= 1
                 for item in state_handler.gamemap.game_map.objects:
-                    item.draw(game_box)
+                    item.draw(state_handler)
 
             for item in state_handler.player.flora:
                 if item[1] + item[2] <= state_handler.timer.tid:

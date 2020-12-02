@@ -671,13 +671,15 @@ class MoltenStrikeBuff(StatusEffect):
             return {
                 "combat_text" : self.combat_text_over,
                 "done" : True,
-                "damage" : False
+                "damage" : False,
+                "type" : False
             }
         else:
             return {
                 "combat_text" : self.combat_text,
                 "done" : False,
-                "damage" : random.randint(1, 4)
+                "damage" : random.randint(1, 4),
+                "type" : "fire"
             }
 
 class StatBuff(StatusEffect):

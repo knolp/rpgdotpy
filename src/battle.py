@@ -262,14 +262,26 @@ class Battle():
         if self.player_effects["stunned"]:
             return
         weapon = self.player.equipment["right_hand"]
+        offhand = self.player.equipment["left_hand"]
 
         # If no weapon, skip to unarmed attack
         if weapon is False:
             self.unarmed_attack()
             return
 
+        extra_damage = {
+            "fire": 0,
+            "occult": 0,
+            "frost": 0,
+            "arcane": 0,
+            "nature": 0,
+        }
+
         # Add weapon damage
-        weapon_damage = random.randint(1, weapon.attack)
+        if weapon.attack > 0:
+            weapon_damage = random.randint(1, weapon.attack)
+        else:
+            weapon_damage = 0
 
         # Add in gear damage
         gear_damage = 0
@@ -292,23 +304,40 @@ class Battle():
         if weapon_unique_modifier:
             damage = damage * weapon_unique_modifier
 
+        if offhand:
+            offhand_effect = offhand.effect(self.player, self.opponent)
+            if offhand_effect:
+                if offhand_effect["combat_text"] is not False:
+                    for item in offhand_effect["combat_text"]:
+                        self.update_log(["player", item])
+
+
+
         #Add status_effect ex. temporary stuff like Molten Strike
         for item in self.player.status_effects:
             if item.damage_type == "enhance_melee_hit":
+                result = item.execute(self.opponent)
                 if result["combat_text"] is not False:
                     self.update_log(["player_effect", result["combat_text"]])
                 if result["done"] is True:
                     self.player.status_effects.remove(item)
                 if result["damage"] is not False:
-                    damage += result["damage"]
+                    if result["type"] == "physical":
+                        damage += result["damage"]
+                    else:
+                        extra_damage[result["type"]] += result["damage"]
 
         # Add limb damage
         if self.opponent.has_limbs:
             # Limb modifier, t.ex 2x damage against head
             limb, modifier = self.limb_damage_modifier()
             damage = int(damage * modifier)
-
-            self.update_log(["player", "It hits {} in the {}, dealing {} ({}) damage.".format(self.opponent.readable_name, limb, damage, weapon.damage_type)])
+            damage_text = "It hits {} in the {}, dealing {} ({})".format(self.opponent.readable_name, limb, damage, weapon.damage_type)
+            for k,v in extra_damage.items():
+                if v > 0:
+                    damage_text += f" + {v} ({k})"
+                    damage += v
+            self.update_log(["player", damage_text + " damage."])
 
             # Find the limb and deal damage to it and the result of that
             for opp_limb in self.opponent.limbs:
@@ -590,7 +619,8 @@ class Battle():
         self.player.in_control = True
         debuffs_to_remove = [
             "WoodlandDeverberrySkin",
-            "WoodlandDesertSalt"
+            "WoodlandDesertSalt",
+            "MoltenStrikeBuff"
         ]
         for item in self.player.status_effects:
             if item.name in debuffs_to_remove:
