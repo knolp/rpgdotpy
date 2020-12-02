@@ -1187,7 +1187,7 @@ class GreenForest(MapState):
             events.GreenForest_tanner_entrance(self.state)
         if self.state.player.x == 24 and self.state.player.y == 12:
             helper.popup(self.state.stdscr, self.state, [
-                "[Tannery of Didric Swanson]",
+                "[Tannery of Didric Burton]",
                 "",
                 "Renowned Tanner and Master Craftsman."
                 ])
@@ -1408,6 +1408,7 @@ class TannerHouse(MapState):
             state.change_map_screen()
             state.first_time = False
         objects = [
+            npc.DidricBurton(18,32)
         ]
         self.first_time = True
         self.game_map = mapper.GameMap("tanner.txt", objects)

@@ -271,6 +271,25 @@ class EdwardGryll(NPC):
 	def action(self, screen, state):
 		actions.SpeakEdwardGryll(screen, state).execute()
 
+#Starter Town Tannery
+class DidricBurton(NPC):
+	inventory = [
+		items.DeerHide()
+	]
+	name = "Didric Burton"
+	def __init__(self, x, y):
+		name = "Didric Burton"
+		super().__init__(name,x,y,"D")
+		self.original_x = x
+		self.original_y = y
+		self.old_timestamp = int(time.time())
+
+	def turn_action(self):
+		pass
+
+	def action(self, screen, state):
+		actions.SpeakDidricBurton(screen, state).execute()
+
 
 
 

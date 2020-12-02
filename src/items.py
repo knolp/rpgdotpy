@@ -856,6 +856,17 @@ class ObsidianShard(Item):
         self.equippable = False
         self.description = "A shard of pure black obsidian from the eastern desert."
 
+class DeerHide(Item):
+    def __init__(self):
+        super().__init__("DeerHide", False)
+        self.readable_name = "Deer Hide"
+        self.type = "crafting"
+        self.subtype = "creature"
+        self.equippable = False
+        self.description = "An expertly tanned deerhide."
+        self.buy_price = 5
+        self.sell_price = 2
+
 
 #Seeds
 class BarburaSeed(Item):

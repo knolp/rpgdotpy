@@ -1155,6 +1155,72 @@ class SpeakEdwardGryll(Action):
                     "I do not know what that means."
                 ]
 
+class SpeakDidricBurton(Action):
+    def __init__(self, screen, state):
+        super().__init__(screen, state, "Speak")
+        self.name = "Didric Burton"
+        self.vocation = "Human Tanner"
+
+    @add_ungetch
+    def execute(self):
+        #text_state = 0  # Text_state for keeping track of states for specific dialogue-trees
+        if "DidricBurton_met" not in self.state.player.flags:  # Inital meet flag, on most NPCs
+            text = [
+                "Hi stranger, you must be new here.",
+                "",
+                "The name's [Didric Burton] and I run this tannery.",
+                "",
+                "What can I do for you, here to [buy] some hides?"
+            ]  # Text is always a list of sentences, add empty string to <br>/linebreak
+            self.state.player.flags.append(
+                "DidricBurton_met")  # Append flag after
+        else:  # Normal text after initial meet
+            text = [
+                "Hi again!",
+                "",
+                "What can I do for you?",
+                "",
+                "interested in [buy]ing some hides?"
+            ]
+
+        while True:
+            answer = input_text(
+                self.name, self.vocation, self.screen, text, self.state).lower()  # Get input
+
+            if answer in ["e", "exit", "bye", "q", "quit"]:  # Always be here
+                return False  # False return to exit
+
+            elif answer in ["quest"]:  # Quest should be a standard, as well as trade
+                text = [
+                    "Sorry, I am not much of an adventurer.",
+                    "",
+                    "But the [hunter] I buy my hides from may need some help",
+                    "",
+                    "You can find him outside of the gates, he usually",
+                    "sets up his fireplace near the cave."
+                ]
+                text_state = 0  # Set state to inital state after generic dialogues
+            elif answer in ["hunter", "huntsman", "eilad", "eilad filch", "anters"]:
+                text = [
+                    "He lives and works in the forest, once a week he",
+                    "comes into my shop to sell me the skins from his",
+                    "most recent hunts."
+                ]
+                if answer not in ["eilad", "eilad filch", "filch"]:
+                    text.insert(0, "")
+                    text.insert(0, "His name is [Eilad Filch]")
+            elif answer in ["trade", "buy"]:
+                text = [
+                    "Hope you found what you were looking for."
+                ]
+                inventory.view_inventory_2(self.state, inv=npc.DidricBurton.inventory)
+            else:  # Generic catch-all for non-keywords
+                text = [
+                    "Huh?",
+                    "",
+                    "I do not know what that means."
+                ]
+
 
 # Objects
 

@@ -1043,11 +1043,12 @@ def view_inventory_2(state, inv="player", sell=False):
 						elif type(result_text) == type(["list", "of", "strings"]):
 							for text in result_text:
 								info_list.append((text, True))
-						if selected_tab[2] >= len(full_dynamic_print_inventory[splice_start:splice_stop]) -1:
-							selected_tab[2] -= 1
 						for thing in inventory:
 							if item.name == thing.name:
 								inventory.pop(inventory.index(thing))
+								if [x.name for x in inventory].count(thing.name) == 0:
+									if selected_tab[2] >= len(full_dynamic_print_inventory[splice_start:splice_stop]) -1:
+										selected_tab[2] -= 1
 								if len(full_dynamic_print_inventory[splice_start:splice_stop]) == 1:
 									if full_dynamic_print_inventory[splice_start:splice_stop][0][1] == 1:
 										currently_selected_tab = 1
