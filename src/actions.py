@@ -701,6 +701,7 @@ class SpeakAbyrroQuatz(Action):
     # Text_states
     # 1 = yes/no efter initial meet
     # 2 = yes/no efter frågat om quest
+    # 3 = yes/no efter frågat om man kan ge honom hides
 
     @add_ungetch
     def execute(self):
@@ -746,6 +747,25 @@ class SpeakAbyrroQuatz(Action):
                     ]
                     self.state.player.flags.append("AbyrroQuatz_hides_started")
                     text_state = 0
+                elif text_state == 3:
+                    text = [
+                        "       [5 Deer Hides removed from inventory]",
+                        "",
+                        "Thank you so much, I had lost hope before I met you.",
+                        "",
+                        "Now I will be going back to [Berud], please see me",
+                        "if you are ever there.",
+                        "",
+                        "Goodbye"
+                    ]
+                    for item in self.state.player.inventory:
+                        if item.name == "DeerHide":
+                            self.state.player.inventory.pop(self.state.player.inventory.index(item))
+                    self.state.player.flags.append("AbyrroQuatz_hides_completed")
+                    for item in self.state.gamemap.game_map.objects:
+                        if item.name == "Abyrro Quatz":
+                            self.state.gamemap.game_map.objects.pop(self.state.gamemap.game_map.objects.index(item))
+                    text_state = 0
 
             elif answer.lower() in ["quest", "help"]:
                 if "AbyrroQuatz_hides_started" not in self.state.player.flags:
@@ -757,14 +777,31 @@ class SpeakAbyrroQuatz(Action):
                         "The [tanner] is just south of the inn."
                     ]
                     text_state = 2
-
-                elif "DeerHide" not in [x.name for x in self.state.player.inventory]:
-                    text = [
-                        "You need to get me those [Deer Hides], remember?",
-                        "I gave you the money, I trust you will come back with them.",
-                        "I must be back in Berud soon."
-                    ]
-                    text_state = 0
+                named_inventory = [x.name for x in self.state.player.inventory]
+                if "AbyrroQuatz_hides_started" in self.state.player.flags:
+                    if "DeerHide" not in named_inventory:
+                        text = [
+                            "You need to get me those [Deer Hides], remember?",
+                            "I gave you the money, I trust you will come back with them.",
+                            "I must be back in Berud soon."
+                        ]
+                        text_state = 0
+                    if "DeerHide" in named_inventory:
+                        if named_inventory.count("DeerHide") < 5:
+                            text = [
+                                "Please come back once you got at leasts 5 [Deer Hides]",
+                                "",
+                                "I cannot go back to Berud without it."
+                            ]
+                            text_state = 0
+                        if named_inventory.count("DeerHide") >= 5:
+                            text = [
+                                "Amazing, you actually didn't just take my money and run",
+                                "I knew I could trust you.",
+                                "",
+                                "Want to hand those 5 [Deer Hides] over to me?"
+                            ]
+                            text_state = 3
 
             elif answer.lower() in ["tanner", "didric burton", "didric", "burton"]:
                 text = [

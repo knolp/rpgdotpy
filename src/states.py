@@ -1189,7 +1189,10 @@ class GreenForest(MapState):
             helper.popup(self.state.stdscr, self.state, [
                 "[Tannery of Didric Burton]",
                 "",
-                "Renowned Tanner and Master Craftsman."
+                "Renowned Tanner and Master Craftsman.",
+                "",
+                "Banned people:",
+                "[Abyrro Quatz] and anybody else from the magic guild."
                 ])
             self.state.player.x, self.state.player.y = self.state.player.last_pos
 
@@ -1223,8 +1226,9 @@ class BrownBearInn(MapState):
             objects.append(npc.BaldirKragg(19,17))
             objects.append(npc.BodvarKragg(23,17))
             objects.append(npc.LarsMagnus(23,35))
-        self.abyrro = npc.AbyrroQuatz(30,33)
-        objects.append(self.abyrro)
+        if "AbyrroQuatz_hides_completed" not in self.state.player.flags:
+            self.abyrro = npc.AbyrroQuatz(30,33)
+            objects.append(self.abyrro)
         self.first_time = True
         self.game_map = mapper.GameMap("BrownBearInn.txt", objects)
         self.menu = GameMenu

@@ -52,6 +52,7 @@ class Flags():
         location = "Brown Bear Inn"
         
         started = "AbyrroQuatz_hides_started"
+        completed = "AbyrroQuatz_hides_completed"
 
 
 
