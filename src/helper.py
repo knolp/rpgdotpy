@@ -253,6 +253,10 @@ def popup(screen, state, text):
 			start += 1
 
 		k = screen.getch()
+		if k == 163:
+			state.log_info("I HAPPENED")
+			return
+		state.log_info(k)
 	curses.ungetch(curses.KEY_F0)
 
 def pick_seed(state):

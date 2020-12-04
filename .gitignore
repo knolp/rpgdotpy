@@ -10,6 +10,12 @@ __pycache__/
 #log files
 *.log
 
+#images
+*.gif
+
+#workspaces
+*.code-workspace
+
 # Distribution / packaging
 .Python
 build/

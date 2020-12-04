@@ -8,6 +8,7 @@ import items
 import alchemy
 import farming
 import helper
+import battlefields
 
 
 class NPC():
@@ -368,7 +369,7 @@ class SkeletonGrunt(Monster):
 		self.text = "SKG"
 
 	def action(self, run=False):
-		result = battle.Battle(self.state, monster.SkeletonGrunt(self.state), "3", run=run).play()
+		result = battle.Battle(self.state, monster.SkeletonGrunt(self.state), battlefields.Battlefield("Dungeon"), run=run).play()
 		return result
 
 

@@ -725,7 +725,6 @@ class SpeakAbyrroQuatz(Action):
                 return False
 
             if answer.lower() in ["yes", "y"]:
-                print("?")
                 if text_state == 1:
                     text = [
                         "I am in quite a pickle, I am here from [Berud] to buy some hides.",
@@ -1132,9 +1131,10 @@ class SpeakEdwardGryll(Action):
                     text = [
                         "Great, we set sail for [Port Avery] right away!"
                     ]
-                    helper.popup(self.state.stdscr, self.state, [
-                                 "You arrive at [Port Avery, Blackcliff]"])
+                    self.state.play_anim()
+                    helper.popup(self.state.stdscr, self.state, ["You arrive at [Port Avery, Blackcliff]"])
                     events.StarterTown_door(self.state)
+                    
                     return
 
             elif answer in ["no", "n"]:
@@ -1294,6 +1294,8 @@ class Rock(Action):
             "",
             "it looks unusal though, as if it's",
             "connected to some kind of contraption."
+            "",
+            "Maybe it can be [activated] some way."
         ])
 
 

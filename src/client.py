@@ -113,6 +113,11 @@ class StateHandler():
     def log_info(self, information):
         logging.debug(information)
 
+    def play_anim(self):
+        anim = animation.boat_animation()
+        animation.play(anim, self)
+
+
     def get_event(self, event):
         for var in dir(events):
             if var == event:
@@ -421,6 +426,7 @@ def draw_menu(stdscr):
     direction = "right"
 
     state_handler = StateHandler(game_box, command_box, stdscr)
+    state_handler.log_info(stdscr.getmaxyx())
 
     curses.start_color()
 
@@ -470,6 +476,9 @@ def draw_menu(stdscr):
     curses.init_pair(159, curses.COLOR_CYAN, curses.COLOR_CYAN) #Window?
     curses.init_pair(160, 130, curses.COLOR_RED)
     curses.init_pair(161, curses.COLOR_WHITE, 238) # Empty Bookcase
+    curses.init_pair(162, curses.COLOR_WHITE, curses.COLOR_WHITE)
+    curses.init_pair(163, curses.COLOR_BLACK, curses.COLOR_BLACK)
+
 
 
     height, width = state_handler.stdscr.getmaxyx()
@@ -910,9 +919,9 @@ def draw_menu(stdscr):
         
         if k == ord("6"):
             #state_handler.timer.tid += 1209600
-            anim = animation.test_animation()
+            anim = animation.boat_animation()
             animation.play(anim, state_handler)
-    
+            helper.popup(state_handler.stdscr, state_handler, ["You arrive at [Port Avery, Blackcliff]"])    
     state_handler.timer.terminate()
 
 
