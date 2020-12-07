@@ -284,7 +284,7 @@ class SpeakOskGhar(Action):
         ]
         while True:
             answer = input_text(self.name, self.vocation,
-                                self.screen, text, self.state)
+                                self.screen, text, self.state).lower()
 
             # General
             if answer.lower() in ["e", "exit", "bye", "q", "quit"]:
@@ -323,6 +323,22 @@ class SpeakOskGhar(Action):
                     "For a nomadic race such as [Orcs], it's a deathsentence",
                     "to find rats have eaten into your supply."
                 ]
+                text_state = 0
+            
+            elif answer in ["chest", "wooden chest"]:
+                if "RatMenace_completed" in self.state.player.flags:
+                    text = [
+                        "As a gratitude of saving my basement,",
+                        "feel free to take something from the [chest]."
+                    ]
+                else:
+                    text = [
+                        "Whatever is in that chest does not concern you.",
+                        "",
+                        "But there might be something in there as a reward",
+                        "if you help me out with a [quest]."
+                    ]
+                    text_state = 0
 
             elif answer.lower() in ["adventurers"]:
                 text = [
@@ -392,21 +408,37 @@ class SpeakOskGhar(Action):
                     "Or did you want some [Hints]?"
                 ]
 
-            # Specific
-            if answer.lower() == "yes" and text_state == 1:
-                text_state = 2
-                self.state.player.flags.append("RatMenace_started")
+            if answer.lower() in ["no", "n"]:
                 text = [
-                    "Great!",
-                    "Take this key and go down the basement in",
-                    "the room to the west.",
+                    "Hmmph, fine.",
                     "",
-                    "	[Basement Key added to inventory]",
+                    "I'll still be here though if you want to",
+                    "help out with my [quest] later.",
                     "",
-                    "And remember, be careful!"
+                    "There is a reward ya know."
                 ]
-                self.state.player.inventory.append(items.BasementKey())
-                continue
+                text_state = 0
+
+            # Specific
+            if answer.lower() in ["ye", "y", "yes"]:
+                if text_state == 1:
+                    text_state = 2
+                    self.state.player.flags.append("RatMenace_started")
+                    text = [
+                        "Great!",
+                        "Take this key and go down the basement in",
+                        "the room to the west.",
+                        "",
+                        "	[Basement Key added to inventory]",
+                        "",
+                        "And remember, be careful!"
+                    ]
+                    self.state.player.inventory.append(items.BasementKey())
+                    continue
+                else:
+                    text = [
+                        "Yes to what?"
+                    ]
 
 
 class SpeakBaldirKragg(Action):
