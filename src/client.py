@@ -29,6 +29,7 @@ import books
 import events
 import animation
 import abilities
+import pyscreenshot as pss
 
 
 
@@ -919,9 +920,11 @@ def draw_menu(stdscr):
         
         if k == ord("6"):
             #state_handler.timer.tid += 1209600
-            anim = animation.boat_animation()
-            animation.play(anim, state_handler)
-            helper.popup(state_handler.stdscr, state_handler, ["You arrive at [Port Avery, Blackcliff]"])    
+            #anim = animation.boat_animation()
+            #animation.play(anim, state_handler)
+            #helper.popup(state_handler.stdscr, state_handler, ["You arrive at [Port Avery, Blackcliff]"])    
+            im = pss.grab(bbox=(10,10,30,30))
+            im.save("test.png")
     state_handler.timer.terminate()
 
 

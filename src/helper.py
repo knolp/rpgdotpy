@@ -259,6 +259,37 @@ def popup(screen, state, text):
 		state.log_info(k)
 	curses.ungetch(curses.KEY_F0)
 
+def info_screen(state):
+	screen = state.stdscr
+	screen.clear()
+	height, width = screen.getmaxyx()
+	k = -1
+	y_offset = 10
+	
+	while k != ord(" ") and k != ord("q"):
+		start = 10
+
+		screen.addstr(5,y_offset + 15,"E",curses.color_pair(197))
+		screen.addstr(5,y_offset + 17, "- This is an NPC, press SPACE to interact and talk with them.")
+		screen.addstr(7,y_offset + 15, "%", curses.color_pair(142))
+		screen.addstr(7,y_offset + 17, "- This is a usable object, press SPACE to interact with it")
+		screen.addstr(8,y_offset + 23, "* For example Chests, levers, Bushes etc.")
+		screen.addstr(10,y_offset + 15, "%", curses.color_pair(209))
+		screen.addstr(10,y_offset + 17, "- This is a door, walk into them to get inside (our otside)")
+
+		screen.addstr(14,y_offset + 15, "I - Open the Inventory")
+		screen.addstr(15,y_offset + 15, "E - Open your Equipment menu")
+		screen.addstr(16,y_offset + 15, "P - Open your spellbook")
+		screen.addstr(17,y_offset + 11, "SPACE - Interact with objects and NPCs")
+		screen.addstr(18,y_offset + 11, "[1-6] - Assignable hotkeys")
+
+		screen.attron(curses.color_pair(5))
+		screen.addstr(30,int(width/ 2) - 2, "Ok")
+		screen.attroff(curses.color_pair(5))
+
+		k = screen.getch()
+	curses.ungetch(curses.KEY_F0)
+
 def pick_seed(state):
 	screen = state.stdscr
 	seeds = [x for x in state.player.inventory if x.subtype == "seed"]

@@ -297,6 +297,33 @@ class SpeakOskGhar(Action):
                     "up north, that could get interesting."
                 ]
                 continue
+
+            elif answer in ["orc", "orcs"]:
+                text = [
+                    "Yes, I am an [Orc].",
+                    "",
+                    "But I have denounced the Orcish ways and",
+                    "I am quite happy living here with the humans."
+                ]
+                if self.state.player.race == "Orc":
+                    text = [
+                        "Been a long time since I've seen another Orc around here.",
+                        "",
+                        "I wish you luck my friend."
+                    ]
+                text_state = 0
+                continue
+
+            elif answer in ["rat", "rats"]:
+                text = [
+                    "I despise [rats].",
+                    "",
+                    "Have done since I was young.",
+                    "",
+                    "For a nomadic race such as [Orcs], it's a deathsentence",
+                    "to find rats have eaten into your supply."
+                ]
+
             elif answer.lower() in ["adventurers"]:
                 text = [
                     "Last I saw of them, they headed into town up north.",
@@ -316,13 +343,13 @@ class SpeakOskGhar(Action):
             elif answer.lower() in ["quests", "quest"]:
                 if text_state == 0:
                     text = [
-                        "I have a great quest for you if you wish.",
+                        "I have a great [quest] for you if you wish.",
                         "You see, I have a...",
                         "",
                         "Rodent problem.",
                         "",
-                        "It's a bit embarassing being an Orc and",
-                        "still afraid of a few measly rats.",
+                        "It's a bit embarassing being an [Orc] and",
+                        "still afraid of a few measly [rats].",
                         "Will you help me out with this?"
                     ]
                     text_state = 1

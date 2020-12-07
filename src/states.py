@@ -556,6 +556,7 @@ class NewGame_3():
             self.state.create_player["name"] = name
             self.state.create_player["flags"] = []
             self.state.make_player()
+            helper.info_screen(self.state)
 
             self.state.game_box.clear()
             self.state.command_box.clear()
