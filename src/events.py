@@ -3,6 +3,14 @@ import helper
 import random
 import animation
 
+def go_to(state, location, x = False, y = False):
+	state.player.location = getattr(states, location)
+	if x and y:
+		state.player.x = x
+		state.player.y = y
+
+	state.update_map()
+
 def go_west(state,location):
 	state.player.location = getattr(states, location)
 	state.player.y = 95

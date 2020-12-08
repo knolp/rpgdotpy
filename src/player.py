@@ -32,13 +32,14 @@ class Player():
 		self.flora = [] #t.ex ["StarterTown_ariam_bush", 100 (#timestamp), 1000 (#time dead)]
 		self.location = getattr(states, create_dict["location"])
 		self.inventory = []
+		self.state = False
 
 		self.temp_alchemy_inventory = []
 		self.recipes = []
 		self.active_farms = [] #0=id,1=Plant,2=time_planted,3=result,4=harvest_time
 		self.hotkeys = {
 			"1" : False,
-			"2" : abilities.MindVision(),
+			"2" : abilities.HomeTeleport(),
 			"3" : False,
 			"4" : False,
 			"5" : False,
@@ -76,6 +77,11 @@ class Player():
 
 		self.last_pos = (3,3)
 		self.last_target = [events.StarterTown_north.__name__]
+		self.recall = {
+			"location" : False,
+			"x" : False,
+			"y" : False
+		}
 
 		#Minions
 		self.max_minions = 3

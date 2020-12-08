@@ -118,11 +118,11 @@ def two_options(screen, state, text, options):
 			screen.attron(curses.color_pair(5))
 			screen.addstr(18,34, options[0])
 			screen.attroff(curses.color_pair(5))
-			screen.addstr(18, 40, options[1])
+			screen.addstr(18, 45, options[1])
 		else:
 			screen.addstr(18,34, options[0])
 			screen.attron(curses.color_pair(5))
-			screen.addstr(18, 40, options[1])
+			screen.addstr(18, 45, options[1])
 			screen.attroff(curses.color_pair(5))
 
 		k = screen.getch()

@@ -207,11 +207,14 @@ class StateHandler():
             self.player.last_target = full_target
 
         self.player._populate_gear_stats()
+        self.player.state = self
 
     def save_player(self, quicksave=False):
         logging.debug("Starting save")
         params = {}
-        for k,v in self.player.__dict__.items()	:
+        for k,v in self.player.__dict__.items():
+            if k == "state":
+                continue
             params[k] = v
             if k == "location":
                 params[k] = v.raw_name
@@ -296,6 +299,7 @@ class StateHandler():
         self.create_player["turn"] = 0
 
         self.player = player.Player(self.create_player)
+        self.player.state = self
 
     def update_map(self, target=False):
         if not target:
@@ -515,10 +519,10 @@ def draw_menu(stdscr):
             state_handler.player.turn += 1
             state_handler.check_overworld_status_effects()
             
-            if k == 9 and is_tab_enabled(state_handler):
-                k = 1
-                state_handler.change_map_screen()
-                continue
+            #if k == 9 and is_tab_enabled(state_handler):
+            #    k = 1
+            #    state_handler.change_map_screen()
+            #    continue
 
 
 
@@ -764,13 +768,13 @@ def draw_menu(stdscr):
 
         else:
 
-            if k == 9 and is_tab_enabled(state_handler):
-                k = 1
-                state_handler.change_map_screen()
-                state_handler.command_state = state_handler.gamemap.menu_commands(state_handler)
-                state_handler.command_state.commands[0].active = True
-                continue
-            elif k == curses.KEY_DOWN:
+            #if k == 9 and is_tab_enabled(state_handler):
+            #    k = 1
+            #    state_handler.change_map_screen()
+            #    state_handler.command_state = state_handler.gamemap.menu_commands(state_handler)
+            #    state_handler.command_state.commands[0].active = True
+            #    continue
+            if k == curses.KEY_DOWN:
                 get_next(state_handler.command_state, command_box)
             elif k == curses.KEY_UP:
                 get_prev(state_handler.command_state, command_box)
@@ -860,6 +864,11 @@ def draw_menu(stdscr):
         if k == ord("p") and state_handler.player != False:
             inventory.view_spellbook(state_handler.stdscr, state_handler)
         
+        if k == ord("l"):
+            save_answer = helper.two_options(state_handler.stdscr, state_handler, ["Do you wish to [Save] the game?"], ["Yes", "No"])
+            if save_answer:
+                state_handler.save_player()
+        
         if k == ord("o") and state_handler.player != False:
             if len(state_handler.player.minions) < state_handler.player.max_minions:
                 state_handler.player.minions.append("W")
@@ -916,15 +925,14 @@ def draw_menu(stdscr):
             state_handler.player.ascii = not state_handler.player.ascii
 
         if k == ord("5"):
-            state_handler.player.status_effects.append(abilities.StatBuff(5,"Intelligence", 13, state_handler.player))
+            #state_handler.player.status_effects.append(abilities.StatBuff(5,"Intelligence", 13, state_handler.player))
+            helper.two_options(state_handler.stdscr, state_handler, ["Teleport Home?"],["yes", "no"])
         
         if k == ord("6"):
             #state_handler.timer.tid += 1209600
             #anim = animation.boat_animation()
             #animation.play(anim, state_handler)
-            #helper.popup(state_handler.stdscr, state_handler, ["You arrive at [Port Avery, Blackcliff]"])    
-            im = pss.grab(bbox=(10,10,30,30))
-            im.save("test.png")
+            helper.popup(state_handler.stdscr, state_handler, ["You arrive at [Port Avery, Blackcliff]"])    
     state_handler.timer.terminate()
 
 

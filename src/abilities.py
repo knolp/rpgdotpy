@@ -1,5 +1,6 @@
 import random
 import helper
+import events
 
 class Ability():
     def __init__(self, name):
@@ -774,7 +775,7 @@ class Teleport():
         self.description = "Teleport a few steps in the direction you are facing."
 
     def execute(self, player):
-        print("Must be implemented")
+        pass
 
 
 class HomeTeleport():
@@ -782,6 +783,27 @@ class HomeTeleport():
         self.name = "HomeTeleport"
         self.readable_name = "Home Teleport"
         self.description = "Teleport to your home."
+
+    def execute(self, player):
+        answer = helper.two_options(player.state.stdscr, player.state, [
+            "Recall to Waypoint?",
+            "or",
+            "Set new Waypoint?"],
+            ["Recall", "Set"])
+
+        if answer:
+            if not player.recall["location"]:
+                helper.popup(player.state.stdscr, player.state, ["You have no [waypoint] set."])
+                return
+            events.go_to(player.state, player.recall["location"], x=player.recall["x"], y=player.recall["y"])
+
+        else:
+            if player.location.raw_name == "RandomCave":
+                helper.popup(player.state.stdscr, player.state, ["You cannot set a [waypoint] here."])
+                return
+            player.recall["location"] = player.location.raw_name
+            player.recall["x"] = player.x
+            player.recall["y"] = player.y
 
 
 
