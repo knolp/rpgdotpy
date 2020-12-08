@@ -7,14 +7,14 @@ class Book():
     
     def read(self, screen):
         #insert read book here
-        screen.clear()
+        screen.erase()
         k = -1
 
         selected_page = 0
         max_page = len(self.pages) - 1
         
         while k != ord("q"):
-            screen.clear()
+            screen.erase()
             start = 10
             for item in self.pages[selected_page]:
                 if start == 10:

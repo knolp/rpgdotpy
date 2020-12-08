@@ -9,7 +9,7 @@ def draw_menu(stdscr):
 	cursor_y = 0
 
 	# Clear and refresh the screen for a blank canvas
-	stdscr.clear()
+	stdscr.erase()
 	stdscr.refresh()
 
 	# Start colors in curses
@@ -22,7 +22,7 @@ def draw_menu(stdscr):
 	while (k != ord('q')):
 
 		# Initialization
-		stdscr.clear()
+		stdscr.erase()
 		height, width = stdscr.getmaxyx()
 
 		inv_box = stdscr.derwin(40,50,0,00)

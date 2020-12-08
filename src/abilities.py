@@ -778,11 +778,11 @@ class Teleport():
         pass
 
 
-class HomeTeleport():
+class Recall():
     def __init__(self):
-        self.name = "HomeTeleport"
-        self.readable_name = "Home Teleport"
-        self.description = "Teleport to your home."
+        self.name = "Recall"
+        self.readable_name = "Recall"
+        self.description = "Recall to a set waypoint"
 
     def execute(self, player):
         answer = helper.two_options(player.state.stdscr, player.state, [

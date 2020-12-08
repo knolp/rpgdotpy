@@ -18,7 +18,7 @@ color_dict = {
 }
 
 def input_text(name, vocation, screen, text, state):
-	screen.clear()
+	screen.erase()
 	start = 10
 	screen.addstr(5, 34, name)
 	screen.addstr(6, 34, vocation)
@@ -54,7 +54,7 @@ def open_chest(screen, state, name, items):
 	taken = []
 
 	while k != ord("q"):
-		screen.clear()
+		screen.erase()
 
 		start = 10
 		loot_text = "Inside the {} you find:".format(name)
@@ -119,7 +119,7 @@ def view_inventory(screen, state):
 	inv_scroll = 0
 
 	while k != ord("q"):
-		screen.clear()
+		screen.erase()
 		#print tabs
 		for i in range(len(tabs)):
 			start_offset = i * 12
@@ -241,7 +241,7 @@ def view_inventory(screen, state):
 
 
 def trade(npc, screen, state):
-	screen.clear()
+	screen.erase()
 	k = -1
 	selected_item = [0,0]
 	selected_item_npc = [0,0]
@@ -273,7 +273,7 @@ def trade(npc, screen, state):
 	}
 
 	while k != ord("q"):
-		screen.clear()
+		screen.erase()
 		# Make borders
 		#screen.attron(curses.color_pair(133))
 		if player_view:
@@ -669,7 +669,7 @@ def view_inventory_2(state, inv="player", sell=False):
 	while k != ord("q"): #Press Q to exit inventory menu
 		if state.player.health <= 0: #t.ex if Ring of Thorns kills you
 			break
-		screen.clear() # Clear old screen
+		screen.erase() # Clear old screen
 
 		#Init some variables regarding player equipment
 		list_of_equipped_items = list(state.player.equipment.values())
@@ -1099,7 +1099,7 @@ def view_inventory_2(state, inv="player", sell=False):
 
 def select_new_item(slot, inventory, screen, old_item):
 
-	screen.clear()
+	screen.erase()
 	k = -1
 	selected_item = 0
 
@@ -1112,7 +1112,7 @@ def select_new_item(slot, inventory, screen, old_item):
 	start = 10
 
 	while k != ord("q"):
-		screen.clear()
+		screen.erase()
 		start = 10
 		pos = 5
 		counter = 0
@@ -1175,7 +1175,7 @@ def select_new_item(slot, inventory, screen, old_item):
 # EQUIPMENT VIEW
 
 def view_equipment(screen, state):
-	screen.clear()
+	screen.erase()
 
 	k = -1
 	select_loop = [
@@ -1219,7 +1219,7 @@ def view_equipment(screen, state):
 
 
 	while k != ord("q"):
-		screen.clear()
+		screen.erase()
 		#border_color += 1
 
 		#INFO STRINGS
@@ -1393,7 +1393,7 @@ def view_equipment(screen, state):
 				selected_item = 0
 
 def swap_spells(screen, state, old_spell_index):
-	screen.clear()
+	screen.erase()
 
 	k = -1
 	selected_item = 0
@@ -1405,7 +1405,7 @@ def swap_spells(screen, state, old_spell_index):
 	offset = int(width / 2)
 
 	while k != ord("q"):
-		screen.clear()
+		screen.erase()
 
 		if state.player.spells[old_spell_index] == False:
 			explain_text = "Choose a spell to replace {}".format("[Empty Slot]")
@@ -1450,7 +1450,7 @@ def swap_spells(screen, state, old_spell_index):
 
 def view_spellbook(screen, state):
 	screen = state.stdscr
-	screen.clear()
+	screen.erase()
 
 	k = -1
 	selected_item = 0
@@ -1463,7 +1463,7 @@ def view_spellbook(screen, state):
 	
 
 	while k != ord("q"):
-		screen.clear()
+		screen.erase()
 
 		explain_text = "You can have a maximum of 5 active spells equipped."
 

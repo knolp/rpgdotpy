@@ -98,7 +98,7 @@ def draw_menu(stdscr):
 	cursor_y = 0
 
 	# Clear and refresh the screen for a blank canvas
-	stdscr.clear()
+	stdscr.erase()
 	stdscr.refresh()
 	stdscr.nodelay(1)
 	curses.curs_set(0)
@@ -123,7 +123,7 @@ def draw_menu(stdscr):
 	# Loop where k is the last character pressed
 	while (k != ord('q')):
 
-		stdscr.clear()
+		stdscr.erase()
 
 		game_box.border()
 		command_box.border()

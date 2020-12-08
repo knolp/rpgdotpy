@@ -426,7 +426,7 @@ class GameMap():
 		object_coords = {}
 		for item in self.objects:
 			object_coords[(item.x - 1, item.y - 1)] = item
-		state.game_box.clear()
+		state.game_box.erase()
 
 		if draw_seen:
 			self.draw_seen(state)

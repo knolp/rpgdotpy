@@ -558,8 +558,8 @@ class NewGame_3():
             self.state.make_player()
             helper.info_screen(self.state)
 
-            self.state.game_box.clear()
-            self.state.command_box.clear()
+            self.state.game_box.erase()
+            self.state.command_box.erase()
             self.state.game_box.refresh()
             self.state.command_box.refresh()
 

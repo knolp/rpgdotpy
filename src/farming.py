@@ -53,7 +53,7 @@ def select_ingredient(state, juicable=False):
     #MAIN LOOP
     low = 0
     while k != ord("q"):
-        screen.clear()
+        screen.erase()
 
         title_text = "Select a seed to plant."
         screen.addstr(2, int((width - len(title_text)) / 2), title_text)
@@ -133,7 +133,7 @@ def farming(state, identity):
     
 
     while k != ord("q"):
-        screen.clear()
+        screen.erase()
         if planted:
             button_text = "Harvest"
         else:

@@ -31,7 +31,7 @@ def add_ungetch_and_cbreak(f):
 	return return_func
 
 def input_text(screen, text, state):
-	screen.clear()
+	screen.erase()
 	start = 10
 	for item in text:
 		screen.addstr(start, 34, item)
@@ -51,7 +51,7 @@ def input_text(screen, text, state):
 	return text[:-1]
 
 def yes_no(screen, state, text):
-	screen.clear()
+	screen.erase()
 	k = -1
 	yes_selected = True
 	
@@ -96,7 +96,7 @@ def yes_no(screen, state, text):
 
 
 def two_options(screen, state, text, options):
-	screen.clear()
+	screen.erase()
 	k = -1
 	first_selected = True
 	
@@ -144,7 +144,7 @@ def ring_select(state):
 		:return bool (True for right, False for left)
 	"""
 	screen = state.stdscr
-	screen.clear()
+	screen.erase()
 	k = -1
 	first_selected = True
 	right_ring = state.player.equipment["ring_1"]
@@ -228,7 +228,7 @@ def color_both(screen, x, y, first, second, color_first, color_second):
 
 #! Todo rework popup #!
 def popup(screen, state, text):
-	screen.clear()
+	screen.erase()
 	height, width = screen.getmaxyx()
 	k = -1
 	
@@ -261,7 +261,7 @@ def popup(screen, state, text):
 
 def info_screen(state):
 	screen = state.stdscr
-	screen.clear()
+	screen.erase()
 	height, width = screen.getmaxyx()
 	k = -1
 	y_offset = 10
@@ -314,7 +314,7 @@ def pick_seed(state):
 			real_seeds[item.readable_name] += 1
 
 	while k != ord("q"):
-		screen.clear()
+		screen.erase()
 		x_pos = 5
 		pos_counter = 0
 		for seed, counter in real_seeds.items():
@@ -364,7 +364,7 @@ def select_charm(state):
 			real_charms[item.readable_name] += 1
 
 	while k != ord("q"):
-		screen.clear()
+		screen.erase()
 		x_pos = 5
 		pos_counter = 0
 		for seed, counter in real_charms.items():

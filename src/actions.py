@@ -11,7 +11,7 @@ from curses.textpad import Textbox, rectangle
 
 
 def input_text(name, vocation, screen, text, state, terminal=False):
-    screen.clear()
+    screen.erase()
     start = 10
     screen.attron(curses.color_pair(135))
     screen.addstr(5, 34, name)
@@ -832,7 +832,7 @@ class SpeakAbyrroQuatz(Action):
                         "But the [tanner] seems to still hold a grudge against me.",
                         "",
                         "Would you be able to buy 5 [Deer Hides] for me?",
-                        "The [tanner] is just south of the inn."
+                        "The [tanner] is just south of this inn."
                     ]
                     text_state = 2
                 named_inventory = [x.name for x in self.state.player.inventory]
@@ -840,8 +840,9 @@ class SpeakAbyrroQuatz(Action):
                     if "DeerHide" not in named_inventory:
                         text = [
                             "You need to get me those [Deer Hides], remember?",
+                            "",
                             "I gave you the money, I trust you will come back with them.",
-                            "I must be back in Berud soon."
+                            "I must be back in [Berud] soon."
                         ]
                         text_state = 0
                     if "DeerHide" in named_inventory:
@@ -877,9 +878,29 @@ class SpeakAbyrroQuatz(Action):
                     text.insert(1, "")
                 text_state = 0
 
+            elif answer.lower() in ["berud"]:
+                text = [
+                    "Ah, [Berud].",
+                    "",
+                    "A wonderful city, home to the [five guilds].",
+                    "Scholars come from all over the realm here."
+                ]
+                text_state = 0
+            
+            elif answer.lower() in ["buy", "trade", "sell"]:
+                text = [
+                    "Do I look like a merchant to you?"
+                ]
+                text_state = 0
+
+
             else:
                 text = [
-                    "Mr Developer, I need some lines here!"
+                    "Huh?",
+                    "",
+                    "I did not understand that.",
+                    "",
+                    "Now, are you able to [help] me or not?"
                 ]
                 text_state = 0
 

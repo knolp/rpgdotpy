@@ -15,7 +15,7 @@ def main(stdscr):
 	curses.init_pair(2,51,-1)
 
 	while k != ord("q"):
-		stdscr.clear()
+		stdscr.erase()
 		if k == ord("l"):
 			stdscr.addch(0,0,curses.ACS_ULCORNER, curses.color_pair(2))
 			stdscr.addch(1,0,curses.ACS_VLINE, curses.color_pair(2))

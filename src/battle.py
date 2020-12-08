@@ -384,7 +384,7 @@ class Battle():
             spell_list = []
 
         while k != ord("q"):
-            self.screen.clear()
+            self.screen.erase()
 
             start = 10
             spell_text = "Select a spell to cast"
@@ -661,7 +661,7 @@ class Battle():
         opponent_art_offset = 2
 
         while k != ord("q"):
-            self.screen.clear()
+            self.screen.erase()
             if self.player.health <= 0:
                 helper.popup(self.screen, self.state, ["You have died"])
                 self.state.game_state = states.Intro(self.state)
@@ -864,7 +864,7 @@ class Battle():
         height, width = self.screen.getmaxyx()
 
         while k != ord("q"):
-            self.screen.clear()
+            self.screen.erase()
 
             start = 10
             loot_text = "{} dropped the following loot".format(self.opponent.readable_name)
@@ -903,7 +903,7 @@ class Battle():
 
 
 def yes_no(screen, state, text):
-    screen.clear()
+    screen.erase()
     k = -1
     yes_selected = True
 

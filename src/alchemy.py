@@ -29,7 +29,7 @@ def make_juice(state):
     result = []
 
     while k != ord("q"):
-        screen.clear()
+        screen.erase()
         counter += 1
         title_text = "Select a berry or fruit to juice."
         screen.addstr(2, int((width - len(title_text)) / 2), title_text)
@@ -166,7 +166,7 @@ def select_ingredient(state, juicable=False):
     #MAIN LOOP
     low = 0
     while k != ord("q"):
-        screen.clear()
+        screen.erase()
 
         title_text = "Select a crafting ingredient."
         screen.addstr(2, int((width - len(title_text)) / 2), title_text)
@@ -232,7 +232,7 @@ def make_potion(state):
     screen = state.stdscr
     player = state.player
     height, width = screen.getmaxyx()
-    screen.clear()
+    screen.erase()
     curses.halfdelay(3)
     
     ingredients = ["Empty","Empty","Empty","Empty"]
@@ -249,7 +249,7 @@ def make_potion(state):
     lista = [1,2,3,4]
 
     while k != ord("q"):
-        screen.clear()
+        screen.erase()
         title_text = "Select ingredients to brew with."
         screen.addstr(2, int((width - len(title_text)) / 2), title_text)
         

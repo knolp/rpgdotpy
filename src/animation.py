@@ -1,5 +1,6 @@
 import curses
 import helper
+import time
 
 def test_animation():
     frames = []
@@ -50,7 +51,7 @@ def boat_animation():
 def play(frames, state):
     screen = state.stdscr
     height, width = screen.getmaxyx()
-    curses.halfdelay(1)
+    #curses.halfdelay(1)
     k = -1
 
     offset_x = 0
@@ -72,7 +73,7 @@ def play(frames, state):
 
 
     while k != ord("q"):
-        screen.clear()
+        screen.erase()
         if frame == len(frames):
             break
         for x, row in enumerate(frames[frame]):
@@ -85,6 +86,8 @@ def play(frames, state):
         screen.addstr(45,50,str(frame), curses.color_pair(138))
 
 
+        time.sleep(0.01)
+        #curses.ungetch(curses.KEY_F0)
         k = screen.getch()
 
         frame += 1
