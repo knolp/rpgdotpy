@@ -46,15 +46,7 @@ class Player():
 			"6" : False,
 		}
 
-		self.stats = {
-			"Intelligence" : 13,
-			"Strength" : 2,
-			"Charisma" : 13,
-			"Agility" : 13,
-			"Attunement" : 13,
-			"Alchemy" : 13,
-			"Farming" : 13
-		}
+		self.stats["Farming"] = 0
 
 		self.gear_stats = {
 			"Intelligence" : 0,
@@ -94,8 +86,8 @@ class Player():
 
 		self.status_effects = []
 		self.immune = []
-		self.health = 1999
-		self.max_health = 2000
+		#self.health = 1999
+		#self.max_health = 2000
 		self.in_control = True
 
 

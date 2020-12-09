@@ -542,10 +542,14 @@ def draw_menu(stdscr):
                             if item.flag:
                                 state_handler.player.flags.append(item.flag)
                             state_handler.gamemap.game_map.objects.remove(item)
+                        else:
+                            break
                             
 
 
-
+            if not state_handler.player:
+                state_handler.able_to_move = True
+                continue
             if state_handler.able_to_move == True:
                 curses.cbreak()
                 #curses.halfdelay(3)

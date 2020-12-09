@@ -1414,10 +1414,13 @@ def swap_spells(screen, state, old_spell_index):
 
 		screen.addstr(10, offset - int((len("Inactive Spells") / 2)), "Inactive Spells")
 		screen.addstr(11, offset - int((len(explain_text) / 2)), explain_text)
-
+		if len(state.player.spellbook) == 0:
+			helper.popup(state.stdscr, state, ["You do not know any spells."])
+			return
 		for i in range(len(state.player.spellbook)):
 			if i == selected_item:
 				screen.attron(curses.color_pair(5))
+			
 			
 			screen.addstr(start + i, offset - int((len(state.player.spellbook[i].readable_name) / 2)), state.player.spellbook[i].readable_name)
 

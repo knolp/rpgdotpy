@@ -208,6 +208,32 @@ class NewGame_1():
             "Mage" : 20,
             "Back" : 20
         }
+        self.vocation_stats = {
+            "Mage" : {
+                "Strength" : 1,
+                "Agility" : 1,
+                "Charisma" : 3,
+                "Intelligence" : 4,
+                "Alchemy" : 3,
+                "Attunement" : 3
+            },
+            "Rogue" : {
+                "Strength" : 3,
+                "Agility" : 4,
+                "Charisma" : 2,
+                "Intelligence" : 0,
+                "Alchemy" : 4,
+                "Attunement" : 0
+            },
+            "Warrior" : {
+                "Strength" : 6,
+                "Agility" : 2,
+                "Charisma" : 0,
+                "Intelligence" : 0,
+                "Alchemy" : 2,
+                "Attunement" : 0
+            }
+        }
 
     def draw(self):
         height, width = self.game_box.getmaxyx()
@@ -232,7 +258,11 @@ class NewGame_1():
                 self.state.create_player["max_health"] = self.vocation_max_health[item.text]
                 self.state.create_player["health"] = self.vocation_max_health[item.text]
                 self.state.create_player["spells"] = [False, False, False, False, False]
-                self.state.create_player["spellbook"] = [abilities.Fireball(), abilities.GreatFireball(), abilities.WoodlandCharm(), abilities.Infest()]
+                if item.text == "Mage":
+                    self.state.create_player["spellbook"] = [abilities.Fireball()]
+                else:
+                    self.state.create_player["spellbook"] = []
+                self.state.create_player["stats"] = self.vocation_stats[item.text]
 
 
 

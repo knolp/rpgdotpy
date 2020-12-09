@@ -761,7 +761,10 @@ class Battle():
                 keyword = "Badly injured"
             else:
                 keyword = "Barely hanging on"
-            self.screen.addstr(opponent_offset + 5, opponent_offset_y, f"Shape: {keyword}")
+            if self.opponent_killed:
+                self.screen.addstr(opponent_offset + 5, opponent_offset_y, f"Shape: Dead")
+            else:
+                self.screen.addstr(opponent_offset + 5, opponent_offset_y, f"Shape: {keyword}")
 
             # TODO END
 
