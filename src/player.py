@@ -90,6 +90,9 @@ class Player():
 		#self.max_health = 2000
 		self.in_control = True
 
+		# Gods
+		self.obligation = False
+
 
 		self.gold = 100
 		self.player = True
@@ -136,8 +139,9 @@ class Player():
 			Used in client.py when loading save to populate self.gear_stats
 		"""
 		for slot, item in self.equipment.items():
-			if item and item.stat_increase:
-				self.gear_stats[item.stat_increase[0]] += item.stat_increase[1]
+			if item and item.state_increase:
+				for stat, value in item.stat_increase.items():
+					self.gear_stats[stat] += value
 
 
 if __name__ == '__main__':

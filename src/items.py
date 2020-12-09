@@ -105,14 +105,18 @@ class Item():
 
     def on_equip(self, player):
         if self.stat_increase:
-            player.gear_stats[f"{self.stat_increase[0]}"] += self.stat_increase[1]
+            for stat, value in self.stat_increase.items():
+                player.gear_stats[stat] += value
+            #player.gear_stats[f"{self.stat_increase[0]}"] += self.stat_increase[1]
             return False
         else:
             return False
 
     def on_unequip(self, player):
         if self.stat_increase:
-            player.gear_stats[f"{self.stat_increase[0]}"] -= self.stat_increase[1]
+            for stat, value in self.stat_increase.items():
+                player.gear_stats[stat] += value
+            #player.gear_stats[f"{self.stat_increase[0]}"] -= self.stat_increase[1]
             return False
         else:
             return False
@@ -495,9 +499,11 @@ class ChainHelmet(Item):
         self.art = art.draw_ChainHelmet()
         self.rarity = "common"
         self.material = ""
-        self.stat_increase = ["Strength", 5]
+        self.stat_increase = {
+           "Strength" : 5
+        }
         self.magic_damage = 3
-        self.effect_description = f"+{self.stat_increase[1]} {self.stat_increase[0]}"
+        self.effect_description = f"+5 Strength"
 
 class WizardHat(Item):
     def __init__(self):
@@ -511,9 +517,11 @@ class WizardHat(Item):
         #self.art = art.draw_ChainHelmet()
         self.rarity = "common"
         self.material = ""
-        self.stat_increase = ["Intelligence", 5]
+        self.stat_increase = {
+            "Intelligence" : 5
+            }
         self.magic_damage = 3
-        self.effect_description = f"+{self.stat_increase[1]} {self.stat_increase[0]}, +{self.magic_damage} base damage to all spells."
+        self.effect_description = f"+5 Intelligence, +{self.magic_damage} base damage to all spells."
 
     def effect(self, player, opponent, spell=False, Melee=False, on_damage_taken=False):
         _ret_dict = self.get_base_ret_dict()
@@ -540,6 +548,22 @@ class ChainMail(Item):
         self.description = "A simple chainmail. Starting to get a bit rusty."
         self.art = art.draw_ChainMail()
         self.rarity = "rare"
+
+class ClothRobe(Item):
+    def __init__(self):
+        super().__init__("ClothRobe", False)
+        self.readable_name = "Cloth Robe"
+        self.type = "armor"
+        self.equippable = self.subtype = "chest"
+        self.attack = 0
+        self.defence = 0
+        self.description = "A thin cloth robe. Looks simple but eminates a presence of magic."
+        self.art = art.draw_ChainMail()
+        self.rarity = "rare"
+        self.stat_increase = {
+            "Intelligence" : 1
+        }
+
 
 #LEGS
 

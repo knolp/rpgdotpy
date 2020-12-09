@@ -736,11 +736,11 @@ def draw_menu(stdscr):
             stdscr.addstr(39,17,f"Name: {state_handler.player.name}")
             stdscr.addstr(40,17,f"Type: {state_handler.player.race} {state_handler.player.vocation}")
             stdscr.addstr(42,17,f"Stats:", curses.color_pair(136))
-            stdscr.addstr(43,17,f"Strength: {state_handler.player.stats['Strength']}")
-            stdscr.addstr(44,17,f"Agility: {state_handler.player.stats['Agility']}")
-            stdscr.addstr(45,17,f"Intelligence: {state_handler.player.stats['Intelligence']}")
-            stdscr.addstr(46,17,f"Charisma: {state_handler.player.stats['Charisma']}")
-            stdscr.addstr(47,17,f"Alchemy: {state_handler.player.stats['Alchemy']}")
+            stdscr.addstr(43,17,f"Strength: {state_handler.player.get_combined_stats()['Strength']}")
+            stdscr.addstr(44,17,f"Agility: {state_handler.player.get_combined_stats()['Agility']}")
+            stdscr.addstr(45,17,f"Intelligence: {state_handler.player.get_combined_stats()['Intelligence']}")
+            stdscr.addstr(46,17,f"Charisma: {state_handler.player.get_combined_stats()['Charisma']}")
+            stdscr.addstr(47,17,f"Alchemy: {state_handler.player.get_combined_stats()['Alchemy']}")
             stdscr.addstr(48,17,f"Farming: {state_handler.player.stats['Farming']}")
 
 
