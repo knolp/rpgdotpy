@@ -115,7 +115,7 @@ class Item():
     def on_unequip(self, player):
         if self.stat_increase:
             for stat, value in self.stat_increase.items():
-                player.gear_stats[stat] += value
+                player.gear_stats[stat] -= value
             #player.gear_stats[f"{self.stat_increase[0]}"] -= self.stat_increase[1]
             return False
         else:
@@ -139,12 +139,12 @@ class Item():
         translate_slots = {
             "right_hand" : "in the right hand",
             "left_hand" : "in the left hand",
-            "head" : "",
-            "legs" : "",
-            "chest" : "",
+            "head" : "on your head",
+            "legs" : "on your legs",
+            "chest" : "on your chest",
             "ring" : "",
             "neck" : "on your neck",
-            "boots" : ""
+            "boots" : "on your feet"
         } #For the output to inventory information console
         text = []
         if not self.equippable: #It does not have an equippable slot

@@ -1,7 +1,5 @@
 import random
 
-area = [[0 for _y in range(5)] for _x in range(5)]
-
 def set_height_map(area):
     for i in range(len(area)):
         for j in range(len(area[0])):
@@ -47,6 +45,7 @@ def displace(area, lx, rx, by, ty, spread):
     area[cx][cy] = jitter(center, spread)
 
 def mpd_displacement_d2(area):
+    area = [[0 for _y in range(5)] for _x in range(5)]
     init_corners(area)
     displace(area,0,4,0,4,1)
 
@@ -61,8 +60,9 @@ def mpd_displacement_d2(area):
 
 
 
-
-set_height_map(area)
-mpd_displacement_d2(area)
-for item in area:
-    print(item)
+if __name__ == "__main__":
+    area = [[0 for _y in range(5)] for _x in range(5)]
+    set_height_map(area)
+    mpd_displacement_d2(area)
+    for item in area:
+        print(item)
