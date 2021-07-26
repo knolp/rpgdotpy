@@ -3,6 +3,14 @@ import art
 import random
 import helper
 
+def pronouns(player):
+    if player.player:
+        your = "your"
+        you = "you"
+    else:
+        your = "their"
+        you = player.name
+    return you, your
 
 # Materials
 
@@ -45,7 +53,7 @@ class Item():
         :list stat_increase         = Stat increase on_equip in form of ["stat", <number>] 
 
     """
-    def __init__(self,name, usable):
+    def __init__(self, name, usable):
         self.name = name
         self.usable = usable
         self.consumable = False
@@ -943,6 +951,7 @@ class FirebloomSeed(Item):
 
 #Consumable
 # Can only affect players themselves, consume-function will be passed the state.player parameter
+# Has now been made available to monsters as well
 class MinorHealthPotion(Item):
     def __init__(self):
         super().__init__("MinorHealthPotion", False)
@@ -955,14 +964,15 @@ class MinorHealthPotion(Item):
         self.effect_description = f"+{self.healing} HP"
 
     def consume(self, player):
+        you, your = pronouns(player)
         healed = self.healing
         if player.health == player.max_health:
-            return False, "You are already at full health"
+            return False, f"{you} are already at full health"
         if player.health + healed > player.max_health:
             healed = player.max_health - player.health
         player.health += healed
         
-        return True, f"You consumed a [{self.readable_name}], it healed for {healed}"
+        return True, f"{you} consumed a [{self.readable_name}], it healed for {healed}"
 
 class AdralBrew(Item):
     def __init__(self):
@@ -978,16 +988,17 @@ class AdralBrew(Item):
         self.effect_description = f"+{self.increase} {self.stat} for {self.turns} turns"
 
     def consume(self, player):
+        you, your = pronouns(player)
         for item in player.status_effects:
             if item.name == "StatBuff":
                 if item.origin == "AdralBrew":
                     if item.turns_left > 100:
-                        return False, "You are already affected by this brew."
+                        return False, f"{you} are already affected by this brew."
                     else:
                         player.status_effects.append(abilities.StatBuff(self.turns, self.stat, self.increase, player, origin="AdralBrew"))
-                        return True, f"You refreshed your [{self.readable_name}], reseting it to {self.turns} turns."
+                        return True, f"{you} refreshed {your} [{self.readable_name}], reseting it to {self.turns} turns."
         player.status_effects.append(abilities.StatBuff(self.turns, self.stat, self.increase, player, origin="AdralBrew"))
-        return True, f"You consumed an [{self.readable_name}], it increases your {self.stat} by {self.increase} for {self.turns} turns."
+        return True, f"{you} consumed an [{self.readable_name}], it increases {your} {self.stat} by {self.increase} for {self.turns} turns."
 
 
 class BrawlersElixir(Item):
@@ -1004,16 +1015,38 @@ class BrawlersElixir(Item):
         self.effect_description = f"+{self.increase} {self.stat} for {self.turns} turns."
 
     def consume(self, player):
+        you, your = pronouns(player)
         for item in player.status_effects:
             if item.name == "StatBuff":
                 if item.origin == "BrawlersElixir":
                     if item.turns_left > 50:
-                        return False, "You are already affected by this brew."
+                        return False, f"{you.capitalize()} are already affected by this brew."
                     else:
                         player.status_effects.append(abilities.StatBuff(self.turns, self.stat, self.increase, player, origin="BrawlersElixir"))
-                        return True, f"You refreshed your [{self.readable_name}], reseting it to {self.turns} turns."
+                        return True, f"{you.capitalize()} refreshed {your} [{self.readable_name}], reseting it to {self.turns} turns."
         player.status_effects.append(abilities.StatBuff(self.turns, self.stat, self.increase, player, origin="BrawlersElixir"))
-        return True, f"You consumed an [{self.readable_name}], it increases your {self.stat} by {self.increase} for {self.turns} turns."
+        return True, f"{you.capitalize()} consumed a [{self.readable_name}], it increases {your} {self.stat} by {self.increase} for {self.turns} turns."
+
+
+class ScrollWoodlandCharm(Item):
+    def __init__(self):
+        super().__init__("ScrollWoodlandCharm", False)
+        self.readable_name = "Spellscroll (Woodland Charm)"
+        self.type = "consumable"
+        self.subtype = "scroll"
+        self.equippable = False
+        self.description = "A sealed scroll with the symbol of a tree."
+        self.effect_description = "Teaches you the spell 'Woodland Charm'"
+
+
+    def consume(self, player):
+        for item in player.spellbook:
+            if item.name == "WoodlandCharm":
+                break
+        else:
+            player.spellbook.append(abilities.WoodlandCharm())
+            return True, "You read the scroll and add [Woodland Charm] to your spellbook."
+        return False, "You already know that spell."
 
 
 
@@ -1094,3 +1127,9 @@ class BharokLegs(Item):
         self.defence = 3
         self.description = "Heavy platelegs from a swampy land."
         self.setname = "Bharok"
+        
+
+
+if __name__ == "__main__":
+    a = AdralBrew()
+    print(dir(a))

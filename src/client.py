@@ -29,7 +29,6 @@ import books
 import events
 import animation
 import abilities
-import pyscreenshot as pss
 
 
 
@@ -436,7 +435,7 @@ def draw_menu(stdscr):
     curses.start_color()
 
     curses.use_default_colors()
-    for i in range(0, curses.COLORS - 1):
+    for i in range(0, 256 - 1):
         curses.init_pair(i + 1, i, i - 1)
 
     curses.init_pair(1, curses.COLOR_CYAN, curses.COLOR_RED)
@@ -896,6 +895,8 @@ def draw_menu(stdscr):
                 elif var == "helper":
                     continue
                 elif var == "Sets":
+                    continue
+                elif var == "pronouns":
                     continue
                 else:
                     item_to_add = getattr(items, var)()

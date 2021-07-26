@@ -7,7 +7,7 @@ class Ability():
         self.name = name
         self.aoe = False
         self.no_direct_damage = False
-    
+
     def execute(self, player, opponent, state):
         pass
 
@@ -17,13 +17,13 @@ class Ability():
 
 #Spells
 
-#  ______ _____ _____  ______ 
+#  ______ _____ _____  ______
 # |  ____|_   _|  __ \|  ____|
-# | |__    | | | |__) | |__   
-# |  __|   | | |  _  /|  __|  
-# | |     _| |_| | \ \| |____ 
+# | |__    | | | |__) | |__
+# |  __|   | | |  _  /|  __|
+# | |     _| |_| | \ \| |____
 # |_|    |_____|_|  \_\______|
-                             
+
 class Fireball(Ability):
     def __init__(self):
         super().__init__("Fireball")
@@ -42,7 +42,7 @@ class Fireball(Ability):
             ]
             damage_done = random.randint(int(0.75 * self.damage), self.damage)
             combat_text.append("{} {} {}".format(player.name, random.choice(combat_variables), opponent.readable_name))
-    
+
             return {
                 "damage" : damage_done,
                 "combat_text" : combat_text
@@ -67,7 +67,7 @@ class GreatFireball(Ability):
             ]
             damage_done = random.randint(int(0.75 * self.damage), self.damage)
             combat_text.append("{} {} {}".format(player.name, random.choice(combat_variables), opponent.readable_name))
-    
+
             return {
                 "damage" : damage_done,
                 "combat_text" : combat_text
@@ -102,7 +102,7 @@ class Scorch(Ability):
                 "damage" : 0,
                 "combat_text" : combat_text
             }
-        
+
         else:
             combat_text.append(random.choice(combat_variables_success))
             opponent.status_effects.append(Burn(5,1,opponent.name))
@@ -115,13 +115,13 @@ class Scorch(Ability):
 
 
 
-#   ____   _____ _____ _    _ _   _______ 
+#   ____   _____ _____ _    _ _   _______
 #  / __ \ / ____/ ____| |  | | | |__   __|
-# | |  | | |   | |    | |  | | |    | |   
-# | |  | | |   | |    | |  | | |    | |   
-# | |__| | |___| |____| |__| | |____| |   
-#  \____/ \_____\_____|\____/|______|_|   
-                                         
+# | |  | | |   | |    | |  | | |    | |
+# | |  | | |   | |    | |  | | |    | |
+# | |__| | |___| |____| |__| | |____| |
+#  \____/ \_____\_____|\____/|______|_|
+
 
 
 
@@ -133,7 +133,7 @@ class LifeBolt(Ability):
         self.damage_type = "occult"
         self.damage = 15
 
-    
+
     def execute(self, player, opponent, state):
         combat_text = []
         combat_variables = [
@@ -148,7 +148,7 @@ class LifeBolt(Ability):
             player.health += heal_done
             combat_text.append("You drain {} health from the attack.".format(heal_done))
         else:
-            player.health = player.max_health
+            player.health = player.max_health #! If player has above max HP, this will fuck things up
             combat_text.append("You drain {} health from the attack.".format(player.max_health - player.health))
 
         return {
@@ -157,31 +157,31 @@ class LifeBolt(Ability):
         }
 
 
-#           _____   _____          _   _ ______ 
+#           _____   _____          _   _ ______
 #     /\   |  __ \ / ____|   /\   | \ | |  ____|
-#    /  \  | |__) | |       /  \  |  \| | |__   
-#   / /\ \ |  _  /| |      / /\ \ | . ` |  __|  
-#  / ____ \| | \ \| |____ / ____ \| |\  | |____ 
+#    /  \  | |__) | |       /  \  |  \| | |__
+#   / /\ \ |  _  /| |      / /\ \ | . ` |  __|
+#  / ____ \| | \ \| |____ / ____ \| |\  | |____
 # /_/    \_\_|  \_\\_____/_/    \_\_| \_|______|
 
 
 
- # ______ _____   ____   _____ _______ 
+ # ______ _____   ____   _____ _______
  #|  ____|  __ \ / __ \ / ____|__   __|
- #| |__  | |__) | |  | | (___    | |   
- #|  __| |  _  /| |  | |\___ \   | |   
- #| |    | | \ \| |__| |____) |  | |   
- #|_|    |_|  \_\\____/|_____/   |_| 
- 
+ #| |__  | |__) | |  | | (___    | |
+ #|  __| |  _  /| |  | |\___ \   | |
+ #| |    | | \ \| |__| |____) |  | |
+ #|_|    |_|  \_\\____/|_____/   |_|
 
- 
- #  _   _       _______ _    _ _____  ______ 
+
+
+ #  _   _       _______ _    _ _____  ______
  #| \ | |   /\|__   __| |  | |  __ \|  ____|
- #|  \| |  /  \  | |  | |  | | |__) | |__   
- #| . ` | / /\ \ | |  | |  | |  _  /|  __|  
- #| |\  |/ ____ \| |  | |__| | | \ \| |____ 
+ #|  \| |  /  \  | |  | |  | | |__) | |__
+ #| . ` | / /\ \ | |  | |  | |  _  /|  __|
+ #| |\  |/ ____ \| |  | |__| | | \ \| |____
  #|_| \_/_/    \_\_|   \____/|_|  \_\______|
- 
+
 
 class Infest(Ability):
     def __init__(self):
@@ -191,7 +191,7 @@ class Infest(Ability):
         self.damage_type = "nature"
         self.damage = 15
 
-    
+
     def execute(self, player, opponent, state):
         if len([x for x in player.inventory if x.subtype == "seed"]):
             seed = helper.pick_seed(state)
@@ -223,7 +223,7 @@ class Infest(Ability):
                     if item.readable_name == seed:
                         player.inventory.pop(player.inventory.index(item))
                         break
-        
+
         if seed == "Ariam Seed":
             damage = player.stats["Intelligence"] * 2
             combat_variables_failure = [f"{opponent.readable_name} is already infested."]
@@ -236,7 +236,7 @@ class Infest(Ability):
                     "damage" : 0,
                     "combat_text" : combat_text
                 }
-            
+
             else:
                 opponent.status_effects.append(InfestAriamSeed(5,damage,opponent))
                 for item in player.inventory:
@@ -248,7 +248,7 @@ class Infest(Ability):
                     "damage" : 0,
                     "combat_text" : combat_text
                 }
-        
+
         if seed == "Dever Seed":
             damage = int(player.stats["Intelligence"] / 2)
             combat_variables_failure = [f"{opponent.readable_name} is already infested."]
@@ -262,7 +262,7 @@ class Infest(Ability):
                     "damage" : 0,
                     "combat_text" : combat_text
                 }
-            
+
             else:
                 opponent.status_effects.append(InfestDeverSeed(5,damage,opponent))
                 for item in player.inventory:
@@ -289,7 +289,7 @@ class Infest(Ability):
                     "damage" : 0,
                     "combat_text" : combat_text
                 }
-            
+
             else:
                 opponent.status_effects.append(InfestFirebloomSeed(5,damage,opponent))
                 for item in player.inventory:
@@ -302,7 +302,7 @@ class Infest(Ability):
                     "damage" : 0,
                     "combat_text" : combat_text
                 }
-        
+
         return {
             "damage" : 0,
             "combat_text" : combat_text
@@ -317,7 +317,7 @@ class WoodlandCharm(Ability):
         self.damage = 0
         self.no_direct_damage = True
 
-    
+
     def execute(self, player, opponent, state):
         charm = helper.select_charm(state)
         if not charm:
@@ -356,11 +356,11 @@ class WoodlandCharm(Ability):
             "combat_text" : combat_text
         }
 
-#   ______ _______ _    _ ______ _____  ______          _      
-# |  ____|__   __| |  | |  ____|  __ \|  ____|   /\   | |     
-# | |__     | |  | |__| | |__  | |__) | |__     /  \  | |     
-# |  __|    | |  |  __  |  __| |  _  /|  __|   / /\ \ | |     
-# | |____   | |  | |  | | |____| | \ \| |____ / ____ \| |____ 
+#   ______ _______ _    _ ______ _____  ______          _
+# |  ____|__   __| |  | |  ____|  __ \|  ____|   /\   | |
+# | |__     | |  | |__| | |__  | |__) | |__     /  \  | |
+# |  __|    | |  |  __  |  __| |  _  /|  __|   / /\ \ | |
+# | |____   | |  | |  | | |____| | \ \| |____ / ____ \| |____
 # |______|  |_|  |_|  |_|______|_|  \_\______/_/    \_\______
 
 
@@ -572,7 +572,7 @@ class InfestFirebloomSeed(StatusEffect):
                 "done" : False,
                 "damage" : 0
             }
-                
+
 #WoodlandCharm Buffs
 class WoodlandDeverberrySkin(StatusEffect):
     def __init__(self, turns, opponent):
@@ -683,11 +683,13 @@ class MoltenStrikeBuff(StatusEffect):
                 "type" : "fire"
             }
 
+
+
 class StatBuff(StatusEffect):
     def __init__(self, turns, stat, increase, player, origin=False):
         """
             Increases <stat> by <increase> for <turn> turns.
-            
+
             :string name =                  Name of the class
             :string readable_name =         Readable syntax of buff name
             :string description =           Description of what it does
@@ -758,7 +760,7 @@ class PhaseShift():
         self.name = "PhaseShift"
         self.readable_name = "Phase Shift"
         self.description = "Shift into the abstract realm, removing your physical body."
-    
+
     def execute(self, player):
         if player.phaseshift == 0:
             player.phaseshift = player.stats["Intelligence"] + player.stats["Attunement"]

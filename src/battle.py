@@ -97,30 +97,45 @@ class Battle():
             return
         if self.opponent.health <= 0:
             return
-        attack = self.opponent.attack()
-        for item in attack["combat_text"]:
-            self.update_log(["opponent", item])
-        damage = attack["damage"]
+
+
+        # Let's add some simple AI
+        choices = self.opponent.get_actions()
+        choice = random.choice(choices)
+
+
+        if choice == "attack":
+            attack = self.opponent.attack()
+            for item in attack["combat_text"]:
+                self.update_log(["opponent", item])
+            if "sleep" in attack.keys():
+                self.update_log(["sleep", attack["sleep"]])
+            damage = attack["damage"]
         
-        #Check for player on_damage_taken items
-        for _, value in self.player.equipment.items():
-            if not value:
-                continue
-            if value.type != "armor":
-                continue
-            else:
-                ret_dict = value.effect(self.player, self.opponent, on_damage_taken=True)
-                if ret_dict["success"] != True:
+            #Check for player on_damage_taken items
+            for _, value in self.player.equipment.items():
+                if not value:
                     continue
-                if ret_dict["multiplier"]:
-                    damage *= ret_dict["multiplier"]
-                if ret_dict["additive"]:
-                    damage += ret_dict["additive"]
-                if ret_dict["damage"]:
-                    self.opponent.health -= ret_dict["damage"]
-                if ret_dict["combat_text"]:
-                    for text in ret_dict["combat_text"]:
-                        self.update_log(["player", text])
+                if value.type != "armor":
+                    continue
+                else:
+                    ret_dict = value.effect(self.player, self.opponent, on_damage_taken=True)
+                    if ret_dict["success"] != True:
+                        continue
+                    if ret_dict["multiplier"]:
+                        damage *= ret_dict["multiplier"]
+                    if ret_dict["additive"]:
+                        damage += ret_dict["additive"]
+                    if ret_dict["damage"]:
+                        self.opponent.health -= ret_dict["damage"]
+                    if ret_dict["combat_text"]:
+                        for text in ret_dict["combat_text"]:
+                            self.update_log(["player", text])
+            self.player.health -= damage
+        else:
+            attack = self.opponent.special_attack()
+            for item in attack["combat_text"]:
+                self.update_log(["opponent", item])
 
         #Check player for thorns-like buffs
         if len(self.player.status_effects) != 0:
@@ -138,7 +153,6 @@ class Battle():
                 if result["damage"] is not False:
                     self.opponent.health -= result["damage"]
 
-        self.player.health -= damage
 
     def check_effects(self):
         """
@@ -222,7 +236,7 @@ class Battle():
             :return None
         """
         damage = self.player.stats["Strength"]
-        self.update_log(["player", "{} attacks with fists".format(self.player.name)])
+        self.update_log(["player", "You attack with your fists"])
         if self.opponent.has_limbs:
             limb, modifier = self.limb_damage_modifier()
             damage = int(damage * modifier)
@@ -238,7 +252,7 @@ class Battle():
                    self.update_log(["opponent_effect", item])
         self.opponent.health -= damage
         recoil = random.randint(0, self.player.stats["Strength"])
-        self.update_log(["player", "The attack bruises {}'s knuckles, dealing {} damage in recoil.".format(self.player.name, recoil)])
+        self.update_log(["player", "The attack bruises your knuckles, dealing {} damage in recoil.".format(recoil)])
         self.player.health -= recoil
 
     def player_attack(self):
@@ -292,7 +306,7 @@ class Battle():
         
         # Add in strength modifier
         strength_modifier = random.randint(int(0.75 * self.player.stats["Strength"]), self.player.stats["Strength"])
-        self.update_log(["player", "{} attacks with {}".format(self.player.name, weapon.readable_name)])
+        self.update_log(["player", "You attack with {}".format(weapon.readable_name)])
 
         # MODIFIERS and DAMAGE CALC
 
@@ -644,13 +658,16 @@ class Battle():
             :return bool (if succesful or not)
         """
         #Give opponent knowledge of battlefield
+        
         self.opponent.battlefield = self.battlefield
         
-        self.update_log(["opponent", "{} encounters {} {}".format(self.player.name, self.opponent.before_name, self.opponent.readable_name)])
+        self.update_log(["opponent", "You encounter {} {}".format(self.opponent.before_name, self.opponent.readable_name)])
         opener = self.opponent.opener()
         if opener:
             for item in opener["combat_text"]:
                 self.update_log(["opponent", item])
+            if "sleep" in opener.keys():
+                self.update_log(["sleep", opener["sleep"]])
         self.update_log(["neutral", ""])
         k = -1
         selected_command = 0
@@ -659,9 +676,14 @@ class Battle():
         opponent_offset = 15
         opponent_offset_y = 100
         opponent_art_offset = 2
-
+        sleep = False
         while k != ord("q"):
             self.screen.erase()
+            if sleep:
+                curses.flash()
+                time.sleep(sleep)
+                curses.flushinp()
+                sleep = False
             if self.player.health <= 0:
                 helper.popup(self.screen, self.state, ["You have died"])
                 self.state.game_state = states.Intro(self.state)
@@ -711,6 +733,10 @@ class Battle():
             combat_log_start = 0
             self.used_turns = []
             for item in self.combat_log:
+                if item[0] == "sleep":
+                    sleep = item[1]
+                    self.combat_log.pop(self.combat_log.index(item))
+                    continue
                 if item[2] not in self.used_turns:
                     self.screen.addstr(combat_log_start, 0, "Turn {}:".format(item[2]))
                     self.used_turns.append(item[2])
@@ -764,7 +790,8 @@ class Battle():
             if self.opponent_killed:
                 self.screen.addstr(opponent_offset + 5, opponent_offset_y, f"Shape: Dead")
             else:
-                self.screen.addstr(opponent_offset + 5, opponent_offset_y, f"Shape: {keyword}")
+                #self.screen.addstr(opponent_offset + 5, opponent_offset_y, f"Shape: {keyword}")
+                self.screen.addstr(opponent_offset + 5, opponent_offset_y, f"Shape: {self.opponent.health}")
 
             # TODO END
 
@@ -791,6 +818,7 @@ class Battle():
                     self.screen.addstr(opponent_offset + 14 + i, opponent_offset_y, limb_info)
                 else:
                     self.screen.addstr(opponent_offset + 14 + i, opponent_offset_y, limb_info, curses.color_pair(133))
+
 
             k = self.screen.getch()
 
@@ -873,16 +901,7 @@ class Battle():
             loot_text = "{} dropped the following loot".format(self.opponent.readable_name)
             self.screen.addstr(8, int((width / 2) - (len(loot_text) / 2)), loot_text)
 
-            if self.loot_list:
-                for i in range(len(self.loot_list)):
-                    if selected_item == i:
-                        self.screen.attron(curses.color_pair(5))
-                    self.screen.addstr(start, offset, self.loot_list[i].readable_name)
-                    if selected_item == i:
-                        self.screen.attroff(curses.color_pair(5))
-                    start += 1
-            else:
-                self.screen.addstr(start, offset, "No loot")
+            
 
             if k == curses.KEY_DOWN:
                 if len(self.loot_list) != 0:
@@ -901,6 +920,18 @@ class Battle():
                     self.player.inventory.append(self.loot_list.pop(selected_item))
                 selected_item = 0
                 curses.ungetch(curses.KEY_F0)
+
+            if self.loot_list:
+                for i in range(len(self.loot_list)):
+                    if selected_item == i:
+                        self.screen.attron(curses.color_pair(5))
+                    self.screen.addstr(start, offset, self.loot_list[i].readable_name)
+                    if selected_item == i:
+                        self.screen.attroff(curses.color_pair(5))
+                    start += 1
+            else:
+                self.screen.addstr(start, offset, "No loot")
+
             k = self.screen.getch()
         curses.ungetch(curses.KEY_F0)
 

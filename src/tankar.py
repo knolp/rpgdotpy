@@ -94,3 +94,18 @@ class PlayerHousing():
             "farming-beds" : "kunna odla herbs",
             "make-a-spell" : "hitta runstenar man kan kombinera till spells, typ 1x AoE, 2x Fire = Great Fireball"
         }
+
+
+class Spells():
+    def __init__(self):
+        self.comment = "Lite idéer kring spells"
+
+    def ideer(self):
+        self.occult = {}
+        self.frost = {}
+        self.arcane = {}
+        self.fire = {}
+        self.nature = {}
+        self.ethereal = {
+            "Magic Shield" : "Scaleable shield för magic damage",
+        }

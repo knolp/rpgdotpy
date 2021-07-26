@@ -14,7 +14,6 @@ import time
 import curses
 import books
 import cavegen
-
 DEBUG = True
 # HELPERS #
 
@@ -1619,6 +1618,7 @@ class RandomCave(MapState):
         objects = [
         ]
         self.first_time = True
+
         self.cave_dict = cavegen.create_map(state.player.seed)
         self.state.player.x, self.state.player.y = self.cave_dict["player_pos"][0] + 1, self.cave_dict["player_pos"][1] + 1
         self.door_pos = self.cave_dict["door_pos"][0] + 1, self.cave_dict["door_pos"][1] + 1

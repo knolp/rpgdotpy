@@ -607,14 +607,14 @@ def view_inventory_2(state, inv="player", sell=False):
 		"Weapons" : ["Swords", "Maces", "Shields", "Wands", "Staves", "Catalysts"],
 		"Crafting" : ["Flora","Seeds", "Metals", "Creature products", "Magical", "Misc"],
 		"Key Items": ["Quest", "Keys", "Books", "Tools"],
-		"Consumables" : ["Potions", "Elixirs", "Brews", "Scrolls", "Food"]
+		"Consumables" : ["Potions", "Elixirs", "Brews", "Scrolls", "Food", "Other"]
 	}
 	dict_of_subtypes_translations = {
 		"Armor" : ["head", "chest", "legs", "boots", "neck", "ring"],
 		"Weapons" : ["sword", "mace", "shield", "wand", "staff", "catalyst"],
 		"Crafting" : ["flora", "seed", "metal", "creature", "magical", "misc"],
 		"Key Items" : ["quest", "key", "book", "tool"],
-		"Consumables" : ["potion", "elixir", "brew", "scroll", "food"]
+		"Consumables" : ["potion", "elixir", "brew", "scroll", "food", "other"]
 	}
 	if inv == "player" and not sell:
 		dict_of_uses = {

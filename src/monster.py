@@ -3,6 +3,19 @@ import art
 import items
 
 class Limb():
+    """
+        Limb class
+
+        owner = object/monster the limb belongs to
+        name = Name of limb, ex. Head, Right Arm
+        vital = Instakill if lost
+        grabbable = If able to hold on to items
+        max_health = Maximum health of limb
+        heal = Current health of limb
+        multiplier = multiplier for damage when struck, ex. maybe 1.5 damage for head hits, versus 0.7 for tail-hits
+        fur = Fur, for fire damage, cold resistance, whatever
+        held_item = If grabbable, does it hold an item
+    """
     def __init__(
             self, 
             owner, 
@@ -134,9 +147,24 @@ class Monster():
         self.immune = []
         self.player = False
         self.battlefield = False
+        self.inventory = []
+        self.actions = ["attack"]
+
+        self.stats = {
+			"Intelligence" : 0,
+			"Strength" : 0,
+			"Charisma" : 0,
+			"Agility" : 0,
+			"Attunement" : 0,
+			"Alchemy" : 0,
+			"Farming" : 0
+		}
 
     def opener(self):
         return False
+
+    def get_actions(self):
+        return self.actions
 
     
     def generate_loot(self):
@@ -148,6 +176,11 @@ class Monster():
                 if random.randint(1,100) <= value:
                     return_loot.append(key)
 
+        if self.inventory:
+            for item in self.inventory:
+                print(dir(item))
+                return_loot.append(item.name)
+
         if self.loot:
             for value in loot_chances:
                 if random.randint(1,100) <= value:
@@ -155,6 +188,7 @@ class Monster():
             return list(set(return_loot))
         else:
             return False
+
 
     def return_limb(self):
         selected_limb = random.choice(self.limbs)
@@ -189,7 +223,8 @@ class Monster():
 
         return {
             "combat_text" : combat_text,
-            "damage" : melee_damage
+            "damage" : melee_damage,
+            "sleep" : 0.5
         }
 
 
@@ -428,6 +463,8 @@ class CaveTroll(Monster):
         self.max_health = sum([x.max_health for x in self.limbs])
         self.health = self.max_health
 
+        self.inventory = [items.AdralBrew()]
+
     def __str__(self):
         return self.name
 
@@ -435,7 +472,8 @@ class CaveTroll(Monster):
         if random.randint(1, 100) < 90:
                 self.limbs.append(Limb(self, "extra head",True,False,10,2))
                 return {
-                "combat_text" : ["The Cave Troll roars at the sight of you, growing an extra head."]}
+                "combat_text" : ["The Cave Troll roars at the sight of you, growing an extra head."]
+                }
  
         return {
             "combat_text" : ["The Cave Troll roars at the sight of you, increasing it's strength",
@@ -443,7 +481,15 @@ class CaveTroll(Monster):
         }
 
     def special_attack(self):
-        pass
+        if self.inventory:
+            item = random.choice([x for x in self.inventory if x.type == "consumable"])
+            ret = item.consume(self)
+            self.inventory.pop(self.inventory.index(item))
+            return {
+                "combat_text" : [ret[1]]
+            }
+        else:
+            return self.attack()
 
     def attack(self):
         return self.melee_attack()
